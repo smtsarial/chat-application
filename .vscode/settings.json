@@ -1,0 +1,21 @@
+{
+    "files.exclude": {
+        ".idea": false,
+        ".dart_tool": false,
+        "build": false,
+        "ios": false,
+        "windows": false,
+        "winuwp": false,
+        ".flutter-plugins": false,
+        ".flutter-plugins-dependencies": false,
+        "web": false,
+        "test": false,
+        ".metadata": false,
+        ".packages": false,
+        "README.md": false,
+        ".gitignore": false,
+        "firebasedeneme.iml": false,
+        "android": false
+    },
+    "workspace.isHidden": false
+}
