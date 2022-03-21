@@ -1,4 +1,5 @@
 import 'package:firebasedeneme/connections/auth.dart';
+import 'package:firebasedeneme/screens/main/splash_screen.dart';
 import 'package:firebasedeneme/theme.dart';
 import 'package:firebasedeneme/screens/auth/register.dart';
 import 'package:flutter/material.dart';
@@ -146,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> saveData(mail) async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.setString("userMail", mail);
+    await sharedPreferences.setString("userUID", mail);
   }
 
   Future loginCheck(context) async {
@@ -165,6 +166,8 @@ class _LoginPageState extends State<LoginPage> {
 
         await saveData(_userEmail.toString());
         FocusManager.instance.primaryFocus!.unfocus();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SplashScreen()));
       } catch (err) {
         setState(() {
           _warningMessage = true;
@@ -231,14 +234,12 @@ class _LoginPageState extends State<LoginPage> {
                       .resetPassword(newTaskController.text)
                       .then((value) {
                     if (value == true) {
-                      print("oke");
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Password reset mail sent to " +
                             newTaskController.text),
                       ));
                       Navigator.pop(context);
                     } else {
-                      print("hahah");
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Error occured while sending email!"),
                       ));

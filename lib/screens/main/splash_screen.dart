@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:firebasedeneme/models/user.dart';
+import 'package:firebasedeneme/screens/auth/login.dart';
+import 'package:firebasedeneme/screens/main/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   static Route get route => MaterialPageRoute(
@@ -14,14 +18,22 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late final StreamSubscription<firebase.User?> listener;
+  late String userUID = "";
+
+  Future<void> _handleAuthenticatedState() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    var _usermail = sharedPreferences.getString("userUID");
+    print(_usermail);
+    setState(() {
+      userUID = _usermail.toString();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _handleAuthenticatedState();
+    _handleAuthenticatedState().then((value) {});
   }
-
-  Future<void> _handleAuthenticatedState() async {}
 
   @override
   void dispose() {
@@ -31,10 +43,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return Scaffold(body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()));
   }
 }

@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:firebasedeneme/connections/auth.dart';
+import 'package:firebasedeneme/screens/main/splash_screen.dart';
 import 'package:firebasedeneme/theme.dart';
 import 'package:firebasedeneme/widgets/avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
   static Route get route => MaterialPageRoute(
@@ -52,8 +55,14 @@ class __SignOutButtonState extends State<_SignOutButton> {
   bool _loading = false;
 
   Future<void> _signOut() async {
-    setState(() {
-      _loading = true;
+    Authentication().signOut().then((value) async {
+      var sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString("userUID", "");
+      setState(() {
+        _loading = true;
+      });
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SplashScreen()));
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebasedeneme/screens/main/home_screen.dart';
+import 'package:firebasedeneme/screens/main/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:firebasedeneme/theme.dart';
@@ -16,11 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: AppTheme.light(),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
       title: 'Chatter',
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }

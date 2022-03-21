@@ -61,9 +61,10 @@ class FirestoreHelper {
     final Faker faker = Faker();
     final date = Helpers.randomDate();
     List<Story> stories = [];
+    print(faker.address.city());
     for (int i = 0; i < 100; i++) {
-      stories.add(Story("", faker.phoneNumber.toString(), faker.food.toString(),
-          date, faker.image.toString(), []));
+      stories.add(Story("", faker.phoneNumber.random.toString(),
+          faker.food.dish().toString(), date, Faker().image.image(), []));
     }
     return stories;
   }
@@ -87,21 +88,23 @@ class FirestoreHelper {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(
-            id,
-            age,
-            chatCount,
-            profilePictureUrl,
-            followers,
-            gender,
-            isActive,
-            lastActiveTime,
-            lastName,
-            likes,
-            userBio,
-            userTags,
-            userType,
-            username,
-          ).toMap());
+              id,
+              age,
+              chatCount,
+              profilePictureUrl,
+              followers,
+              gender,
+              isActive,
+              lastActiveTime,
+              lastName,
+              likes,
+              userBio,
+              userTags,
+              userType,
+              username,
+              "Türkiye",
+              "İstanbul")
+          .toMap());
       return true;
     } catch (e) {
       print(e);

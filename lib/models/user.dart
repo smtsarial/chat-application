@@ -13,23 +13,26 @@ class User {
   late List userTags;
   late String userType;
   late String username;
+  late String country;
+  late String city;
 
   User(
-    this.id,
-    this.age,
-    this.chatCount,
-    this.profilePictureUrl,
-    this.followers,
-    this.gender,
-    this.isActive,
-    this.lastActiveTime,
-    this.lastName,
-    this.likes,
-    this.userBio,
-    this.userTags,
-    this.userType,
-    this.username,
-  );
+      this.id,
+      this.age,
+      this.chatCount,
+      this.profilePictureUrl,
+      this.followers,
+      this.gender,
+      this.isActive,
+      this.lastActiveTime,
+      this.lastName,
+      this.likes,
+      this.userBio,
+      this.userTags,
+      this.userType,
+      this.username,
+      this.city,
+      this.country);
   User.fromMap(dynamic obj) {
     username = obj['username'];
     userType = obj['userType'];
@@ -44,6 +47,8 @@ class User {
     profilePictureUrl = obj['profilePictureUrl'];
     chatCount = obj['chatCount'];
     age = obj['age'];
+    city = obj['city'];
+    country = obj['country'];
   }
 
   Map<String, dynamic> toMap() {
@@ -62,6 +67,8 @@ class User {
       map['profilePitureUrl'] = this.profilePictureUrl;
       map['chatCount'] = this.chatCount;
       map['age'] = this.age;
+      map['city'] = this.city;
+      map['country'] = this.country;
     }
     return map;
   }
