@@ -12,6 +12,13 @@ const ContentColorDarkTheme = Color(0xFFF5FCF9);
 const WarninngColor = Color(0xFFF3BB1C);
 const ErrorColor = Color(0xFFF03738);
 
+const kPrimaryColor = Color.fromRGBO(73, 3, 201, 1);
+const kSecondaryColor = Color.fromRGBO(59, 24, 95, 1);
+const kContentColorLightTheme = Color(0xFF1D1D35);
+const kContentColorDarkTheme = Color(0xFFF5FCF9);
+const kWarninngColor = Color(0xFFF3BB1C);
+const kErrorColor = Color(0xFFF03738);
+
 const kDefaultPadding = 20.0;
 
 abstract class AppColors {

@@ -1,4 +1,6 @@
 import 'package:firebasedeneme/screens/auth/login.dart';
+import 'package:firebasedeneme/screens/main/anon_message_screen.dart';
+import 'package:firebasedeneme/screens/main/messages/chat_screen.dart';
 import 'package:firebasedeneme/screens/main/message_screen.dart';
 import 'package:firebasedeneme/screens/main/profile_screen.dart';
 import 'package:firebasedeneme/screens/main/shuffle_screen.dart';
@@ -20,19 +22,12 @@ class HomeScreen extends StatelessWidget {
   final pages = [
     StoryPage(),
     MessagesPage(),
+    AnonMessagesPage(),
     ShufflePage(),
     ProfileScreen(),
   ];
 
-  final pageTitles = const [
-    'Messages',
-    'Notifications',
-    'Calls',
-    'Contacts',
-  ];
-
   void _onNavigationItemSelected(index) {
-    title.value = pageTitles[index];
     pageIndex.value = index;
   }
 
@@ -107,15 +102,22 @@ class __BottomNavigationBarState extends State<_BottomNavigationBar> {
               _NavigationBarItem(
                 index: 2,
                 label: '',
-                icon: CupertinoIcons.shuffle,
+                icon: CupertinoIcons.captions_bubble_fill,
                 isSelected: (selectedIndex == 2),
                 onTap: handleItemSelected,
               ),
               _NavigationBarItem(
                 index: 3,
                 label: '',
-                icon: CupertinoIcons.person,
+                icon: CupertinoIcons.shuffle,
                 isSelected: (selectedIndex == 3),
+                onTap: handleItemSelected,
+              ),
+              _NavigationBarItem(
+                index: 4,
+                label: '',
+                icon: CupertinoIcons.person,
+                isSelected: (selectedIndex == 4),
                 onTap: handleItemSelected,
               ),
             ],

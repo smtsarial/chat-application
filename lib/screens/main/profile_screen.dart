@@ -16,29 +16,67 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+        body: SingleChildScrollView(
+      child: Center(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            SizedBox(
+              height: 36,
             ),
-            CircleAvatar(
-              backgroundColor: PureColor,
-              radius: 65,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: Image(image: AssetImage('anonuser.png')).image,
+            Text(
+              "SAMET SARIAL",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 26,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: IconButton(
+                        onPressed: () {}, icon: Icon(Icons.settings)),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Colors.blue,
+                          Colors.red,
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      color: PrimaryColor,
+                    ),
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundImage: Image(
+                              image: NetworkImage(
+                                  "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fimage_picker8854925666362766770.jpg'?alt=media&token=1440a674-0a91-4bb9-91e7-6c2137132eba"))
+                          .image,
+                    ),
+                  ),
+                  Container(
+                    child:
+                        IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            SizedBox(
+              height: 16,
             ),
             const Divider(),
             const _SignOutButton(),
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

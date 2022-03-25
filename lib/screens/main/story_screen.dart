@@ -31,7 +31,7 @@ class _StoryPageState extends State<StoryPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        padding: const EdgeInsets.fromLTRB(8, 10, 8, 5),
         child: Column(
           children: [
             Container(

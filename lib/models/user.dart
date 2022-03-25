@@ -1,12 +1,15 @@
 class User {
   late String id;
+  late String email;
   late int age;
   late int chatCount;
   late String profilePictureUrl;
   late List followers;
+  late List followed;
   late String gender;
   late bool isActive;
   late DateTime lastActiveTime;
+  late String firstName;
   late String lastName;
   late List likes;
   late String userBio;
@@ -18,13 +21,16 @@ class User {
 
   User(
       this.id,
+      this.email,
       this.age,
       this.chatCount,
       this.profilePictureUrl,
       this.followers,
+      this.followed,
       this.gender,
       this.isActive,
       this.lastActiveTime,
+      this.firstName,
       this.lastName,
       this.likes,
       this.userBio,
@@ -34,6 +40,9 @@ class User {
       this.city,
       this.country);
   User.fromMap(dynamic obj) {
+    email = obj['email'];
+    firstName = obj['firstName'];
+    followed = obj['followed'];
     username = obj['username'];
     userType = obj['userType'];
     userTags = obj['userTags'];
@@ -54,6 +63,10 @@ class User {
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     if (id != null) {
+      map['email'] = this.email;
+      map['firstName'] = this.firstName;
+      map['followed'] = this.followed;
+
       map['username'] = this.username;
       map['userType'] = this.userType;
       map['userTags'] = this.userTags;
@@ -64,7 +77,7 @@ class User {
       map['isActive'] = this.isActive;
       map["gender"] = this.gender;
       map['followers'] = this.followers;
-      map['profilePitureUrl'] = this.profilePictureUrl;
+      map['profilePictureUrl'] = this.profilePictureUrl;
       map['chatCount'] = this.chatCount;
       map['age'] = this.age;
       map['city'] = this.city;

@@ -18,10 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark(),
+      theme: ThemeData(
+        fontFamily: 'RobotoMono',
+      ),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
-      title: 'Chatter',
+      title: 'anonmy',
       home: SplashScreen(),
     );
   }

@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:firebasedeneme/connections/auth.dart';
 import 'package:firebasedeneme/connections/firestore.dart';
+import 'package:firebasedeneme/screens/main/splash_screen.dart';
 import 'package:firebasedeneme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -255,7 +257,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         InkWell(
             onTap: () {
-              print("object");
               SelectImageFromGallery();
             },
             child: _imageload == true
@@ -273,12 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 : CircleAvatar(
                     backgroundColor: PureColor,
                     radius: 100,
-                    child: CircleAvatar(
-                      radius: 95,
-                      backgroundImage:
-                          Image(image: AssetImage('anonuser.png')).image,
-                    ),
-                  )),
+                    child: Icon(Icons.camera_alt, size: 95))),
         SizedBox(
           height: 12,
         ),
@@ -376,6 +372,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Future<void> saveData(mail) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString("userUID", mail);
+  }
+
   Future signUpValidation(gendervalue) async {
     if (_imageload != true) {
       setState(() {
@@ -411,30 +412,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       else
                         {
                           FirestoreHelper.uploadProfilePictureToStorage(_image)
-                              .then((imageURL) {
+                              .then((imageURL) async {
                             if (imageUrl.contains(".com")) {
                               FirestoreHelper.addNewUser(
                                       "",
+                                      emailController.text,
                                       int.parse(ageController.text),
                                       0,
                                       imageURL,
                                       [],
+                                      [],
                                       gendervalue,
                                       true,
                                       DateTime.now(),
+                                      name.text,
                                       Surname.text,
                                       [],
                                       "",
                                       [],
                                       "basic",
                                       usernameController.text)
-                                  .then((value) {
+                                  .then((value) async {
                                 if (value == true) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text(
                                             'Başarılı Şekilde Kayıt Olundu')),
                                   );
+                                  var _userEmail = await Authentication().login(
+                                      emailController.text,
+                                      passwordController.text);
+                                  await saveData(_userEmail.toString());
+                                  FocusManager.instance.primaryFocus!.unfocus();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SplashScreen()));
                                 } else {
                                   Authentication()
                                       .deleteAccount()

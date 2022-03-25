@@ -12,7 +12,7 @@ class FirestoreHelper {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static final DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  static Future deneme() async {
+  static Future denem1e() async {
     await Authentication().login("sarialsamet@gmail.com", "samet2828");
     Stream<DatabaseEvent> stream =
         ref.child("asfasf/messages/sendermessager").orderByValue().onValue;
@@ -71,13 +71,16 @@ class FirestoreHelper {
 
   static Future<bool> addNewUser(
     id,
+    email,
     age,
     chatCount,
     profilePictureUrl,
     followers,
+    followed,
     gender,
     isActive,
     lastActiveTime,
+    firstName,
     lastName,
     likes,
     userBio,
@@ -89,13 +92,16 @@ class FirestoreHelper {
     try {
       var result = await db.collection('users').add(User(
               id,
+              email,
               age,
               chatCount,
               profilePictureUrl,
               followers,
+              followed,
               gender,
               isActive,
               lastActiveTime,
+              firstName,
               lastName,
               likes,
               userBio,

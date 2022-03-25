@@ -41,6 +41,8 @@ dependencies:
   cached_network_image: ^3.1.0
   jiffy: ^4.1.0
   faker: ^2.0.0
+  font_awesome_flutter: ^10.0.0
+  stories_editor: ^0.1.8
   
 
 
@@ -86,7 +88,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: assets/fonts/RobotoMono.ttf
+          weight: 700
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
