@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
-import 'package:firebasedeneme/models/user.dart';
+import 'package:firebasedeneme/connections/firestore.dart';
+import 'package:firebasedeneme/providers/userProvider.dart';
 import 'package:firebasedeneme/screens/auth/login.dart';
 import 'package:firebasedeneme/screens/main/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,8 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    super.initState();
     _handleAuthenticatedState().then((value) {});
+    FirestoreHelper.getUserData().then((value) => print(value.email));
+
+    super.initState();
   }
 
   @override
@@ -43,6 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()));
+    return Scaffold(
+      body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()),
+    );
   }
 }

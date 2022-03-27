@@ -18,7 +18,11 @@ class MessagesScreen extends StatelessWidget {
         children: [
           BackButton(),
           CircleAvatar(
-            backgroundImage: AssetImage("assets/images/user_2.png"),
+            radius: 20,
+            backgroundImage: Image(
+                    image: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fimage_picker8854925666362766770.jpg'?alt=media&token=1440a674-0a91-4bb9-91e7-6c2137132eba"))
+                .image,
           ),
           SizedBox(width: kDefaultPadding * 0.75),
           Column(
@@ -37,7 +41,6 @@ class MessagesScreen extends StatelessWidget {
         ],
       ),
       actions: [
-        
         SizedBox(width: kDefaultPadding / 2),
       ],
     );

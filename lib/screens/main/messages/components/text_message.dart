@@ -13,9 +13,12 @@ class TextMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: MediaQuery.of(context).platformBrightness == Brightness.dark
-          ? Colors.white
-          : Colors.black,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: MediaQuery.of(context).platformBrightness == Brightness.dark
+            ? Colors.white
+            : PrimaryColor,
+      ),
       padding: EdgeInsets.symmetric(
         horizontal: kDefaultPadding * 0.75,
         vertical: kDefaultPadding / 2,

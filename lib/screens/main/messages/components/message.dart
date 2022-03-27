@@ -1,6 +1,7 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebasedeneme/models/ChatMessage.dart';
 import 'package:firebasedeneme/theme.dart';
+import 'package:firebasedeneme/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'audio_message.dart';
 import 'text_message.dart';
@@ -38,7 +39,8 @@ class Message extends StatelessWidget {
           if (!message.isSender) ...[
             CircleAvatar(
               radius: 12,
-              backgroundImage: AssetImage("assets/images/user_2.png"),
+              backgroundImage: CachedNetworkImageProvider(
+                  "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fimage_picker4575221974603790001.jpg'?alt=media&token=e20d0a63-e499-420e-9a24-e73667939197"),
             ),
             SizedBox(width: kDefaultPadding / 2),
           ],

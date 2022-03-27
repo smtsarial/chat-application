@@ -1,14 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
+import 'package:firebasedeneme/connections/firestore.dart';
 import 'package:firebasedeneme/helper.dart';
-import 'package:firebasedeneme/models/story_data.dart';
+import 'package:firebasedeneme/models/user.dart';
 import 'package:firebasedeneme/theme.dart';
 import 'package:firebasedeneme/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
-
+  const Profile({Key? key, required this.userData}) : super(key: key);
+  final User userData;
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -34,7 +36,7 @@ class _ProfileState extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Kristin Watson",
+                widget.userData.firstName + " " + widget.userData.lastName,
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -66,10 +68,8 @@ class _ProfileState extends State<Profile> {
                   children: [
                     CircleAvatar(
                       radius: 95,
-                      backgroundImage: Image.network(
-                        "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fimage_picker8854925666362766770.jpg'?alt=media&token=1440a674-0a91-4bb9-91e7-6c2137132eba",
-                        fit: BoxFit.cover,
-                      ).image,
+                      backgroundImage: CachedNetworkImageProvider(
+                          widget.userData.profilePictureUrl),
                     ),
                     Positioned(
                         bottom: 1,
@@ -94,9 +94,24 @@ class _ProfileState extends State<Profile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(onPressed: () {}, child: Text("Send Message")),
                 TextButton(
-                    onPressed: () {}, child: Text("Send Message Anonymously"))
+                    onPressed: () {
+                      FirestoreHelper.sendMessageNormally(
+                          widget.userData.email,
+                          widget.userData.username,
+                          widget.userData.profilePictureUrl,
+                          false);
+                    },
+                    child: Text("Send Message")),
+                TextButton(
+                    onPressed: () {
+                      FirestoreHelper.sendMessageNormally(
+                          widget.userData.email,
+                          widget.userData.username,
+                          widget.userData.profilePictureUrl,
+                          true);
+                    },
+                    child: Text("Send Message Anonymously"))
               ],
             ),
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -130,7 +145,7 @@ class _ProfileState extends State<Profile> {
                     "Messages",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text("2030")
+                  Text(widget.userData.chatCount.toString())
                 ],
               ),
             ),
@@ -147,87 +162,13 @@ class _ProfileState extends State<Profile> {
                     "Followers",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text("203")
+                  Text(widget.userData.followers.length.toString())
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Stories extends StatelessWidget {
-  const _Stories({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      child: SizedBox(
-        height: 110,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 6),
-              child: Text(
-                'Stories',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 15,
-                  color: AppColors.textFaded,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  final faker = Faker();
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 60,
-                      child: _StoryCard(
-                        storyData: StoryData(
-                          name: faker.person.name(),
-                          url: Helpers.randomPictureUrl(),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StoryCard extends StatelessWidget {
-  const _StoryCard({
-    Key? key,
-    required this.storyData,
-  }) : super(key: key);
-
-  final StoryData storyData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Avatar.medium(url: storyData.url),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-        )),
-      ],
     );
   }
 }

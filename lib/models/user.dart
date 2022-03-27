@@ -49,7 +49,7 @@ class User {
     userBio = obj['userBio'];
     likes = obj['likes'];
     lastName = obj['lastName'];
-    lastActiveTime = obj['lastActiveTime'];
+    lastActiveTime =obj['lastActiveTime'].toDate();
     isActive = obj['isActive'];
     gender = obj['gender'];
     followers = obj['followers'];
@@ -66,7 +66,6 @@ class User {
       map['email'] = this.email;
       map['firstName'] = this.firstName;
       map['followed'] = this.followed;
-
       map['username'] = this.username;
       map['userType'] = this.userType;
       map['userTags'] = this.userTags;

@@ -1,18 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/models/models.dart';
 import 'package:firebasedeneme/models/story.dart';
 import 'package:firebasedeneme/models/user.dart';
-
+import 'package:firebasedeneme/providers/messages.dart';
 import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/avatar.dart';
-import 'package:faker/faker.dart';
 import 'package:firebasedeneme/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:jiffy/jiffy.dart';
-
-import '../../helper.dart';
+import 'package:provider/provider.dart';
 import 'profilePages/profile_screen.dart';
 
 class ShufflePage extends StatefulWidget {
@@ -25,7 +21,6 @@ class ShufflePage extends StatefulWidget {
 class _ShufflePageState extends State<ShufflePage> {
   late RangeValues _currentRangeValues = RangeValues(18, 65);
   late int _value = 1;
-
   late List<Story> stories = [];
 
   @override
@@ -35,6 +30,7 @@ class _ShufflePageState extends State<ShufflePage> {
         stories = value;
       });
     });
+
     super.initState();
   }
 
@@ -70,6 +66,8 @@ class _ShufflePageState extends State<ShufflePage> {
           padding: EdgeInsets.fromLTRB(15, 8, 15, 8),
           child: InkWell(
             onTap: () {
+              //"Provider.of<MessageProvider>(context, listen: false)",
+              //    .checkUsername();
               settingModalBottomSheet(context);
             },
             child: Container(
@@ -139,7 +137,9 @@ class _ShufflePageState extends State<ShufflePage> {
     return GestureDetector(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Profile()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Profile(userData: userData)));
         },
         child: Stack(
           children: [
@@ -172,9 +172,9 @@ class _ShufflePageState extends State<ShufflePage> {
                             child: CircleAvatar(
                               radius: 30,
                               backgroundImage: Image(
-                                      image: NetworkImage(
-                                          userData.profilePictureUrl))
-                                  .image,
+                                image: CachedNetworkImageProvider(
+                                    userData.profilePictureUrl),
+                              ).image,
                             ),
                           ),
                           Positioned(

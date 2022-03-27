@@ -1,75 +1,96 @@
-import 'package:firebasedeneme/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebasedeneme/connections/firestore.dart';
+import 'package:firebasedeneme/models/message_data.dart';
+import 'package:firebasedeneme/providers/userProvider.dart';
 import 'package:firebasedeneme/screens/main/messages/chat_screen.dart';
-
 import 'package:firebasedeneme/theme.dart';
 import 'package:firebasedeneme/widgets/avatar.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
-
-import '../../helper.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class MessagesPage extends StatelessWidget {
   const MessagesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Container(
-            child: Center(
-                child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                  child: Text(
-                    "Conversations",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
+    return Column(
+      children: [
+        Container(
+          child: Center(
+              child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Text(
+                  "Conversations",
+                  style: TextStyle(
+                    fontSize: 16.0,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: TextField(
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        prefixIcon: Icon(Icons.search),
-                        hintText: "Search",
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: PrimaryColor, width: 12.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                      )),
-                ),
-                Divider(),
-              ],
-            )),
-          ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: TextField(
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                      prefixIcon: Icon(Icons.search),
+                      hintText: "Search",
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: PrimaryColor, width: 12.0),
+                          borderRadius: BorderRadius.circular(5.0)),
+                    )),
+              ),
+              Divider(),
+            ],
+          )),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(_delegate),
-        )
+        Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+          stream: FirestoreHelper.messages(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) return new CircularProgressIndicator();
+            return new ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                if (document['senderMail'] ==
+                    context.watch<UserProvider>().user.email.toString()) {
+                  return _MessageTitle(
+                      messageData: MessageRoom([],
+                          document["senderMail"],
+                          document["senderUsername"],
+                          document["senderProfilePictureUrl"],
+                          document["receiverMail"],
+                          document["receiverProfilePictureUrl"],
+                          document["receiverUsername"],
+                          document['lastMessageTime'].toDate(),
+                          document['lastMessage'],
+                          false));
+                } else if (document['receiverMail'] ==
+                    context.watch<UserProvider>().user.email.toString()) {
+                  return _MessageTitleReceiver(
+                      messageData: MessageRoom([],
+                          document["senderMail"],
+                          document["senderUsername"],
+                          document["senderProfilePictureUrl"],
+                          document["receiverMail"],
+                          document["receiverProfilePictureUrl"],
+                          document["receiverUsername"],
+                          document['lastMessageTime'].toDate(),
+                          document['lastMessage'],
+                          false));
+                } else {
+                  return Text("data");
+                }
+              }).toList(),
+            );
+          },
+        )),
       ],
-    );
-  }
-
-  Widget _delegate(BuildContext context, int index) {
-    final Faker faker = Faker();
-    final date = Helpers.randomDate();
-    return _MessageTitle(
-      messageData: MessageData(
-        senderName: faker.person.name(),
-        message: faker.lorem.sentence(),
-        messageDate: date,
-        dateMessage: Jiffy(date).fromNow(),
-        profilePicture: Helpers.randomPictureUrl(),
-      ),
     );
   }
 }
@@ -80,7 +101,7 @@ class _MessageTitle extends StatelessWidget {
     required this.messageData,
   }) : super(key: key);
 
-  final MessageData messageData;
+  final MessageRoom messageData;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +127,8 @@ class _MessageTitle extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Avatar.medium(url: messageData.profilePicture),
+                child:
+                    Avatar.medium(url: messageData.receiverProfilePictureUrl),
               ),
               Expanded(
                 child: Column(
@@ -116,7 +138,7 @@ class _MessageTitle extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        messageData.senderName,
+                        messageData.receiverUsername,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,
@@ -128,7 +150,7 @@ class _MessageTitle extends StatelessWidget {
                     SizedBox(
                       height: 20,
                       child: Text(
-                        messageData.message,
+                        messageData.lastMessage,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 12,
@@ -149,7 +171,9 @@ class _MessageTitle extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      messageData.dateMessage.toUpperCase(),
+                      DateFormat('yMd')
+                          .format(messageData.lastMessageTime)
+                          .toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,
@@ -188,86 +212,118 @@ class _MessageTitle extends StatelessWidget {
   }
 }
 
-class _Stories extends StatelessWidget {
-  const _Stories({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      child: SizedBox(
-        height: 134,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
-              child: Text(
-                'Stories',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 15,
-                  color: AppColors.textFaded,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  final faker = Faker();
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 60,
-                      child: _StoryCard(
-                        storyData: StoryData(
-                          name: faker.person.name(),
-                          url: Helpers.randomPictureUrl(),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StoryCard extends StatelessWidget {
-  const _StoryCard({
+class _MessageTitleReceiver extends StatelessWidget {
+  const _MessageTitleReceiver({
     Key? key,
-    required this.storyData,
+    required this.messageData,
   }) : super(key: key);
 
-  final StoryData storyData;
+  final MessageRoom messageData;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Avatar.medium(url: storyData.url),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              storyData.name,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 11,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.bold,
-              ),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MessagesScreen()));
+      },
+      child: Container(
+        height: 80,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 0.2,
             ),
           ),
         ),
-      ],
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Avatar.medium(url: messageData.senderProfilePictureUrl),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        messageData.senderUsername,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          letterSpacing: 0.2,
+                          wordSpacing: 1.5,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        messageData.lastMessage,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textFaded,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      DateFormat('yMd')
+                          .format(messageData.lastMessageTime)
+                          .toString(),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        letterSpacing: -0.2,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textFaded,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: AppColors.secondary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '1',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textLigth,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

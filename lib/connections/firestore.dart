@@ -22,6 +22,27 @@ class FirestoreHelper {
     });
   }
 
+  static Future<User> getUserData() async {
+    //this method for taking user data
+    List<User> details = [];
+    await Authentication().getUser().then((value) async {
+      var data = await db
+          .collection('users')
+          .where("email", isEqualTo: value.toString())
+          .get();
+      if (data != null) {
+        details = data.docs.map((document) => User.fromMap(document)).toList();
+      }
+      int i = 0;
+      details.forEach((detail) {
+        detail.id = data.docs[i].id;
+        i++;
+      });
+    });
+
+    return details[0];
+  }
+
   static Future<int> checkUsername(username) async {
     //this function checks usernames from users collection
     try {
@@ -67,6 +88,53 @@ class FirestoreHelper {
           faker.food.dish().toString(), date, Faker().image.image(), []));
     }
     return stories;
+  }
+
+  static Future<bool> sendMessageNormally(
+      receiverMail, receiverUsername, receiverProfilePictureUrl, anon) async {
+    try {
+      await FirestoreHelper.getUserData().then((value) async {
+        await db.collection('messages').add({
+          'anonim': anon,
+          "lastMessageTime": DateTime.now(),
+          "receiverMail": receiverMail,
+          "receiverProfilePictureUrl": receiverProfilePictureUrl,
+          "receiverUsername": receiverUsername,
+          "senderMail": value.email,
+          "senderProfilePictureUrl": value.profilePictureUrl,
+          "senderUsername": value.username,
+          "lastMessage": "",
+          "MessageRoomPeople": [receiverMail, value.email]
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future addNewMessageRoom() async {
+    await db.collection('messages').add({
+      'anonim': false,
+      "lastMessageTime": DateTime.now(),
+      "receiverMail": "sarialsamet@gmail.com",
+      "receiverProfilePictureUrl": "sarialsamet",
+      "receiverUsername": "sarialsamet",
+      "senderMail": "xxxxx@gmail.com",
+      "senderProfilePictureUrl": "xxxxx",
+      "senderUsername": "xxxxxx",
+      "lastMessage": "selam",
+      "MessageRoomPeople": ["sarialsamet@gmail.com", "xxxxx@gmail.com"]
+    });
+  }
+
+  static Stream<QuerySnapshot> messages() {
+    var data = FirebaseFirestore.instance
+        .collection('messages')
+        .where("anonim", isEqualTo: false)
+        .where("MessageRoomPeople", arrayContains: "sarialsamet@gmail.com")
+        .snapshots();
+    return data;
   }
 
   static Future<bool> addNewUser(

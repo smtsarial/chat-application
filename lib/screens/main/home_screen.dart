@@ -1,14 +1,14 @@
-import 'package:firebasedeneme/screens/auth/login.dart';
+import 'package:firebasedeneme/providers/messages.dart';
+import 'package:firebasedeneme/providers/userProvider.dart';
 import 'package:firebasedeneme/screens/main/anon_message_screen.dart';
-import 'package:firebasedeneme/screens/main/messages/chat_screen.dart';
 import 'package:firebasedeneme/screens/main/message_screen.dart';
 import 'package:firebasedeneme/screens/main/profile_screen.dart';
 import 'package:firebasedeneme/screens/main/shuffle_screen.dart';
 import 'package:firebasedeneme/screens/main/story_screen.dart';
 import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/glowing_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   static Route get route => MaterialPageRoute(
@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserProvider>(context);
     return SafeArea(
         child: Scaffold(
       body: ValueListenableBuilder(
