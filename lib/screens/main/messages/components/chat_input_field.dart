@@ -1,13 +1,13 @@
+import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class ChatInputField extends StatelessWidget {
-  const ChatInputField({
-    Key? key,
-  }) : super(key: key);
-
+  const ChatInputField({Key? key, required this.messageRoom}) : super(key: key);
+  final MessageRoom messageRoom;
   @override
   Widget build(BuildContext context) {
+    TextEditingController messageController = new TextEditingController();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: kDefaultPadding,
@@ -48,6 +48,7 @@ class ChatInputField extends StatelessWidget {
                     SizedBox(width: kDefaultPadding / 4),
                     Expanded(
                       child: TextField(
+                        controller: messageController,
                         decoration: InputDecoration(
                           hintText: "Type message",
                           border: InputBorder.none,
@@ -55,16 +56,19 @@ class ChatInputField extends StatelessWidget {
                       ),
                     ),
                     Icon(
-                      Icons.attach_file,
+                      Icons.camera_alt_outlined,
                       color: Theme.of(context)
                           .textTheme
                           .bodyText1!
                           .color!
                           .withOpacity(0.64),
                     ),
-                    SizedBox(width: kDefaultPadding / 4),
-                    Icon(
-                      Icons.camera_alt_outlined,
+                    SizedBox(width: kDefaultPadding / 3),
+                    IconButton(
+                      onPressed: () {
+                        print(messageController.text);
+                      },
+                      icon: Icon(Icons.send),
                       color: Theme.of(context)
                           .textTheme
                           .bodyText1!

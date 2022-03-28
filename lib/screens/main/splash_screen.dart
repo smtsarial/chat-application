@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             providers: [
                 ChangeNotifierProvider<MessageRoomProvider>(
                   create: ((context) => MessageRoomProvider(userData)),
-                )
+                ),
               ],
             child: Scaffold(
               body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()),

@@ -130,7 +130,9 @@ class _MessageTitle extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MessagesScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatScreen(messageRoom: messageData)));
       },
       child: Container(
         height: 80,
@@ -247,7 +249,9 @@ class _MessageTitleReceiver extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MessagesScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatScreen(messageRoom: messageData)));
       },
       child: Container(
         height: 80,

@@ -1,4 +1,6 @@
+import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/messages/chat_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
 import 'package:anonmy/connections/firestore.dart';
@@ -115,20 +117,60 @@ class _ProfileState extends State<Profile> {
                               widget.userData.email,
                               false)
                           .then((value) {
-                        value.id == "" ? print("anan") : print("object");
+                        value.id == ""
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScreen(
+                                        messageRoom: MessageRoom(
+                                            "",
+                                            [],
+                                            widget.senderData.email,
+                                            widget.senderData.username,
+                                            widget.senderData.profilePictureUrl,
+                                            widget.userData.email,
+                                            widget.userData.profilePictureUrl,
+                                            widget.userData.username,
+                                            DateTime.now(),
+                                            "",
+                                            false))))
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChatScreen(messageRoom: value)));
                       });
                     },
                     child: Text("Send Message")),
                 TextButton(
                     onPressed: () {
-                      print(widget.senderData.email);
-                      print("****" + widget.userData.email);
                       FirestoreHelper.checkAvaliableMessageRoom(
                               widget.senderData.email,
                               widget.userData.email,
                               true)
                           .then((value) {
-                        value.id == "" ? print("anan") : print("object");
+                        value.id == ""
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScreen(
+                                        messageRoom: MessageRoom(
+                                            "",
+                                            [],
+                                            widget.senderData.email,
+                                            widget.senderData.username,
+                                            widget.senderData.profilePictureUrl,
+                                            widget.userData.email,
+                                            widget.userData.profilePictureUrl,
+                                            widget.userData.username,
+                                            DateTime.now(),
+                                            "",
+                                            true))))
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChatScreen(messageRoom: value)));
                       });
                     },
                     child: Text("Send Message Anonymously"))

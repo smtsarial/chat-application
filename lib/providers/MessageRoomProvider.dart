@@ -13,9 +13,25 @@ class MessageRoomProvider with ChangeNotifier {
     return await Authentication().getUser();
   }
 
+  Future getChatMessages() async {
+    List<String> messageRoomIDS = [];
+    messages.listen((querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        messageRoomIDS.toList().add(element.id.toString());
+      });
+      if (querySnapshot.docChanges == true) {
+        print("change detected");
+        querySnapshot.docs.forEach((element) {
+          messageRoomIDS.toList().add(element.id.toString());
+        });
+      }
+    });
+  }
+
   MessageRoomProvider(User userData) {
     messages = FirestoreHelper.messages(userData.email);
     anonmessages = FirestoreHelper.ANONmessages(userData.email);
+    getChatMessages().then((value) => null);
     notifyListeners();
   }
 }
