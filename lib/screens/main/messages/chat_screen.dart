@@ -1,5 +1,5 @@
-import 'package:firebasedeneme/screens/main/messages/components/body.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/screens/main/messages/components/body.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class MessagesScreen extends StatelessWidget {

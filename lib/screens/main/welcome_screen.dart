@@ -1,5 +1,5 @@
-import 'package:firebasedeneme/screens/main/splash_screen.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

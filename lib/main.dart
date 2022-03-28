@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebasedeneme/providers/messages.dart';
-import 'package:firebasedeneme/providers/userProvider.dart';
-import 'package:firebasedeneme/screens/main/home_screen.dart';
-import 'package:firebasedeneme/screens/main/splash_screen.dart';
+import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
+import 'package:anonmy/providers/messages.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/home_screen.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/theme.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<UserProvider>(
             create: ((context) => UserProvider()),
-          )
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

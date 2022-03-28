@@ -1,10 +1,11 @@
+import 'package:anonmy/models/message_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebasedeneme/connections/auth.dart';
-import 'package:firebasedeneme/helper.dart';
-import 'package:firebasedeneme/models/story.dart';
-import 'package:firebasedeneme/models/user.dart';
+import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/helper.dart';
+import 'package:anonmy/models/story.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
 
@@ -113,7 +114,9 @@ class FirestoreHelper {
     }
   }
 
-  static Future addNewMessageRoom() async {
+  static Future addNewMessageRoom(
+      bool anonOrNot, User sender, User receiver) async {
+    //send message to specific user
     await db.collection('messages').add({
       'anonim': false,
       "lastMessageTime": DateTime.now(),
@@ -128,11 +131,56 @@ class FirestoreHelper {
     });
   }
 
-  static Stream<QuerySnapshot> messages() {
+  static Future<MessageRoom> checkAvaliableMessageRoom(
+      String receiverMail, String senderMail, bool anon) async {
+    //THIS FUNCTION CHECKS IF THERE IS A CURRENT MESSAGEROOM
+    MessageRoom message =
+        MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true);
+    await db
+        .collection('messages')
+        .where("MessageRoomPeople", arrayContains: senderMail)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        if (element.get('anonim') == anon) {
+          if (element.get('senderMail') == receiverMail ||
+              element.get('receiverMail') == receiverMail) {
+            //print("LLLLL" + element.id);
+            message = MessageRoom(
+                element.id,
+                element.get('MessageRoomPeople'),
+                element.get('senderMail'),
+                element.get('senderUsername'),
+                element.get('senderProfilePictureUrl'),
+                element.get('receiverMail'),
+                element.get('receiverProfilePictureUrl'),
+                element.get('receiverUsername'),
+                element.get('lastMessageTime').toDate(),
+                element.get('lastMessage'),
+                element.get('anonim'));
+          }
+        }
+      });
+    });
+    return message;
+  }
+
+  static Stream<QuerySnapshot> messages(userMail) {
+    // Normal message stream
     var data = FirebaseFirestore.instance
         .collection('messages')
         .where("anonim", isEqualTo: false)
-        .where("MessageRoomPeople", arrayContains: "sarialsamet@gmail.com")
+        .where("MessageRoomPeople", arrayContains: userMail)
+        .snapshots();
+    return data;
+  }
+
+  static Stream<QuerySnapshot> ANONmessages(userMail) {
+    // anon message stream
+    var data = FirebaseFirestore.instance
+        .collection('messages')
+        .where("anonim", isEqualTo: true)
+        .where("MessageRoomPeople", arrayContains: userMail)
         .snapshots();
     return data;
   }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/models/message_data.dart';
-import 'package:firebasedeneme/models/user.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:flutter/material.dart';
 
 class MessageProvider with ChangeNotifier {

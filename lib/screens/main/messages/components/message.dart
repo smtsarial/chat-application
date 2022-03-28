@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebasedeneme/models/ChatMessage.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/avatar.dart';
+import 'package:anonmy/models/ChatMessage.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'audio_message.dart';
 import 'text_message.dart';

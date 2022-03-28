@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:firebasedeneme/connections/auth.dart';
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/screens/main/splash_screen.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,11 +1,13 @@
-import 'package:firebasedeneme/providers/messages.dart';
-import 'package:firebasedeneme/providers/userProvider.dart';
-import 'package:firebasedeneme/screens/main/anon_message_screen.dart';
-import 'package:firebasedeneme/screens/main/message_screen.dart';
-import 'package:firebasedeneme/screens/main/profile_screen.dart';
-import 'package:firebasedeneme/screens/main/shuffle_screen.dart';
-import 'package:firebasedeneme/screens/main/story_screen.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
+import 'package:anonmy/providers/messages.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/anon_message_screen.dart';
+import 'package:anonmy/screens/main/message_screen.dart';
+import 'package:anonmy/screens/main/profile_screen.dart';
+import 'package:anonmy/screens/main/shuffle_screen.dart';
+import 'package:anonmy/screens/main/story_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +36,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<UserProvider>(context);
+    Provider.of<MessageRoomProvider>(context);
     return SafeArea(
         child: Scaffold(
       body: ValueListenableBuilder(
@@ -42,6 +45,9 @@ class HomeScreen extends StatelessWidget {
           return pages[value];
         },
       ),
+      //floatingActionButton: FloatingActionButton(onPressed: () {
+      //  FirestoreHelper.addNewMessageRoom();
+      //}),
       bottomNavigationBar: _BottomNavigationBar(
         onItemSelected: _onNavigationItemSelected,
       ),

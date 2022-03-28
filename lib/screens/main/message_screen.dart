@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/models/message_data.dart';
-import 'package:firebasedeneme/providers/userProvider.dart';
-import 'package:firebasedeneme/screens/main/messages/chat_screen.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/avatar.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/messages/chat_screen.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class MessagesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MessageRoomProvider messageStream = context.watch<MessageRoomProvider>();
     return Column(
       children: [
         Container(
@@ -51,45 +53,65 @@ class MessagesPage extends StatelessWidget {
         ),
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
-          stream: FirestoreHelper.messages(),
+          stream: messageStream.messages,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return new CircularProgressIndicator();
-            return new ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                if (document['senderMail'] ==
-                    context.watch<UserProvider>().user.email.toString()) {
-                  return _MessageTitle(
-                      messageData: MessageRoom([],
-                          document["senderMail"],
-                          document["senderUsername"],
-                          document["senderProfilePictureUrl"],
-                          document["receiverMail"],
-                          document["receiverProfilePictureUrl"],
-                          document["receiverUsername"],
-                          document['lastMessageTime'].toDate(),
-                          document['lastMessage'],
-                          false));
-                } else if (document['receiverMail'] ==
-                    context.watch<UserProvider>().user.email.toString()) {
-                  return _MessageTitleReceiver(
-                      messageData: MessageRoom([],
-                          document["senderMail"],
-                          document["senderUsername"],
-                          document["senderProfilePictureUrl"],
-                          document["receiverMail"],
-                          document["receiverProfilePictureUrl"],
-                          document["receiverUsername"],
-                          document['lastMessageTime'].toDate(),
-                          document['lastMessage'],
-                          false));
-                } else {
-                  return Text("data");
-                }
-              }).toList(),
-            );
+            if (!snapshot.hasData)
+              return Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.grey,
+                  color: Colors.blueGrey,
+                  strokeWidth: 2,
+                ),
+              );
+            return snapshot.requireData.size != 0
+                ? new ListView(
+                    children:
+                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                      if (document['senderMail'] ==
+                          context.watch<UserProvider>().user.email.toString()) {
+                        return _MessageTitle(
+                            messageData: MessageRoom(
+                                document.id,
+                                [],
+                                document["senderMail"],
+                                document["senderUsername"],
+                                document["senderProfilePictureUrl"],
+                                document["receiverMail"],
+                                document["receiverProfilePictureUrl"],
+                                document["receiverUsername"],
+                                document['lastMessageTime'].toDate(),
+                                document['lastMessage'],
+                                false));
+                      } else if (document['receiverMail'] ==
+                          context.watch<UserProvider>().user.email.toString()) {
+                        return _MessageTitleReceiver(
+                            messageData: MessageRoom(
+                                document.id,
+                                [],
+                                document["senderMail"],
+                                document["senderUsername"],
+                                document["senderProfilePictureUrl"],
+                                document["receiverMail"],
+                                document["receiverProfilePictureUrl"],
+                                document["receiverUsername"],
+                                document['lastMessageTime'].toDate(),
+                                document['lastMessage'],
+                                false));
+                      } else {
+                        return Text(
+                            "There is no Anon message please check shuffle page");
+                      }
+                    }).toList(),
+                  )
+                : (Center(
+                    child: Text(
+                      "There is no message please check shuffle page to send message.",
+                      textAlign: TextAlign.center,
+                    ),
+                  ));
           },
-        )),
+        ))
       ],
     );
   }

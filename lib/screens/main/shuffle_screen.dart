@@ -1,11 +1,12 @@
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/models/story.dart';
-import 'package:firebasedeneme/models/user.dart';
-import 'package:firebasedeneme/providers/messages.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/filter_widgets.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/story.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/messages.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -139,7 +140,9 @@ class _ShufflePageState extends State<ShufflePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Profile(userData: userData)));
+                  builder: (context) => Profile(
+                      senderData: context.watch<UserProvider>().user,
+                      userData: userData)));
         },
         child: Stack(
           children: [

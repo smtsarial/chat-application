@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
-import 'package:firebasedeneme/connections/auth.dart';
-import 'package:firebasedeneme/models/user.dart';
-import 'package:firebasedeneme/providers/userProvider.dart';
-import 'package:firebasedeneme/screens/main/splash_screen.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/avatar.dart';
+import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

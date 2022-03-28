@@ -1,8 +1,8 @@
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/models/story.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/story.dart';
 import 'package:faker/faker.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/filter_widgets.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../helper.dart';

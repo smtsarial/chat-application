@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/providers/userProvider.dart';
-import 'package:firebasedeneme/screens/auth/login.dart';
-import 'package:firebasedeneme/screens/main/home_screen.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/auth/login.dart';
+import 'package:anonmy/screens/main/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,11 +23,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late final StreamSubscription<firebase.User?> listener;
   late String userUID = "";
-
+  User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
+      "", [], "", [], "", "", "", "");
   Future<void> _handleAuthenticatedState() async {
     var sharedPreferences = await SharedPreferences.getInstance();
     var _usermail = sharedPreferences.getString("userUID");
-    print(_usermail);
+
+    print("asfasf" + _usermail.toString());
     setState(() {
       userUID = _usermail.toString();
     });
@@ -33,9 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _handleAuthenticatedState().then((value) {});
-    FirestoreHelper.getUserData().then((value) => print(value.email));
+    FirestoreHelper.getUserData().then((value) {
+      setState(
+        () {
+          userData = value;
+        },
+      );
+    });
 
+    _handleAuthenticatedState().then((value) {});
     super.initState();
   }
 
@@ -47,8 +57,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()),
-    );
+    return userData.id != ""
+        ? (MultiProvider(
+            providers: [
+                ChangeNotifierProvider<MessageRoomProvider>(
+                  create: ((context) => MessageRoomProvider(userData)),
+                )
+              ],
+            child: Scaffold(
+              body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()),
+            )))
+        : Scaffold(
+            body: Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+              color: Colors.blueGrey,
+              strokeWidth: 2,
+            ),
+          ));
   }
 }

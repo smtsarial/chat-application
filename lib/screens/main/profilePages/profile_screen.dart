@@ -1,16 +1,19 @@
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
-import 'package:firebasedeneme/connections/firestore.dart';
-import 'package:firebasedeneme/helper.dart';
-import 'package:firebasedeneme/models/user.dart';
-import 'package:firebasedeneme/theme.dart';
-import 'package:firebasedeneme/widgets/avatar.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/helper.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.userData}) : super(key: key);
+  const Profile({Key? key, required this.senderData, required this.userData})
+      : super(key: key);
   final User userData;
+  final User senderData;
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -20,7 +23,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: body(),
+      body: body(context),
     );
   }
 
@@ -53,7 +56,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget body() {
+  Widget body(context) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -61,9 +64,20 @@ class _ProfileState extends State<Profile> {
             height: 22,
           ),
           Center(
-            child: CircleAvatar(
-                backgroundColor: PureColor,
-                radius: 100,
+            child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.blue,
+                      Colors.red,
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                  color: PrimaryColor,
+                ),
                 child: Stack(
                   children: [
                     CircleAvatar(
@@ -73,14 +87,14 @@ class _ProfileState extends State<Profile> {
                     ),
                     Positioned(
                         bottom: 1,
-                        right: 1,
+                        right: 20,
                         child: Container(
-                          child: IconButton(
-                            icon: Icon(Icons.photo_album_sharp),
-                            onPressed: () {},
-                          ),
+                          height: 30,
+                          width: 30,
                           decoration: BoxDecoration(
-                              color: Colors.red,
+                              color: widget.userData.isActive
+                                  ? Colors.green
+                                  : Colors.red,
                               borderRadius: BorderRadius.circular(30)),
                         )),
                   ],
@@ -96,20 +110,26 @@ class _ProfileState extends State<Profile> {
               children: [
                 TextButton(
                     onPressed: () {
-                      FirestoreHelper.sendMessageNormally(
-                          widget.userData.email,
-                          widget.userData.username,
-                          widget.userData.profilePictureUrl,
-                          false);
+                      FirestoreHelper.checkAvaliableMessageRoom(
+                              widget.senderData.email,
+                              widget.userData.email,
+                              false)
+                          .then((value) {
+                        value.id == "" ? print("anan") : print("object");
+                      });
                     },
                     child: Text("Send Message")),
                 TextButton(
                     onPressed: () {
-                      FirestoreHelper.sendMessageNormally(
-                          widget.userData.email,
-                          widget.userData.username,
-                          widget.userData.profilePictureUrl,
-                          true);
+                      print(widget.senderData.email);
+                      print("****" + widget.userData.email);
+                      FirestoreHelper.checkAvaliableMessageRoom(
+                              widget.senderData.email,
+                              widget.userData.email,
+                              true)
+                          .then((value) {
+                        value.id == "" ? print("anan") : print("object");
+                      });
                     },
                     child: Text("Send Message Anonymously"))
               ],
@@ -120,7 +140,10 @@ class _ProfileState extends State<Profile> {
           userSpecificInformationLayer(),
           Divider(),
           Container(
-            child: Text("samet"),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: Text(widget.userData.userBio),
+            ),
           )
         ],
       ),
@@ -131,6 +154,7 @@ class _ProfileState extends State<Profile> {
     return Center(
       child: Container(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               padding: EdgeInsets.all(12),

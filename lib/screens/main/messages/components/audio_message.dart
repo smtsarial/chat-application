@@ -1,7 +1,6 @@
-import 'package:firebasedeneme/models/ChatMessage.dart';
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/models/ChatMessage.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
-
 
 class AudioMessage extends StatelessWidget {
   final ChatMessage? message;

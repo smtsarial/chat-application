@@ -1,4 +1,4 @@
-import 'package:firebasedeneme/theme.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class asd extends StatelessWidget {

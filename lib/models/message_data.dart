@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
 class MessageRoom {
+  late String id;
   late String senderMail;
   late String senderUsername;
   late String senderProfilePictureUrl;
@@ -13,6 +14,7 @@ class MessageRoom {
   late bool anonim;
 
   MessageRoom(
+      this.id,
       this.MessageRoomPeople,
       this.senderMail,
       this.senderUsername,
