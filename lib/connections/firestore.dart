@@ -44,6 +44,17 @@ class FirestoreHelper {
     return details[0];
   }
 
+  static Future<bool> removeFollowedUser(userId, removedData) async {
+    try {
+      db.collection('users').doc(userId).update({
+        'followed': FieldValue.arrayRemove([removedData])
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<int> checkUsername(username) async {
     //this function checks usernames from users collection
     try {
@@ -60,6 +71,7 @@ class FirestoreHelper {
   }
 
   static Future uploadProfilePictureToStorage(path) async {
+    //upload profile picture
     try {
       String? pictureUrl;
       firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
@@ -114,21 +126,55 @@ class FirestoreHelper {
     }
   }
 
-  static Future addNewMessageRoom(
+  static Future<MessageRoom> getSpecificChatRoomInfo(id) async {
+    MessageRoom message =
+        MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true);
+    try {
+      await db.collection('messages').doc(id).get().then((data) {
+        message = MessageRoom(
+            id,
+            data['MessageRoomPeople'],
+            data['senderMail'],
+            data['senderUsername'],
+            data['senderProfilePictureUrl'],
+            data['receiverMail'],
+            data['receiverProfilePictureUrl'],
+            data['receiverUsername'],
+            data['lastMessageTime'].toDate(),
+            data['lastMessage'],
+            data['anonim']);
+      });
+      return message;
+    } catch (e) {
+      return message;
+    }
+  }
+
+  static Future<String> addNewMessageRoom(
       bool anonOrNot, User sender, User receiver) async {
     //send message to specific user
-    await db.collection('messages').add({
-      'anonim': false,
-      "lastMessageTime": DateTime.now(),
-      "receiverMail": "sarialsamet@gmail.com",
-      "receiverProfilePictureUrl": "sarialsamet",
-      "receiverUsername": "sarialsamet",
-      "senderMail": "xxxxx@gmail.com",
-      "senderProfilePictureUrl": "xxxxx",
-      "senderUsername": "xxxxxx",
-      "lastMessage": "selam",
-      "MessageRoomPeople": ["sarialsamet@gmail.com", "xxxxx@gmail.com"]
-    });
+    String id = "";
+    try {
+      await db.collection('messages').add({
+        'anonim': anonOrNot,
+        "lastMessageTime": DateTime.now(),
+        "receiverMail": receiver.email,
+        "receiverProfilePictureUrl": receiver.profilePictureUrl,
+        "receiverUsername": receiver.username,
+        "senderMail": sender.email,
+        "senderProfilePictureUrl": sender.profilePictureUrl,
+        "senderUsername": sender.username,
+        "lastMessage": "selam",
+        "MessageRoomPeople": [sender.email, receiver.email]
+      }).then((value) {
+        id = value.id;
+        return id;
+      });
+      return id;
+    } catch (e) {
+      print(e);
+      return id;
+    }
   }
 
   static Future<MessageRoom> checkAvaliableMessageRoom(

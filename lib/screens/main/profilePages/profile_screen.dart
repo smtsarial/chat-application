@@ -118,22 +118,23 @@ class _ProfileState extends State<Profile> {
                               false)
                           .then((value) {
                         value.id == ""
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                        messageRoom: MessageRoom(
-                                            "",
-                                            [],
-                                            widget.senderData.email,
-                                            widget.senderData.username,
-                                            widget.senderData.profilePictureUrl,
-                                            widget.userData.email,
-                                            widget.userData.profilePictureUrl,
-                                            widget.userData.username,
-                                            DateTime.now(),
-                                            "",
-                                            false))))
+                            ? FirestoreHelper.addNewMessageRoom(
+                                    false, widget.senderData, widget.userData)
+                                .then((value) {
+                                if (value != "") {
+                                  FirestoreHelper.getSpecificChatRoomInfo(value)
+                                      .then((value) {
+                                    if (value.id != "") {
+                                      print(value.MessageRoomPeople);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ChatScreen(
+                                                  messageRoom: value)));
+                                    }
+                                  });
+                                }
+                              })
                             : Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -150,22 +151,23 @@ class _ProfileState extends State<Profile> {
                               true)
                           .then((value) {
                         value.id == ""
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                        messageRoom: MessageRoom(
-                                            "",
-                                            [],
-                                            widget.senderData.email,
-                                            widget.senderData.username,
-                                            widget.senderData.profilePictureUrl,
-                                            widget.userData.email,
-                                            widget.userData.profilePictureUrl,
-                                            widget.userData.username,
-                                            DateTime.now(),
-                                            "",
-                                            true))))
+                            ? FirestoreHelper.addNewMessageRoom(
+                                    true, widget.senderData, widget.userData)
+                                .then((value) {
+                                if (value != "") {
+                                  FirestoreHelper.getSpecificChatRoomInfo(value)
+                                      .then((value) {
+                                    if (value.id != "") {
+                                      print(value.MessageRoomPeople);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ChatScreen(
+                                                  messageRoom: value)));
+                                    }
+                                  });
+                                }
+                              })
                             : Navigator.push(
                                 context,
                                 MaterialPageRoute(

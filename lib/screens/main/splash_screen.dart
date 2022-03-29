@@ -22,18 +22,9 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late final StreamSubscription<firebase.User?> listener;
-  late String userUID = "";
+
   User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
       "", [], "", [], "", "", "", "");
-  Future<void> _handleAuthenticatedState() async {
-    var sharedPreferences = await SharedPreferences.getInstance();
-    var _usermail = sharedPreferences.getString("userUID");
-
-    print("asfasf" + _usermail.toString());
-    setState(() {
-      userUID = _usermail.toString();
-    });
-  }
 
   @override
   void initState() {
@@ -45,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     });
 
-    _handleAuthenticatedState().then((value) {});
     super.initState();
   }
 
@@ -57,23 +47,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return userData.id != ""
-        ? (MultiProvider(
+    return userData.id == ""
+        ? Scaffold(body: Center(child: CircularProgressIndicator()))
+        : (MultiProvider(
             providers: [
                 ChangeNotifierProvider<MessageRoomProvider>(
                   create: ((context) => MessageRoomProvider(userData)),
-                ),
+                )
               ],
             child: Scaffold(
-              body: userUID.length != 0 ? (HomeScreen()) : (LoginPage()),
-            )))
-        : Scaffold(
-            body: Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.grey,
-              color: Colors.blueGrey,
-              strokeWidth: 2,
-            ),
-          ));
+              body: HomeScreen(),
+            )));
   }
 }

@@ -12,4 +12,8 @@ class UserProvider with ChangeNotifier {
     FirestoreHelper.getUserData().then((value) => user = value);
     notifyListeners();
   }
+  void updateUserData() {
+    FirestoreHelper.getUserData().then((value) => user = value);
+    notifyListeners();
+  }
 }

@@ -73,7 +73,7 @@ class AnonMessagesPage extends StatelessWidget {
                         return _MessageTitle(
                             messageData: MessageRoom(
                                 document.id,
-                                [],
+                                document['MessageRoomPeople'],
                                 document["senderMail"],
                                 document["senderUsername"],
                                 document["senderProfilePictureUrl"],
@@ -88,7 +88,7 @@ class AnonMessagesPage extends StatelessWidget {
                         return _MessageTitleReceiver(
                             messageData: MessageRoom(
                                 document.id,
-                                [],
+                                document['MessageRoomPeople'],
                                 document["senderMail"],
                                 document["senderUsername"],
                                 document["senderProfilePictureUrl"],
@@ -280,7 +280,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        messageData.senderUsername,
+                        "Anon-" + messageData.id,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,

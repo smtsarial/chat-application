@@ -1,6 +1,5 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
-import 'package:anonmy/providers/messages.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/anon_message_screen.dart';
 import 'package:anonmy/screens/main/message_screen.dart';

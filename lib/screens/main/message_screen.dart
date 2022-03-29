@@ -73,7 +73,7 @@ class MessagesPage extends StatelessWidget {
                         return _MessageTitle(
                             messageData: MessageRoom(
                                 document.id,
-                                [],
+                                document['MessageRoomPeople'],
                                 document["senderMail"],
                                 document["senderUsername"],
                                 document["senderProfilePictureUrl"],
@@ -88,7 +88,7 @@ class MessagesPage extends StatelessWidget {
                         return _MessageTitleReceiver(
                             messageData: MessageRoom(
                                 document.id,
-                                [],
+                                document['MessageRoomPeople'],
                                 document["senderMail"],
                                 document["senderUsername"],
                                 document["senderProfilePictureUrl"],

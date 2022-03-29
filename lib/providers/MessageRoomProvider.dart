@@ -31,7 +31,7 @@ class MessageRoomProvider with ChangeNotifier {
   MessageRoomProvider(User userData) {
     messages = FirestoreHelper.messages(userData.email);
     anonmessages = FirestoreHelper.ANONmessages(userData.email);
-    getChatMessages().then((value) => null);
+    //getChatMessages().then((value) => null);
     notifyListeners();
   }
 }

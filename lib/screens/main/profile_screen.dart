@@ -1,12 +1,11 @@
+import 'package:anonmy/screens/main/followedList.dart';
+import 'package:anonmy/screens/main/followersList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
-import 'package:anonmy/widgets/avatar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -39,10 +38,15 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FollowersList()));
+                              },
                               icon: FaIcon(FontAwesomeIcons.users)),
                           Text("Followers"),
-                          Text(user.followed.length.toString())
+                          Text(user.followers.length.toString())
                         ],
                       )),
                       Container(
@@ -69,7 +73,12 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FollowedList()));
+                              },
                               icon: FaIcon(FontAwesomeIcons.users)),
                           Text("Followed"),
                           Text(user.followed.length.toString())

@@ -1,13 +1,11 @@
+import 'package:anonmy/screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:anonmy/connections/auth.dart';
-import 'package:anonmy/providers/MessageRoomProvider.dart';
-import 'package:anonmy/providers/messages.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/home_screen.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:anonmy/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +13,43 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late String userUID = "";
+  Future<void> _handleAuthenticatedState() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    var _usermail = sharedPreferences.getString("userUID");
+
+    setState(() {
+      userUID = _usermail.toString();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+    _handleAuthenticatedState().then((value) {});
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    final isBackground = state == AppLifecycleState.paused;
+    print("*****" + isBackground.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +60,10 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          darkTheme: AppTheme.dark(),
-          themeMode: ThemeMode.dark,
-          title: 'anonmy',
-          home: SplashScreen(),
-        ));
+            debugShowCheckedModeBanner: false,
+            darkTheme: AppTheme.dark(),
+            themeMode: ThemeMode.dark,
+            title: 'anonmy',
+            home: userUID == "" ? LoginPage() : SplashScreen()));
   }
 }
