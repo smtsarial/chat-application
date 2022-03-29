@@ -44,10 +44,35 @@ class FirestoreHelper {
     return details[0];
   }
 
+  static Future<bool> unfollowUser(User user, User removedUser) async {
+    //UNFOLLOW USER
+    try {
+      db.collection('users').doc(user.id).update({
+        'followers': FieldValue.arrayRemove([removedUser.username])
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<bool> removeFollowedUser(userId, removedData) async {
+    //REMOVES FROM FOLLOWED LIST
     try {
       db.collection('users').doc(userId).update({
         'followed': FieldValue.arrayRemove([removedData])
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> addFollowersToUser(User follower, User user) async {
+    //follow user
+    try {
+      db.collection('users').doc(user.id).update({
+        'followers': FieldValue.arrayUnion([follower.username])
       });
       return true;
     } catch (e) {

@@ -21,6 +21,16 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool follower = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      follower = widget.userData.followers.contains(widget.senderData.username);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +61,56 @@ class _ProfileState extends State<Profile> {
       actions: [
         SizedBox(width: kDefaultPadding / 2),
         Center(
-          child: Text("Follow"),
-        ),
+            child: widget.userData.followers
+                    .contains(widget.senderData.username)
+                ? GestureDetector(
+                    child: Text("Unfollow"),
+                    onTap: () {
+                      FirestoreHelper.unfollowUser(
+                              widget.userData, widget.senderData)
+                          .then((value) {
+                        if (value == true) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('You unfollowed ' +
+                                    widget.userData.firstName.toString() +
+                                    " " +
+                                    widget.userData.lastName)),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Error occured please try again!')),
+                          );
+                        }
+                      });
+                    },
+                  )
+                : GestureDetector(
+                    child: Text("Follow"),
+                    onTap: () {
+                      FirestoreHelper.addFollowersToUser(
+                              widget.senderData, widget.userData)
+                          .then((value) {
+                        if (value == true) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('You followed ' +
+                                    widget.userData.firstName.toString() +
+                                    " " +
+                                    widget.userData.lastName)),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Error occured please try again!')),
+                          );
+                        }
+                      });
+                    },
+                  )),
         SizedBox(width: kDefaultPadding / 2),
       ],
     );
