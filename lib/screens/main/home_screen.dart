@@ -1,8 +1,6 @@
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/anon_message_screen.dart';
-import 'package:anonmy/screens/main/message_screen.dart';
+import 'package:anonmy/screens/main/chat/chatScreenTab.dart';
 import 'package:anonmy/screens/main/profile_screen.dart';
 import 'package:anonmy/screens/main/shuffle_screen.dart';
 import 'package:anonmy/screens/main/story_screen.dart';
@@ -22,8 +20,7 @@ class HomeScreen extends StatelessWidget {
 
   final pages = [
     StoryPage(),
-    MessagesPage(),
-    AnonMessagesPage(),
+    TabBarChat(),
     ShufflePage(),
     ProfileScreen(),
   ];
@@ -108,22 +105,15 @@ class __BottomNavigationBarState extends State<_BottomNavigationBar> {
               _NavigationBarItem(
                 index: 2,
                 label: '',
-                icon: CupertinoIcons.captions_bubble_fill,
+                icon: CupertinoIcons.shuffle,
                 isSelected: (selectedIndex == 2),
                 onTap: handleItemSelected,
               ),
               _NavigationBarItem(
                 index: 3,
                 label: '',
-                icon: CupertinoIcons.shuffle,
-                isSelected: (selectedIndex == 3),
-                onTap: handleItemSelected,
-              ),
-              _NavigationBarItem(
-                index: 4,
-                label: '',
                 icon: CupertinoIcons.person,
-                isSelected: (selectedIndex == 4),
+                isSelected: (selectedIndex == 3),
                 onTap: handleItemSelected,
               ),
             ],

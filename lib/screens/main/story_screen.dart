@@ -1,11 +1,11 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
+import 'package:anonmy/screens/main/story/stories_editor.dart';
 import 'package:faker/faker.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
-
-import '../../helper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage({Key? key}) : super(key: key);
@@ -41,7 +41,9 @@ class _StoryPageState extends State<StoryPage> {
                 Text("       "),
                 Text("Stories"),
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    takeStory();
+                  },
                   child: Icon(Icons.add_a_photo),
                 )
               ],
@@ -382,5 +384,15 @@ class _StoryPageState extends State<StoryPage> {
             );
           });
         });
+  }
+
+  Future takeStory() async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => StoriesEditor(
+              giphyKey: '[HERE YOUR API KEY]',
+              onDone: (uri) {
+                debugPrint(uri);
+              },
+            )));
   }
 }

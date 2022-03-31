@@ -42,8 +42,26 @@ dependencies:
   jiffy: ^4.1.0
   faker: ^2.0.0
   font_awesome_flutter: ^10.0.0
-  stories_editor: ^0.1.8
   cached_network_image: ^3.2.0
+  image: ^3.1.0
+  path_provider: ^2.0.8
+  photo_view: ^0.13.0
+  image_gallery_saver: ^1.7.1
+  # position
+  align_positioned: ^3.0.0
+  # own packages
+  gallery_media_picker: ^0.0.7
+  modal_gif_picker: ^0.0.1
+  # painting
+  perfect_freehand: ^1.0.4
+  # animations
+  animated_text_kit: ^4.2.1
+  # rendering
+  ffmpeg_kit_flutter_min_gpl: ^4.5.1
+  # permission
+  permission_handler: ^8.1.4+2
+  # toast
+  fluttertoast: ^8.0.9
   
 
 
@@ -67,43 +85,105 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
+  
   assets:
-    - anonuser.png
-  #   - images/a_dot_ham.jpeg
+    - assets/icons/align_center.png
+    - assets/icons/align_left.png
+    - assets/icons/align_rigth.png
+    - assets/icons/arrow.png
+    - assets/icons/brush.png
+    - assets/icons/check.png
+    - assets/icons/circular_gradient.png
+    - assets/icons/colorpalette.png
+    - assets/icons/download.png
+    - assets/icons/draft.png
+    - assets/icons/draw.png
+    - assets/icons/font_backGround.png
+    - assets/icons/marker.png
+    - assets/icons/neon.png
+    - assets/icons/pen.png
+    - assets/icons/pickColor.png
+    - assets/icons/return.png
+    - assets/icons/stickers.png
+    - assets/icons/text.png
+    - assets/icons/trash.png
+    - assets/icons/photo_filter.png
+    - assets/icons/video_trim.png
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
   fonts:
-    - family: RobotoMono
+    - family: Alegreya
       fonts:
-        - asset: assets/fonts/RobotoMono.ttf
-          weight: 700
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+        - asset: assets/fonts/Alegreya-VariableFont_wght.ttf
+
+    - family: B612
+      fonts:
+        - asset: assets/fonts/B612-Regular.ttf
+
+    - family: TitilliumWeb
+      fonts:
+        - asset: assets/fonts/TitilliumWeb-Regular.ttf
+
+    - family: Varela
+      fonts:
+        - asset: assets/fonts/Varela-Regular.ttf
+
+    - family: Vollkorn
+      fonts:
+        - asset: assets/fonts/Vollkorn-Regular.ttf
+
+    - family: Rakkas
+      fonts:
+        - asset: assets/fonts/Rakkas-Regular.ttf
+
+    - family: ConcertOne
+      fonts:
+        - asset: assets/fonts/ConcertOne-Regular.ttf
+
+    - family: YatraOne
+      fonts:
+        - asset: assets/fonts/YatraOne-Regular.ttf
+
+    - family: OldStandardTT
+      fonts:
+        - asset: assets/fonts/OldStandardTT-Italic.ttf
+
+    - family: Neonderthaw
+      fonts:
+        - asset: assets/fonts/Neonderthaw-Regular.ttf
+
+    - family: DancingScript
+      fonts:
+        - asset: assets/fonts/DancingScript-VariableFont_wght.ttf
+
+    - family: SedgwickAve
+      fonts:
+        - asset: assets/fonts/SedgwickAve-Regular.ttf
+
+    - family: IndieFlower
+      fonts:
+        - asset: assets/fonts/IndieFlower-Regular.ttf
+
+    - family: Sacramento
+      fonts:
+        - asset: assets/fonts/Sacramento-Regular.ttf
+
+    - family: PressStart2P
+      fonts:
+        - asset: assets/fonts/PressStart2P-Regular.ttf
+
+    - family: FrederickatheGreat
+      fonts:
+        - asset: assets/fonts/FrederickatheGreat-Regular.ttf
+
+    - family: ReenieBeanie
+      fonts:
+        - asset: assets/fonts/ReenieBeanie-Regular.ttf
+
+    - family: BungeeShade
+      fonts:
+        - asset: assets/fonts/BungeeShade-Regular.ttf
+
+    - family: UnifrakturMaguntia
+      fonts:
+        - asset: assets/fonts/UnifrakturMaguntia-Regular.ttf

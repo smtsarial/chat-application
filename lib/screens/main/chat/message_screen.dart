@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AnonMessagesPage extends StatelessWidget {
-  const AnonMessagesPage({Key? key}) : super(key: key);
+class MessagesPage extends StatelessWidget {
+  const MessagesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +23,7 @@ class AnonMessagesPage extends StatelessWidget {
               child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Text(
-                  "Anon Conversations",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 2),
                 child: TextField(
                     style: TextStyle(
                       fontSize: 15.0,
@@ -53,7 +44,7 @@ class AnonMessagesPage extends StatelessWidget {
         ),
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
-          stream: messageStream.anonmessages,
+          stream: messageStream.messages,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData)
@@ -82,7 +73,7 @@ class AnonMessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                true));
+                                false));
                       } else if (document['receiverMail'] ==
                           context.watch<UserProvider>().user.email.toString()) {
                         return _MessageTitleReceiver(
@@ -97,7 +88,7 @@ class AnonMessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                true));
+                                false));
                       } else {
                         return Text(
                             "There is no Anon message please check shuffle page");
@@ -280,7 +271,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        "Anon-" + messageData.id,
+                        messageData.senderUsername,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,

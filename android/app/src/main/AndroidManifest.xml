@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.firebasedeneme">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="31" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>   
    <application
         android:label="firebasedeneme"
         android:name="${applicationName}"
@@ -30,5 +36,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+         
     </application>
 </manifest>

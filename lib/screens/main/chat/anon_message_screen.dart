@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -10,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class MessagesPage extends StatelessWidget {
-  const MessagesPage({Key? key}) : super(key: key);
+class AnonMessagesPage extends StatelessWidget {
+  const AnonMessagesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +22,7 @@ class MessagesPage extends StatelessWidget {
               child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Text(
-                  "Conversations",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.fromLTRB(15, 5, 15, 2),
                 child: TextField(
                     style: TextStyle(
                       fontSize: 15.0,
@@ -53,7 +43,7 @@ class MessagesPage extends StatelessWidget {
         ),
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
-          stream: messageStream.messages,
+          stream: messageStream.anonmessages,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData)
@@ -82,7 +72,7 @@ class MessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                false));
+                                true));
                       } else if (document['receiverMail'] ==
                           context.watch<UserProvider>().user.email.toString()) {
                         return _MessageTitleReceiver(
@@ -97,7 +87,7 @@ class MessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                false));
+                                true));
                       } else {
                         return Text(
                             "There is no Anon message please check shuffle page");
@@ -280,7 +270,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        messageData.senderUsername,
+                        "Anon-" + messageData.id,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,
