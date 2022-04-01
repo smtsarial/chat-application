@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   late final StreamSubscription<firebase.User?> listener;
 
   User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-      "", [], "", [], "", "", "", "");
+      "", [], "", [], "", "", "", "", []);
 
   @override
   void initState() {

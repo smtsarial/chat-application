@@ -31,42 +31,34 @@ class _StoryPageState extends State<StoryPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(8, 10, 8, 5),
+        padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
         child: Column(
           children: [
             Container(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("       "),
-                Text("Stories"),
                 InkWell(
                   onTap: () async {
                     takeStory();
                   },
                   child: Icon(Icons.add_a_photo),
-                )
+                ),
+                Text(
+                  "Stories",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () async {
+                    settingModalBottomSheet(context);
+                  },
+                  child: Icon(Icons.filter_list_rounded),
+                ),
               ],
             )),
-            Divider(),
-            InkWell(
-              onTap: () {
-                settingModalBottomSheet(context);
-              },
-              child: Container(
-                  child: Row(
-                children: [
-                  Icon(Icons.filter_list_rounded),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text('Filter'),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios_rounded)
-                ],
-              )),
+            SizedBox(
+              height: 15,
             ),
-            Divider(),
             Expanded(
               child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -76,41 +68,51 @@ class _StoryPageState extends State<StoryPage> {
                       crossAxisSpacing: 2),
                   itemCount: stories.length,
                   itemBuilder: (BuildContext ctx, index) {
-                    return Stack(
-                      children: [
-                        Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: PrimaryColor,
-                              image: DecorationImage(
-                                image: NetworkImage(stories[index].imageUrl),
-                                fit: BoxFit.cover,
-                              ),
-                            )),
-                        Positioned(
-                            left: 4,
-                            bottom: 10,
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: PureColor,
-                                  radius: 12,
-                                  child: CircleAvatar(
-                                    radius: 11,
-                                    backgroundImage: Image(
-                                            image: NetworkImage(
-                                                stories[index].imageUrl))
-                                        .image,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(stories[index].ownerUsername)
-                              ],
-                            )),
-                      ],
-                    );
+                    return stories.length != 0
+                        ? Stack(
+                            children: [
+                              Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: PrimaryColor,
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage(stories[index].imageUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                              Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(137, 0, 0, 0),
+                                  )),
+                              Positioned(
+                                  left: 4,
+                                  bottom: 10,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: PureColor,
+                                        radius: 12,
+                                        child: CircleAvatar(
+                                          radius: 11,
+                                          backgroundImage: Image(
+                                                  image: NetworkImage(
+                                                      stories[index].imageUrl))
+                                              .image,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(stories[index].ownerUsername)
+                                    ],
+                                  )),
+                            ],
+                          )
+                        : Center(
+                            child: Text("There is no story"),
+                          );
                   }),
             )
           ],

@@ -1,3 +1,4 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -49,6 +50,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     final isBackground = state == AppLifecycleState.paused;
     print("*****" + isBackground.toString());
+    if (isBackground == false) {
+      FirestoreHelper.changeUserActiveStatusAndTime(true).then((value) {
+        print(value);
+      });
+    } else {
+      FirestoreHelper.changeUserActiveStatusAndTime(false).then((value) {
+        print(value);
+      });
+    }
   }
 
   @override

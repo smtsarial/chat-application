@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'profilePages/profile_screen.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ShufflePage extends StatefulWidget {
   const ShufflePage({Key? key}) : super(key: key);
@@ -122,7 +123,8 @@ class _ShufflePageState extends State<ShufflePage> {
                             doc["userType"],
                             doc["username"],
                             doc["city"],
-                            doc["country"]));
+                            doc["country"],
+                            doc['myStoriesId']));
                       });
                 } else {
                   return Text("No data");
@@ -179,17 +181,25 @@ class _ShufflePageState extends State<ShufflePage> {
                               ).image,
                             ),
                           ),
+                          //TODO HERE WILL BE DYNAMIC ACCORDING TO THE USER PACKAGE
                           Positioned(
-                            top: 0,
+                            bottom: 0,
                             right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                            ),
+                            child: Icon(FontAwesomeIcons.crown,
+                                color: Colors.yellow),
                           ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: userData.isActive
+                                  ? Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.green,
+                                      ),
+                                    )
+                                  : Container()),
                         ],
                       ),
                       SizedBox(
@@ -202,7 +212,9 @@ class _ShufflePageState extends State<ShufflePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(userData.city),
+                      userData.isActive
+                          ? Container()
+                          : Text(timeago.format(userData.lastActiveTime)),
                       SizedBox(
                         height: 10,
                       ),

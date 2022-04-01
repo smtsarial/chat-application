@@ -11,7 +11,7 @@ class FollowersList extends StatefulWidget {
 
 class _FollowersListState extends State<FollowersList> {
   User user = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "",
-      [], "", [], "", "", "", "");
+      [], "", [], "", "", "", "",[]);
 
   @override
   void initState() {

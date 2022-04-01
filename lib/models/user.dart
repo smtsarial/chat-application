@@ -18,6 +18,7 @@ class User {
   late String username;
   late String country;
   late String city;
+  late List myStoriesId;
 
   User(
       this.id,
@@ -38,7 +39,8 @@ class User {
       this.userType,
       this.username,
       this.city,
-      this.country);
+      this.country,
+      this.myStoriesId);
   User.fromMap(dynamic obj) {
     email = obj['email'];
     firstName = obj['firstName'];
@@ -49,7 +51,7 @@ class User {
     userBio = obj['userBio'];
     likes = obj['likes'];
     lastName = obj['lastName'];
-    lastActiveTime =obj['lastActiveTime'].toDate();
+    lastActiveTime = obj['lastActiveTime'].toDate();
     isActive = obj['isActive'];
     gender = obj['gender'];
     followers = obj['followers'];
@@ -58,6 +60,7 @@ class User {
     age = obj['age'];
     city = obj['city'];
     country = obj['country'];
+    myStoriesId = obj['myStoriesId'];
   }
 
   Map<String, dynamic> toMap() {
@@ -81,6 +84,7 @@ class User {
       map['age'] = this.age;
       map['city'] = this.city;
       map['country'] = this.country;
+      map['myStoriesId'] = this.myStoriesId;
     }
     return map;
   }

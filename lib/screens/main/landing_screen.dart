@@ -2,7 +2,7 @@ import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

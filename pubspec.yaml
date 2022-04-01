@@ -47,21 +47,15 @@ dependencies:
   path_provider: ^2.0.8
   photo_view: ^0.13.0
   image_gallery_saver: ^1.7.1
-  # position
   align_positioned: ^3.0.0
-  # own packages
   gallery_media_picker: ^0.0.7
   modal_gif_picker: ^0.0.1
-  # painting
   perfect_freehand: ^1.0.4
-  # animations
   animated_text_kit: ^4.2.1
-  # rendering
   ffmpeg_kit_flutter_min_gpl: ^4.5.1
-  # permission
   permission_handler: ^8.1.4+2
-  # toast
   fluttertoast: ^8.0.9
+  timeago: ^3.2.2
   
 
 

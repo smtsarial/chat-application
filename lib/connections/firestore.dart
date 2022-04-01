@@ -112,6 +112,44 @@ class FirestoreHelper {
       });
       return pictureUrl;
     } catch (e) {
+      print("sss" + e.toString());
+      return e;
+    }
+  }
+
+  static Future<bool> saveNewStories(String storyUrl) async {
+    try {
+      await FirestoreHelper.getUserData().then((value) async {
+        Story story = Story(
+            "", value.email, value.username, DateTime.now(), storyUrl, []);
+        await db
+            .collection('stories')
+            .add(story.toMap())
+            .then((value) => print(value));
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future uploadStoryToStorage(path) async {
+    //upload story picture
+    try {
+      String? pictureUrl;
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('stories/${Path.basename(path.toString())}');
+
+      await ref.putFile(path).whenComplete(() async {
+        await ref.getDownloadURL().then((value) {
+          print(pictureUrl);
+          pictureUrl = value;
+          print(pictureUrl);
+        });
+      });
+      return pictureUrl;
+    } catch (e) {
       return e;
     }
   }
@@ -278,26 +316,44 @@ class FirestoreHelper {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(
-              id,
-              email,
-              age,
-              chatCount,
-              profilePictureUrl,
-              followers,
-              followed,
-              gender,
-              isActive,
-              lastActiveTime,
-              firstName,
-              lastName,
-              likes,
-              userBio,
-              userTags,
-              userType,
-              username,
-              "Türkiye",
-              "İstanbul")
-          .toMap());
+          id,
+          email,
+          age,
+          chatCount,
+          profilePictureUrl,
+          followers,
+          followed,
+          gender,
+          isActive,
+          lastActiveTime,
+          firstName,
+          lastName,
+          likes,
+          userBio,
+          userTags,
+          userType,
+          username,
+          "Türkiye",
+          "İstanbul", []).toMap());
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> changeUserActiveStatusAndTime(bool isActive) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        if (isActive == true) {
+          db.collection('users').doc(value.id).update({"isActive": isActive});
+        } else {
+          db
+              .collection('users')
+              .doc(value.id)
+              .update({"isActive": isActive, "lastActiveTime": DateTime.now()});
+        }
+      });
       return true;
     } catch (e) {
       print(e);

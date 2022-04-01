@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class UserProvider with ChangeNotifier {
   User user = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "",
-      [], "", [], "", "", "", "");
+      [], "", [], "", "", "", "",[]);
 
   UserProvider() {
     FirestoreHelper.getUserData().then((value) => user = value);

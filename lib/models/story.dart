@@ -29,7 +29,7 @@ class Story {
       map['ownerUsername'] = this.ownerUsername;
       map['createdTime'] = this.createdTime;
       map['imageUrl'] = this.imageUrl;
-      map['lseenPeopleikes'] = this.seenPeople;
+      map['seenPeople'] = this.seenPeople;
     }
     return map;
   }

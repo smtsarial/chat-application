@@ -13,7 +13,7 @@ class FollowedList extends StatefulWidget {
 
 class _FollowedListState extends State<FollowedList> {
   User user = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "",
-      [], "", [], "", "", "", "");
+      [], "", [], "", "", "", "",[]);
   List list = [];
   @override
   void initState() {

@@ -1,3 +1,4 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ import 'package:anonmy/screens/main/story/src/presentation/utils/constants/item_
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/text_animation_type.dart';
 import 'package:anonmy/screens/main/story/src/presentation/widgets/animated_onTap_button.dart';
 
-class BottomTools extends StatelessWidget {
+class BottomTools extends StatefulWidget {
   final GlobalKey contentKey;
   final Function(String imageUri) onDone;
   final Widget? onDoneButtonStyle;
@@ -28,9 +29,16 @@ class BottomTools extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<BottomTools> createState() => _BottomToolsState();
+}
+
+class _BottomToolsState extends State<BottomTools> {
+  bool isShared = false;
+  @override
   Widget build(BuildContext context) {
     var _size = MediaQuery.of(context).size;
     bool _createVideo = false;
+
     return Consumer4<ControlNotifier, ScrollNotifier, DraggableWidgetNotifier,
         PaintingNotifier>(
       builder: (_, controlNotifier, scrollNotifier, itemNotifier,
@@ -122,6 +130,9 @@ class BottomTools extends StatelessWidget {
                     builder: (_, setState) {
                       return AnimatedOnTapButton(
                           onTap: () async {
+                            setState(() {
+                              isShared = true;
+                            });
                             String pngUri;
                             if (paintingNotifier.lines.isNotEmpty ||
                                 itemNotifier.draggableWidget.isNotEmpty) {
@@ -137,17 +148,25 @@ class BottomTools extends StatelessWidget {
                               }
                               if (_createVideo) {
                                 debugPrint('creating video');
-                                await renderWidget();
+                                await widget.renderWidget();
                               } else {
                                 debugPrint('creating image');
                                 await takePicture(
-                                        contentKey: contentKey,
+                                        contentKey: widget.contentKey,
                                         context: context,
                                         saveToGallery: false)
                                     .then((bytes) {
                                   if (bytes != null) {
-                                    pngUri = bytes;
-                                    onDone(pngUri);
+                                    print(widget.contentKey);
+                                    FirestoreHelper.uploadStoryToStorage(bytes)
+                                        .then((imageURL) async {
+                                      print(imageURL);
+                                      FirestoreHelper.saveNewStories(imageURL)
+                                          .then((value) {
+                                        print(value);
+                                        Navigator.pop(context);
+                                      });
+                                    });
                                   } else {}
                                 });
                               }
@@ -156,35 +175,39 @@ class BottomTools extends StatelessWidget {
                               _createVideo = false;
                             });
                           },
-                          child: onDoneButtonStyle ??
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 12, right: 5, top: 4, bottom: 4),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: Colors.white, width: 1.5)),
-                                child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            letterSpacing: 1.5,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5),
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ]),
-                              ));
+                          child: isShared != true
+                              ? widget.onDoneButtonStyle ??
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 12, right: 5, top: 4, bottom: 4),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                            color: Colors.white, width: 1.5)),
+                                    child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const [
+                                          Text(
+                                            'Share',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                letterSpacing: 1.5,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5),
+                                            child: Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                          ),
+                                        ]),
+                                  )
+                              : Container(
+                                  child: CircularProgressIndicator(),
+                                ));
                     },
                   ),
                 ),
