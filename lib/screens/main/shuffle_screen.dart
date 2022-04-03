@@ -40,49 +40,33 @@ class _ShufflePageState extends State<ShufflePage> {
     return Column(
       children: [
         Container(
-          child: Center(
-              child: Column(
+          child: Row(
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(12, 10, 12, 2),
+              GestureDetector(
+                  onTap: () {
+                    //"Provider.of<MessageProvider>(context, listen: false)",
+                    //    .checkUsername();
+
+                    settingModalBottomSheet(context);
+                  },
+                  child: Card(
+                      child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Icon(
+                            Icons.filter_list_rounded,
+                          )))),
+              Expanded(
+                  child: Container(
                 child: TextField(
-                    style: TextStyle(fontSize: 12.0),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: PureColor,
-                      ),
-                      hintText: "Search",
-                      border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: PrimaryColor, width: 2.0),
-                          borderRadius: BorderRadius.circular(5.0)),
-                    )),
-              ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: PureColor,
+                  ),
+                  hintText: "Search",
+                )),
+              ))
             ],
-          )),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(15, 8, 15, 8),
-          child: InkWell(
-            onTap: () {
-              //"Provider.of<MessageProvider>(context, listen: false)",
-              //    .checkUsername();
-              settingModalBottomSheet(context);
-            },
-            child: Container(
-                child: Row(
-              children: [
-                Icon(Icons.filter_list_rounded),
-                SizedBox(
-                  width: 5,
-                ),
-                Text('Filter'),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios_rounded)
-              ],
-            )),
           ),
         ),
         Divider(),
@@ -185,8 +169,10 @@ class _ShufflePageState extends State<ShufflePage> {
                           Positioned(
                             bottom: 0,
                             right: 0,
-                            child: Icon(FontAwesomeIcons.crown,
-                                color: Colors.yellow),
+                            child: userData.userType != "basic"
+                                ? Icon(FontAwesomeIcons.crown,
+                                    color: Colors.yellow)
+                                : Container(),
                           ),
                           Positioned(
                               top: 0,

@@ -1,6 +1,6 @@
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:faker/faker.dart';
 import 'package:anonmy/connections/firestore.dart';

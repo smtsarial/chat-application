@@ -24,9 +24,8 @@ class TextMessage extends StatelessWidget {
         vertical: kDefaultPadding / 2,
       ),
       child: Text(
-        message!.text,
+        message!.message,
         style: TextStyle(
-          color: message!.isSender ? Colors.white : Colors.white,
         ),
       ),
     );

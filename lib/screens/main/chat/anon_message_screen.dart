@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class AnonMessagesPage extends StatelessWidget {
   const AnonMessagesPage({Key? key}) : super(key: key);
@@ -17,30 +18,6 @@ class AnonMessagesPage extends StatelessWidget {
     MessageRoomProvider messageStream = context.watch<MessageRoomProvider>();
     return Column(
       children: [
-        Container(
-          child: Center(
-              child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(15, 5, 15, 2),
-                child: TextField(
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                      prefixIcon: Icon(Icons.search),
-                      hintText: "Search",
-                      border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: PrimaryColor, width: 12.0),
-                          borderRadius: BorderRadius.circular(5.0)),
-                    )),
-              ),
-              Divider(),
-            ],
-          )),
-        ),
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
           stream: messageStream.anonmessages,
@@ -185,9 +162,7 @@ class _MessageTitle extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      DateFormat('yMd')
-                          .format(messageData.lastMessageTime)
-                          .toString(),
+                      timeago.format(messageData.lastMessageTime).toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,
@@ -260,7 +235,9 @@ class _MessageTitleReceiver extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Avatar.medium(url: messageData.senderProfilePictureUrl),
+                child: Avatar.medium(
+                    url:
+                        "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fanonuser.png?alt=media&token=5e705128-21cf-480a-bd50-36097e98455a"),
               ),
               Expanded(
                 child: Column(
@@ -270,7 +247,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        "Anon-" + messageData.id,
+                        "anon-" + messageData.id,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,
@@ -303,9 +280,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      DateFormat('yMd')
-                          .format(messageData.lastMessageTime)
-                          .toString(),
+                      timeago.format(messageData.lastMessageTime).toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,
@@ -313,26 +288,26 @@ class _MessageTitleReceiver extends StatelessWidget {
                         color: AppColors.textFaded,
                       ),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        color: AppColors.secondary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: AppColors.textLigth,
-                          ),
-                        ),
-                      ),
-                    )
+                    //const SizedBox(
+                    //  height: 8,
+                    //),
+                    //Container(
+                    //  width: 18,
+                    //  height: 18,
+                    //  decoration: const BoxDecoration(
+                    //    color: AppColors.secondary,
+                    //    shape: BoxShape.circle,
+                    //  ),
+                    //  child: const Center(
+                    //    child: Text(
+                    //      '1',
+                    //      style: TextStyle(
+                    //        fontSize: 10,
+                    //        color: AppColors.textLigth,
+                    //      ),
+                    //    ),
+                    //  ),
+                    //)
                   ],
                 ),
               ),

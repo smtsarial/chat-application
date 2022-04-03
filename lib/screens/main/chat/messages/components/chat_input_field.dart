@@ -1,5 +1,9 @@
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatInputField extends StatelessWidget {
@@ -37,14 +41,7 @@ class ChatInputField extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.sentiment_satisfied_alt_outlined,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .color!
-                          .withOpacity(0.64),
-                    ),
+                    
                     SizedBox(width: kDefaultPadding / 4),
                     Expanded(
                       child: TextField(
@@ -67,6 +64,15 @@ class ChatInputField extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         print(messageController.text);
+                        sendMessage(messageController.text).then((value) {
+                          messageController.text = "";
+                          if (value != true) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  "Connection lost please refresh this page! and try again!"),
+                            ));
+                          }
+                        });
                       },
                       icon: Icon(Icons.send),
                       color: Theme.of(context)
@@ -83,5 +89,28 @@ class ChatInputField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> sendMessage(String message) async {
+    try {
+      await FirestoreHelper.getUserData().then((value) async {
+        await FirebaseFirestore.instance
+            .collection('messages')
+            .doc(messageRoom.id)
+            .collection('chatMessages')
+            .add({
+          "messageOwnerMail": value.email,
+          "messageOwnerUsername": value.username,
+          "timeToSent": DateTime.now(),
+          "messageType": 0,
+          "status": 0,
+          "message": message
+        });
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

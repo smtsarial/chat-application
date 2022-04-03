@@ -1,13 +1,15 @@
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'audio_message.dart';
 import 'text_message.dart';
 import 'video_message.dart';
 
-class Message extends StatelessWidget {
+class Message extends StatefulWidget {
   const Message({
     Key? key,
     required this.message,
@@ -15,6 +17,11 @@ class Message extends StatelessWidget {
 
   final ChatMessage message;
 
+  @override
+  State<Message> createState() => _MessageState();
+}
+
+class _MessageState extends State<Message> {
   @override
   Widget build(BuildContext context) {
     Widget messageContaint(ChatMessage message) {
@@ -33,10 +40,13 @@ class Message extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: Row(
-        mainAxisAlignment:
-            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: widget.message.messageOwnerMail ==
+                context.watch<UserProvider>().user.email
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
-          if (!message.isSender) ...[
+          if (widget.message.messageOwnerMail !=
+              context.watch<UserProvider>().user.email) ...[
             CircleAvatar(
               radius: 12,
               backgroundImage: CachedNetworkImageProvider(
@@ -44,8 +54,10 @@ class Message extends StatelessWidget {
             ),
             SizedBox(width: kDefaultPadding / 2),
           ],
-          messageContaint(message),
-          if (message.isSender) MessageStatusDot(status: message.messageStatus)
+          messageContaint(widget.message),
+          if (widget.message.messageOwnerMail ==
+              context.watch<UserProvider>().user.email)
+            MessageStatusDot(status: widget.message.status)
         ],
       ),
     );
@@ -60,8 +72,6 @@ class MessageStatusDot extends StatelessWidget {
   Widget build(BuildContext context) {
     Color dotColor(MessageStatus status) {
       switch (status) {
-        case MessageStatus.not_sent:
-          return kErrorColor;
         case MessageStatus.not_view:
           return Theme.of(context).textTheme.bodyText1!.color!.withOpacity(0.1);
         case MessageStatus.viewed:
@@ -80,7 +90,7 @@ class MessageStatusDot extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        status == MessageStatus.not_sent ? Icons.close : Icons.done,
+        Icons.done,
         size: 8,
         color: Theme.of(context).scaffoldBackgroundColor,
       ),

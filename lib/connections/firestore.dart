@@ -120,8 +120,8 @@ class FirestoreHelper {
   static Future<bool> saveNewStories(String storyUrl) async {
     try {
       await FirestoreHelper.getUserData().then((value) async {
-        Story story = Story(
-            "", value.email, value.username, DateTime.now(), storyUrl, []);
+        Story story = Story("", value.email, value.username,
+            value.profilePictureUrl, DateTime.now(), storyUrl, []);
         await db
             .collection('stories')
             .add(story.toMap())
@@ -161,8 +161,19 @@ class FirestoreHelper {
     print(faker.address.city());
     for (int i = 0; i < 100; i++) {
       stories.add(Story("", faker.phoneNumber.random.toString(),
-          faker.food.dish().toString(), date, Faker().image.image(), []));
+          faker.food.dish().toString(), "", date, Faker().image.image(), []));
     }
+    return stories;
+  }
+
+  static Future<List<Story>> getStoriesForStoryScreen() async {
+    //Gets all stories
+    List<Story> stories = [];
+    await db.collection('stories').get().then((value) {
+      value.docs.forEach((element) {
+        stories.add(Story.fromMap(element));
+      });
+    });
     return stories;
   }
 

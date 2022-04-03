@@ -3,12 +3,13 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MessagesPage extends StatelessWidget {
   const MessagesPage({Key? key}) : super(key: key);
@@ -18,30 +19,6 @@ class MessagesPage extends StatelessWidget {
     MessageRoomProvider messageStream = context.watch<MessageRoomProvider>();
     return Column(
       children: [
-        Container(
-          child: Center(
-              child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(15, 5, 15, 2),
-                child: TextField(
-                    style: TextStyle(
-                      fontSize: 15.0,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                      prefixIcon: Icon(Icons.search),
-                      hintText: "Search",
-                      border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: PrimaryColor, width: 12.0),
-                          borderRadius: BorderRadius.circular(5.0)),
-                    )),
-              ),
-              Divider(),
-            ],
-          )),
-        ),
         Expanded(
             child: StreamBuilder<QuerySnapshot>(
           stream: messageStream.messages,
@@ -186,9 +163,7 @@ class _MessageTitle extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      DateFormat('yMd')
-                          .format(messageData.lastMessageTime)
-                          .toString(),
+                      timeago.format(messageData.lastMessageTime).toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,

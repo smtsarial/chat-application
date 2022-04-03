@@ -3,6 +3,7 @@ class Story {
   late String ownerMail;
   late String ownerUsername;
   late DateTime createdTime;
+  late String ownerProfilePicture;
   late String imageUrl;
   late List seenPeople;
 
@@ -10,6 +11,7 @@ class Story {
     this.id,
     this.ownerMail,
     this.ownerUsername,
+    this.ownerProfilePicture,
     this.createdTime,
     this.imageUrl,
     this.seenPeople,
@@ -17,7 +19,8 @@ class Story {
   Story.fromMap(dynamic obj) {
     ownerMail = obj['ownerMail'];
     ownerUsername = obj['ownerUsername'];
-    createdTime = obj['createdTime'];
+    ownerProfilePicture = obj['ownerProfilePicture'];
+    createdTime = obj['createdTime'].toDate();
     imageUrl = obj['imageUrl'];
     seenPeople = obj['seenPeople'];
   }
@@ -27,6 +30,7 @@ class Story {
     if (id != null) {
       map['ownerMail'] = this.ownerMail;
       map['ownerUsername'] = this.ownerUsername;
+      map['ownerProfilePicture'] = this.ownerProfilePicture;
       map['createdTime'] = this.createdTime;
       map['imageUrl'] = this.imageUrl;
       map['seenPeople'] = this.seenPeople;

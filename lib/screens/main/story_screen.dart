@@ -1,11 +1,11 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/story/stories_editor.dart';
-import 'package:faker/faker.dart';
+import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage({Key? key}) : super(key: key);
@@ -20,11 +20,14 @@ class _StoryPageState extends State<StoryPage> {
   late int _value = 1;
   @override
   void initState() {
-    FirestoreHelper.FakeStory().then((value) {
-      setState(() {
-        stories = value;
+    if (mounted) {
+      FirestoreHelper.getStoriesForStoryScreen().then((value) {
+        setState(() {
+          stories = value;
+        });
+        print(value.length);
       });
-    });
+    }
     super.initState();
   }
 
@@ -38,7 +41,7 @@ class _StoryPageState extends State<StoryPage> {
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
+                GestureDetector(
                   onTap: () async {
                     takeStory();
                   },
@@ -48,7 +51,7 @@ class _StoryPageState extends State<StoryPage> {
                   "Stories",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                InkWell(
+                GestureDetector(
                   onTap: () async {
                     settingModalBottomSheet(context);
                   },
@@ -60,61 +63,72 @@ class _StoryPageState extends State<StoryPage> {
               height: 15,
             ),
             Expanded(
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 9 / 16,
-                      mainAxisSpacing: 2,
-                      crossAxisSpacing: 2),
-                  itemCount: stories.length,
-                  itemBuilder: (BuildContext ctx, index) {
-                    return stories.length != 0
-                        ? Stack(
-                            children: [
-                              Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: PrimaryColor,
-                                    image: DecorationImage(
-                                      image:
-                                          NetworkImage(stories[index].imageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )),
-                              Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(137, 0, 0, 0),
-                                  )),
-                              Positioned(
-                                  left: 4,
-                                  bottom: 10,
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: PureColor,
-                                        radius: 12,
-                                        child: CircleAvatar(
-                                          radius: 11,
-                                          backgroundImage: Image(
-                                                  image: NetworkImage(
-                                                      stories[index].imageUrl))
-                                              .image,
+                child: stories.length != 0
+                    ? GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 9 / 16,
+                                mainAxisSpacing: 2,
+                                crossAxisSpacing: 2),
+                        itemCount: stories.length,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StoryViewer(
+                                            imageList: [stories[index]],
+                                          )));
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: PrimaryColor,
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                            stories[index].imageUrl),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )),
+                                Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(137, 0, 0, 0),
+                                    )),
+                                Positioned(
+                                    left: 4,
+                                    bottom: 10,
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: PureColor,
+                                          radius: 12,
+                                          child: CircleAvatar(
+                                            radius: 11,
+                                            backgroundImage: Image(
+                                                    image: CachedNetworkImageProvider(
+                                                        stories[index]
+                                                            .ownerProfilePicture))
+                                                .image,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(stories[index].ownerUsername)
-                                    ],
-                                  )),
-                            ],
-                          )
-                        : Center(
-                            child: Text("There is no story"),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(stories[index].ownerUsername)
+                                      ],
+                                    )),
+                              ],
+                            ),
                           );
-                  }),
-            )
+                        })
+                    : Center(
+                        child: Text("There is no story"),
+                      ))
           ],
         ));
   }

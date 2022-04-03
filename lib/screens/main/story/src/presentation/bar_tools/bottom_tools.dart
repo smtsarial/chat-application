@@ -130,12 +130,12 @@ class _BottomToolsState extends State<BottomTools> {
                     builder: (_, setState) {
                       return AnimatedOnTapButton(
                           onTap: () async {
-                            setState(() {
-                              isShared = true;
-                            });
                             String pngUri;
                             if (paintingNotifier.lines.isNotEmpty ||
                                 itemNotifier.draggableWidget.isNotEmpty) {
+                              setState(() {
+                                isShared = true;
+                              });
                               for (var element
                                   in itemNotifier.draggableWidget) {
                                 if (element.type == ItemType.gif ||
@@ -206,8 +206,8 @@ class _BottomToolsState extends State<BottomTools> {
                                         ]),
                                   )
                               : Container(
-                                  child: CircularProgressIndicator(),
-                                ));
+                                  child: CircularProgressIndicator(
+                                      color: Colors.grey)));
                     },
                   ),
                 ),
