@@ -1,5 +1,6 @@
 import 'package:anonmy/screens/main/followedList.dart';
 import 'package:anonmy/screens/main/followersList.dart';
+import 'package:anonmy/screens/main/profileSetting_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/models/user.dart';
@@ -21,6 +22,14 @@ class ProfileScreen extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text(user.firstName + " " + user.lastName),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditPage()));
+                },
+                icon: Icon(Icons.settings)),
+          ],
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -49,25 +58,39 @@ class ProfileScreen extends StatelessWidget {
                           Text(user.followers.length.toString())
                         ],
                       )),
-                      Container(
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Colors.blue,
-                              Colors.red,
-                            ],
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Colors.blue,
+                                  Colors.red,
+                                ],
+                              ),
+                              shape: BoxShape.circle,
+                              color: PrimaryColor,
+                            ),
+                            child: CircleAvatar(
+                              radius: 82,
+                              backgroundImage: CachedNetworkImageProvider(
+                                  user.profilePictureUrl),
+                            ),
                           ),
-                          shape: BoxShape.circle,
-                          color: PrimaryColor,
-                        ),
-                        child: CircleAvatar(
-                          radius: 82,
-                          backgroundImage: CachedNetworkImageProvider(
-                              user.profilePictureUrl),
-                        ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Center(
+                            child: Text(
+                              "@" + user.username,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
                       ),
                       Container(
                           child: Column(

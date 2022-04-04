@@ -2,6 +2,7 @@ import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/chatScreenTab.dart';
 import 'package:anonmy/screens/main/profile_screen.dart';
+import 'package:anonmy/screens/main/purchase_screen.dart';
 import 'package:anonmy/screens/main/shuffle_screen.dart';
 import 'package:anonmy/screens/main/story_screen.dart';
 import 'package:anonmy/theme.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatelessWidget {
     StoryPage(),
     TabBarChat(),
     ShufflePage(),
+    PurchaseScreen(),
     ProfileScreen(),
   ];
 
@@ -112,8 +114,15 @@ class __BottomNavigationBarState extends State<_BottomNavigationBar> {
               _NavigationBarItem(
                 index: 3,
                 label: '',
-                icon: CupertinoIcons.person,
+                icon: CupertinoIcons.purchased,
                 isSelected: (selectedIndex == 3),
+                onTap: handleItemSelected,
+              ),
+              _NavigationBarItem(
+                index: 4,
+                label: '',
+                icon: CupertinoIcons.person,
+                isSelected: (selectedIndex == 4),
                 onTap: handleItemSelected,
               ),
             ],
