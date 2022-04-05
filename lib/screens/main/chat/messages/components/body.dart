@@ -1,8 +1,12 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'chat_input_field.dart';
 import 'message.dart';
@@ -15,6 +19,35 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  Future<bool> updateStatusOfMessages() async {
+    try {
+      FirestoreHelper.getUserData().then((value) async {
+        await FirestoreHelper.db
+            .collection('messages')
+            .doc(widget.messageRoomData.id)
+            .collection('chatMessages')
+            .where("status", isEqualTo: 0)
+            .where("messageOwnerMail", isNotEqualTo: value.email)
+            .get()
+            .then((value) {
+          value.docs.forEach((element) async {
+            await element.reference.update({"status": 1});
+          });
+        });
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  @override
+  void initState() {
+    updateStatusOfMessages().then((value) => print(value));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

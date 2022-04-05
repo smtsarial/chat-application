@@ -16,13 +16,24 @@ class _TabBarChatState extends State<TabBarChat> {
         length: 2,
         child: Scaffold(
           appBar: TabBar(
+            labelColor: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
             tabs: [
               Tab(
-                icon: Icon(Icons.groups_rounded),
+                icon: Icon(
+                  Icons.groups_rounded,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
                 text: "Messages",
               ),
               Tab(
-                icon: Icon(Icons.group_rounded),
+                icon: Icon(Icons.group_rounded,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
                 text: "Anon Messages",
               )
             ],

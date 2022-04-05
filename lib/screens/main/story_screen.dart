@@ -25,7 +25,6 @@ class _StoryPageState extends State<StoryPage> {
         setState(() {
           stories = value;
         });
-        print(value.length);
       });
     }
     super.initState();

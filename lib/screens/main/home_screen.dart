@@ -114,7 +114,7 @@ class __BottomNavigationBarState extends State<_BottomNavigationBar> {
               _NavigationBarItem(
                 index: 3,
                 label: '',
-                icon: CupertinoIcons.purchased,
+                icon: CupertinoIcons.rocket,
                 isSelected: (selectedIndex == 3),
                 onTap: handleItemSelected,
               ),

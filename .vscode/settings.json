@@ -1,21 +1,21 @@
 {
     "files.exclude": {
-        ".idea": false,
-        ".dart_tool": false,
-        "build": false,
-        "windows": false,
-        "winuwp": false,
-        ".flutter-plugins": false,
-        ".flutter-plugins-dependencies": false,
-        "web": false,
-        "test": false,
-        ".metadata": false,
-        ".packages": false,
-        "README.md": false,
-        ".gitignore": false,
-        "anonmy.iml": false,
-        "android": false,
-        "ios": false
+        ".idea": true,
+        ".dart_tool": true,
+        "build": true,
+        "windows": true,
+        "winuwp": true,
+        ".flutter-plugins": true,
+        ".flutter-plugins-dependencies": true,
+        "web": true,
+        "test": true,
+        ".metadata": true,
+        ".packages": true,
+        "README.md": true,
+        ".gitignore": true,
+        "anonmy.iml": true,
+        "android": true,
+        "ios": true
     },
-    "workspace.isHidden": false
+    "workspace.isHidden": true
 }
