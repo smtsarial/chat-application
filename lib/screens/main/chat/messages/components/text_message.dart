@@ -12,7 +12,8 @@ class TextMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Flexible(
+        child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: MediaQuery.of(context).platformBrightness == Brightness.dark
@@ -23,11 +24,10 @@ class TextMessage extends StatelessWidget {
         horizontal: kDefaultPadding * 0.75,
         vertical: kDefaultPadding / 2,
       ),
-      child: Text(
-        message!.message,
-        style: TextStyle(
-        ),
-      ),
-    );
+      child: Text(message!.message,
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 20),
+    ));
   }
 }

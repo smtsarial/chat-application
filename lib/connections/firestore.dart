@@ -154,18 +154,6 @@ class FirestoreHelper {
     }
   }
 
-  static Future<List<Story>> FakeStory() async {
-    final Faker faker = Faker();
-    final date = Helpers.randomDate();
-    List<Story> stories = [];
-    print(faker.address.city());
-    for (int i = 0; i < 100; i++) {
-      stories.add(Story("", faker.phoneNumber.random.toString(),
-          faker.food.dish().toString(), "", date, Faker().image.image(), []));
-    }
-    return stories;
-  }
-
   static Future<List<Story>> getStoriesForStoryScreen() async {
     //Gets all stories
     List<Story> stories = [];
@@ -291,6 +279,7 @@ class FirestoreHelper {
         .collection('messages')
         .where("anonim", isEqualTo: false)
         .where("MessageRoomPeople", arrayContains: userMail)
+        .orderBy("lastMessageTime", descending: true)
         .snapshots();
     return data;
   }
@@ -301,6 +290,7 @@ class FirestoreHelper {
         .collection('messages')
         .where("anonim", isEqualTo: true)
         .where("MessageRoomPeople", arrayContains: userMail)
+        .orderBy("lastMessageTime", descending: true)
         .snapshots();
     return data;
   }

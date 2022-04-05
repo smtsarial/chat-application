@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return userData.id == ""
-        ? Scaffold(body: Center(child: CircularProgressIndicator()))
+        ? Scaffold(body: Center(child: LoginPage()))
         : (MultiProvider(
             providers: [
                 ChangeNotifierProvider<MessageRoomProvider>(

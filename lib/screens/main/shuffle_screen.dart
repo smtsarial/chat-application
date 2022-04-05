@@ -26,12 +26,6 @@ class _ShufflePageState extends State<ShufflePage> {
 
   @override
   void initState() {
-    FirestoreHelper.FakeStory().then((value) {
-      setState(() {
-        stories = value;
-      });
-    });
-
     super.initState();
   }
 
@@ -134,8 +128,21 @@ class _ShufflePageState extends State<ShufflePage> {
             Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: AppColors.textDark,
-                    borderRadius: BorderRadius.circular(4))),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Color.fromARGB(255, 61, 61, 61)
+                      : Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Color.fromARGB(255, 37, 37, 37)
+                          : Color.fromARGB(255, 185, 185, 185).withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(4, 8), // changes position of shadow
+                    )
+                  ],
+                )),
             Center(
               child: Padding(
                   padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
@@ -208,7 +215,6 @@ class _ShufflePageState extends State<ShufflePage> {
                           ? (userData.userBio.length > 20
                               ? (Text(
                                   userData.userBio.substring(0, 14) + " ...",
-                                  style: TextStyle(),
                                 ))
                               : Text(userData.userBio))
                           : Text("No Description")

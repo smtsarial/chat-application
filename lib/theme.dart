@@ -11,6 +11,7 @@ const TextColor = Colors.white54;
 const ContentColorDarkTheme = Color(0xFFF5FCF9);
 const WarninngColor = Color(0xFFF3BB1C);
 const ErrorColor = Color(0xFFF03738);
+const PurchaseColor = Color.fromARGB(255, 53, 167, 0);
 
 const kPrimaryColor = Color.fromRGBO(73, 3, 201, 1);
 const kSecondaryColor = Color.fromRGBO(59, 24, 95, 1);
@@ -35,7 +36,7 @@ abstract class AppColors {
 }
 
 abstract class _LightColors {
-  static const background = Colors.white;
+  static const background = Color.fromARGB(255, 173, 173, 173);
   static const card = AppColors.cardLight;
 }
 

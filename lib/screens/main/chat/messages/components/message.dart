@@ -47,11 +47,6 @@ class _MessageState extends State<Message> {
         children: [
           if (widget.message.messageOwnerMail !=
               context.watch<UserProvider>().user.email) ...[
-            CircleAvatar(
-              radius: 12,
-              backgroundImage: CachedNetworkImageProvider(
-                  "https://firebasestorage.googleapis.com/v0/b/denemeprojem-65ebc.appspot.com/o/profileImages%2Fimage_picker4575221974603790001.jpg'?alt=media&token=e20d0a63-e499-420e-9a24-e73667939197"),
-            ),
             SizedBox(width: kDefaultPadding / 2),
           ],
           messageContaint(widget.message),
