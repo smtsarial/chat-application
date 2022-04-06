@@ -279,9 +279,7 @@ class _MessageTitleReceiver extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      DateFormat('yMd')
-                          .format(messageData.lastMessageTime)
-                          .toString(),
+                      timeago.format(messageData.lastMessageTime).toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,

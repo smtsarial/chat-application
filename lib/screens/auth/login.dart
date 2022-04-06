@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
 
         await saveData(_userEmail.toString());
         FocusManager.instance.primaryFocus!.unfocus();
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SplashScreen()));
       } catch (err) {
         setState(() {

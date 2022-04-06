@@ -1,4 +1,5 @@
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/chat/messages/components/image_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/theme.dart';
@@ -30,8 +31,10 @@ class _MessageState extends State<Message> {
           return TextMessage(message: message);
         case ChatMessageType.audio:
           return AudioMessage(message: message);
+        case ChatMessageType.image:
+          return ImageMessage(message: message);
         case ChatMessageType.video:
-          return VideoMessage();
+          return VideoMessage(message: message);
         default:
           return SizedBox();
       }

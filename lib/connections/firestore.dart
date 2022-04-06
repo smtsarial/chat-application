@@ -95,6 +95,28 @@ class FirestoreHelper {
     }
   }
 
+  static Future uploadChatImagesToStorage(path) async {
+    //upload profile picture
+    try {
+      String? pictureUrl;
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('chatPhotos/${Path.basename(path.toString())}');
+
+      await ref.putFile(path).whenComplete(() async {
+        await ref.getDownloadURL().then((value) {
+          print(pictureUrl);
+          pictureUrl = value;
+          print(pictureUrl);
+        });
+      });
+      return pictureUrl;
+    } catch (e) {
+      print("sss" + e.toString());
+      return e;
+    }
+  }
+
   static Future uploadProfilePictureToStorage(path) async {
     //upload profile picture
     try {
@@ -122,11 +144,14 @@ class FirestoreHelper {
       await FirestoreHelper.getUserData().then((value) async {
         Story story = Story("", value.email, value.username,
             value.profilePictureUrl, DateTime.now(), storyUrl, []);
-        await db
-            .collection('stories')
-            .add(story.toMap())
-            .then((value) => print(value));
+        await db.collection('stories').add(story.toMap()).then((value1) {
+          print(value1.id);
+          db.collection('users').doc(value.id).update({
+            "myStoriesId": FieldValue.arrayUnion([value1.id])
+          });
+        });
       });
+
       return true;
     } catch (e) {
       return false;
@@ -143,15 +168,36 @@ class FirestoreHelper {
 
       await ref.putFile(path).whenComplete(() async {
         await ref.getDownloadURL().then((value) {
-          print(pictureUrl);
           pictureUrl = value;
-          print(pictureUrl);
         });
       });
+
       return pictureUrl;
     } catch (e) {
       return e;
     }
+  }
+
+  static Future<List<Story>> getStoriesForUser(User userData) async {
+    //Gets all stories
+
+    List<Story> stories = [];
+    await db
+        .collection('stories')
+        .where("ownerMail", isEqualTo: userData.email)
+        .orderBy("createdTime", descending: false)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        stories.add(Story.fromMap(element));
+      });
+      int i = 0;
+      stories.forEach((detail) {
+        detail.id = value.docs[i].id;
+        i++;
+      });
+    });
+    return stories;
   }
 
   static Future<List<Story>> getStoriesForStoryScreen() async {

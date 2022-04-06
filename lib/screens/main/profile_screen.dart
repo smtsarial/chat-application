@@ -1,5 +1,7 @@
 import 'package:anonmy/screens/main/followedList.dart';
 import 'package:anonmy/screens/main/followersList.dart';
+import 'package:anonmy/screens/main/landing_screen.dart';
+import 'package:anonmy/screens/main/myStoriesList_screen.dart';
 import 'package:anonmy/screens/main/profileSetting_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/auth.dart';
@@ -36,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 36,
+                  height: 10,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -60,6 +62,16 @@ class ProfileScreen extends StatelessWidget {
                       )),
                       Column(
                         children: [
+                          Center(
+                            child: Text(
+                              "@" + user.username,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
                           Container(
                             padding: EdgeInsets.all(3),
                             decoration: BoxDecoration(
@@ -80,16 +92,6 @@ class ProfileScreen extends StatelessWidget {
                                   user.profilePictureUrl),
                             ),
                           ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Center(
-                            child: Text(
-                              "@" + user.username,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          )
                         ],
                       ),
                       Container(
@@ -113,8 +115,85 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                const Divider(),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                    ),
+                  ),
+                  child: Text(
+                    "My Stories",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyStoriesScreen()));
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.rocket_launch,
+                          size: 40,
+                          color: Color.fromARGB(255, 255, 153, 0),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Get More Messages!",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Get Shuffle Proote, be on top of the shuffle list.",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      width: 300.0,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: PrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12), // <-- Radius
+                          ),
+                        ),
+                        child: Text(
+                          "Update My Account",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                )),
                 const _SignOutButton(),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LandingScreen()));
+                  },
+                  child: const Text('Landing'),
+                )
               ],
             ),
           ),

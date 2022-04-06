@@ -35,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: PrimaryColor,
             automaticallyImplyLeading: false,
             title: GestureDetector(
               onTap: () {

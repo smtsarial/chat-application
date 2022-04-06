@@ -17,13 +17,23 @@ class StoryPage extends StatefulWidget {
 class _StoryPageState extends State<StoryPage> {
   late List<Story> stories = [];
   late RangeValues _currentRangeValues = RangeValues(18, 65);
-  late int _value = 1;
+  late int _filterGenderValue = 1;
+  late String filterCity = "İstanbul";
+  late String filterGender = "All";
+  late List filterAge = [18, 65];
+
   @override
   void initState() {
     if (mounted) {
       FirestoreHelper.getStoriesForStoryScreen().then((value) {
+        late List<Story> stor1es = [];
+        value.forEach((element) {
+          if (DateTime.now().difference(element.createdTime).inHours < 24) {
+            stor1es.add(element);
+          }
+        });
         setState(() {
-          stories = value;
+          stories = stor1es;
         });
       });
     }
@@ -173,9 +183,9 @@ class _StoryPageState extends State<StoryPage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              _currentRangeValues.start.round().toString() +
+                              filterAge[0].round().toString() +
                                   " - " +
-                                  _currentRangeValues.end.round().toString(),
+                                  filterAge[1].round().toString(),
                             ),
                           ],
                         ),
@@ -188,6 +198,10 @@ class _StoryPageState extends State<StoryPage> {
                         min: 18,
                         onChanged: (values) {
                           setState(() {
+                            filterAge = [
+                              values.start.round(),
+                              values.end.round()
+                            ];
                             _currentRangeValues = values;
                           });
                         },
@@ -207,7 +221,7 @@ class _StoryPageState extends State<StoryPage> {
                             ),
                           ),
                           DropdownButtonFormField<String>(
-                            value: "Şehir",
+                            value: filterCity,
                             decoration: InputDecoration(
                               hintStyle: TextStyle(color: TextColor),
                               enabledBorder: InputBorder.none,
@@ -217,7 +231,13 @@ class _StoryPageState extends State<StoryPage> {
                             dropdownColor: PrimaryColor,
                             icon: const Icon(Icons.arrow_drop_down),
                             style: const TextStyle(color: TextColor),
-                            onChanged: (String? newValue) {},
+                            onChanged: (String? newValue) {
+                              setState(
+                                () {
+                                  filterCity = newValue.toString();
+                                },
+                              );
+                            },
                             validator: (value) {
                               if (value == "Gender") {
                                 return 'Please select your gender.';
@@ -337,35 +357,37 @@ class _StoryPageState extends State<StoryPage> {
                               children: [
                                 MyRadioListTile<int>(
                                   value: 1,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'All',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = value.toString();
+                                  }),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 2,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'Male',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(
+                                      () => _filterGenderValue = value!),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 3,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'Female',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(
+                                      () => _filterGenderValue = value!),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 4,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'Other',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(
+                                      () => _filterGenderValue = value!),
                                 ),
                               ],
                             ),
@@ -391,6 +413,9 @@ class _StoryPageState extends State<StoryPage> {
                       ),
                       onPressed: () {
                         debugPrint("Butona tıklandı");
+                        print(filterAge);
+                        print(filterCity);
+                        print(filterGender);
                       },
                     ),
                   ),
@@ -399,6 +424,11 @@ class _StoryPageState extends State<StoryPage> {
             );
           });
         });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future takeStory() async {

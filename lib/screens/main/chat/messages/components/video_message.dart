@@ -1,7 +1,14 @@
+import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class VideoMessage extends StatelessWidget {
+  const VideoMessage({
+    Key? key,
+    required this.message,
+  }) : super(key: key);
+
+  final ChatMessage message;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -12,10 +19,8 @@ class VideoMessage extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                  "https://file-examples.com/storage/fe90a286be623bac8923620/2017/04/file_example_MP4_480_1_5MG.mp4"),
-            ),
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(message.message)),
             Container(
               height: 25,
               width: 25,

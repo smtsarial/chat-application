@@ -29,6 +29,12 @@ class TopTools extends StatefulWidget {
 class _TopToolsState extends State<TopTools> {
   bool _createVideo = false;
   @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer3<ControlNotifier, PaintingNotifier,
         DraggableWidgetNotifier>(

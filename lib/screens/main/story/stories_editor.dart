@@ -81,9 +81,14 @@ class _StoriesEditorState extends State<StoriesEditor> {
 
   @override
   void dispose() {
-    if (mounted) {
-      super.dispose();
-    }
+    //Provider.of<ControlNotifier>(context, listen: false).dispose();
+    //Provider.of<ScrollNotifier>(context, listen: false).dispose();
+    //Provider.of<DraggableWidgetNotifier>(context, listen: false).dispose();
+    //Provider.of<GradientNotifier>(context, listen: false).dispose();
+    //Provider.of<PaintingNotifier>(context, listen: false).dispose();
+    //Provider.of<TextEditingNotifier>(context, listen: false).dispose();
+    //Provider.of<RenderingNotifier>(context, listen: false).dispose();
+    super.dispose();
   }
 
   @override
