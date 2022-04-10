@@ -185,7 +185,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      ClipRRect(
+      Material(
         key: key,
         child: Container(
           color: Colors.grey[100],
@@ -229,27 +229,13 @@ class StoryItem {
                             child: Text(" - " + timeago.format(storyDate)),
                           )
                         ],
-                      )
+                      ),
                     ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 16),
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      child: caption == null ? SizedBox() : caption,
-                    ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(roundedTop ? 8 : 0),
-          bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
       shown: shown,

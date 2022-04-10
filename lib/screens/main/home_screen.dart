@@ -1,3 +1,4 @@
+import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/chatScreenTab.dart';
@@ -67,6 +68,10 @@ class _BottomNavigationBar extends StatefulWidget {
 
 class __BottomNavigationBarState extends State<_BottomNavigationBar> {
   var selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void handleItemSelected(int index) {
     setState(() {

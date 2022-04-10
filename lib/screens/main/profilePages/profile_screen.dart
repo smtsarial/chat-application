@@ -1,5 +1,6 @@
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
@@ -354,7 +355,16 @@ class _StoriesState extends State<_Stories> {
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
                               width: 60,
-                              child: _StoryCard(storyData: stories[index]),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StoryViewer(
+                                                  imageList: stories,
+                                                )));
+                                  },
+                                  child: _StoryCard(storyData: stories[index])),
                             ),
                           );
                         },

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditPage extends StatefulWidget {
@@ -11,12 +16,21 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  bool showPassword = false;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController firstnamecontroller = new TextEditingController();
+  TextEditingController lastnamecontroller = new TextEditingController();
+  TextEditingController descriptioncontroller = new TextEditingController();
+  late File _image;
+  bool _imageload = false;
+  late ImagePicker picker;
+  bool _visibleCircular = false;
+  String editedCountry = "";
   User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
       "", [], "", [], "", "", "", "", []);
 
   @override
   void initState() {
+    picker = new ImagePicker();
     if (mounted) {
       Authentication().getUser().then((value) {
         FirestoreHelper.getUserData()
@@ -24,6 +38,17 @@ class _EditPageState extends State<EditPage> {
       });
     }
     super.initState();
+  }
+
+  Future SelectImageFromGallery() async {
+    await picker.pickImage(source: ImageSource.gallery).then((value) {
+      if (value != null) {
+        setState(() {
+          _imageload = true;
+          _image = File(value.path);
+        });
+      }
+    });
   }
 
   @override
@@ -42,58 +67,214 @@ class _EditPageState extends State<EditPage> {
           child: ListView(
             children: [
               Center(
-                child: Stack(
-                  children: [
-                    Container(
-                        width: 130,
-                        height: 130,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 4,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-                                  color: Colors.black.withOpacity(0.1),
-                                  offset: Offset(0, 10))
-                            ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(
-                                    userData.profilePictureUrl)))),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Colors.green,
+                child: InkWell(
+                  onTap: () {
+                    SelectImageFromGallery();
+                  },
+                  child: _imageload == true
+                      ? CircleAvatar(
+                          backgroundColor: PureColor,
+                          radius: 100,
+                          child: CircleAvatar(
+                            radius: 95,
+                            backgroundImage: Image.file(
+                              _image,
+                              fit: BoxFit.cover,
+                            ).image,
                           ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        )),
-                  ],
+                        )
+                      : CircleAvatar(
+                          radius: 95,
+                          backgroundImage: CachedNetworkImageProvider(
+                              userData.profilePictureUrl),
+                        ),
                 ),
               ),
               SizedBox(
-                height: 35,
+                height: 9,
               ),
-              buildTextField("First Name", userData.firstName, false),
-              buildTextField("Last Name", userData.lastName, false),
-              buildTextField("E-mail", userData.email, false),
-              buildTextField("Description", userData.userBio, false),
-              buildTextField("City", userData.city, false),
+              Center(
+                child: Text("Tap to edit"),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Center(
+                  child: ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      children: [
+                    Form(key: _formKey, child: Column(children: <Widget>[]))
+                  ])),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: TextFormField(
+                  style: TextStyle(color: TextColor),
+                  controller: firstnamecontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: false,
+                  decoration: InputDecoration(
+                    hintText: userData.firstName,
+                    hintStyle: TextStyle(color: TextColor),
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: TextFormField(
+                  style: TextStyle(color: TextColor),
+                  controller: lastnamecontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: false,
+                  decoration: InputDecoration(
+                    hintText: userData.lastName,
+                    hintStyle: TextStyle(color: TextColor),
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: TextFormField(
+                  style: TextStyle(color: TextColor),
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: false,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: userData.email,
+                    hintStyle: TextStyle(color: TextColor),
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: TextFormField(
+                  style: TextStyle(color: TextColor),
+                  controller: descriptioncontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: false,
+                  decoration: InputDecoration(
+                    hintText: userData.userBio,
+                    hintStyle: TextStyle(color: TextColor),
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: DropdownButtonFormField<String>(
+                    value: "Şehir",
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(color: TextColor),
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    ),
+                    dropdownColor: PrimaryColor,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    style: const TextStyle(color: TextColor),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        editedCountry = newValue.toString();
+                      });
+                    },
+                    validator: (value) {
+                      if (value == "Gender") {
+                        return 'Please select your gender.';
+                      }
+                      return null;
+                    },
+                    items: <String>[
+                      'Şehir',
+                      'Adana',
+                      'Adıyaman',
+                      'Afyon',
+                      'Ağrı',
+                      'Amasya',
+                      'Ankara',
+                      'Antalya',
+                      'Artvin',
+                      'Aydın',
+                      'Balıkesir',
+                      'Bilecik',
+                      'Bingöl',
+                      'Bitlis',
+                      'Bolu',
+                      'Burdur',
+                      'Bursa',
+                      'Çanakkale',
+                      'Çankırı',
+                      'Çorum',
+                      'Denizli',
+                      'Diyarbakır',
+                      'Edirne',
+                      'Elazığ',
+                      'Erzincan',
+                      'Erzurum',
+                      'Eskişehir',
+                      'Gaziantep',
+                      'Giresun',
+                      'Gümüşhane',
+                      'Hakkari',
+                      'Hatay',
+                      'Isparta',
+                      'Mersin',
+                      'İstanbul',
+                      'İzmir',
+                      'Kars',
+                      'Kastamonu',
+                      'Kayseri',
+                      'Kırklareli',
+                      'Kırşehir',
+                      'Kocaeli',
+                      'Konya',
+                      'Kütahya',
+                      'Malatya',
+                      'Manisa',
+                      'Kahramanmaraş',
+                      'Mardin',
+                      'Muğla',
+                      'Muş',
+                      'Nevşehir',
+                      'Niğde',
+                      'Ordu',
+                      'Rize',
+                      'Sakarya',
+                      'Samsun',
+                      'Siirt',
+                      'Sinop',
+                      'Sivas',
+                      'Tekirdağ',
+                      'Tokat',
+                      'Trabzon',
+                      'Tunceli',
+                      'Şanlıurfa',
+                      'Uşak',
+                      'Van',
+                      'Yozgat',
+                      'Zonguldak',
+                      'Aksaray',
+                      'Bayburt',
+                      'Karaman',
+                      'Kırıkkale',
+                      'Batman',
+                      'Şırnak',
+                      'Bartın',
+                      'Ardahan',
+                      'Iğdır',
+                      'Yalova',
+                      'Karabük',
+                      'Kilis',
+                      'Osmaniye',
+                      'Düzce'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )),
               SizedBox(
                 height: 15,
               ),
@@ -101,19 +282,31 @@ class _EditPageState extends State<EditPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      updateUser();
+                    },
                     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      "UPDATE",
-                      style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white),
-                    ),
+                    child: _visibleCircular
+                        ? Visibility(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              color: Colors.blueGrey,
+                              strokeWidth: 2,
+                            ),
+                            visible: _visibleCircular,
+                          )
+                        : Text(
+                            "UPDATE",
+                            style: TextStyle(
+                                fontSize: 14,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
+                          ),
                   ),
                 ],
               )
@@ -124,37 +317,36 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
-        readOnly: true,
-        obscureText: isPasswordTextField ? showPassword : false,
-        decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
-            contentPadding: EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            )),
-      ),
-    );
+  Future updateUser() async {
+    if (_imageload != true) {
+      setState(() {
+        _visibleCircular = false;
+      });
+    }
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _visibleCircular = true;
+      });
+      FirebaseFirestore.instance.collection('users').doc(userData.id).update({
+        "firstName": firstnamecontroller.text.isEmpty
+            ? userData.firstName
+            : firstnamecontroller.text,
+        "lastName": lastnamecontroller.text.isEmpty
+            ? userData.lastName
+            : lastnamecontroller.text,
+        "userBio": descriptioncontroller.text.isEmpty
+            ? userData.userBio
+            : descriptioncontroller.text,
+        "country": editedCountry == "" ? userData.country : editedCountry
+      }).then((value) {
+        setState(() {
+          _visibleCircular = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Profile updated successfully"),
+        ));
+      });
+    }
   }
 
   Future<void> saveData(data) async {

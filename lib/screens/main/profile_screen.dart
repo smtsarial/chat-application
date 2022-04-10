@@ -1,8 +1,13 @@
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/followedList.dart';
 import 'package:anonmy/screens/main/followersList.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:anonmy/screens/main/myStoriesList_screen.dart';
 import 'package:anonmy/screens/main/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/settings.dart';
+import 'package:anonmy/screens/main/storyViewer_screen.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/models/user.dart';
@@ -13,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:timeago/timeago.dart' as timeago;
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -27,8 +34,10 @@ class ProfileScreen extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen()));
                 },
                 icon: Icon(Icons.settings)),
           ],
@@ -123,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    "My Stories",
+                    "Edit My Stories",
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -133,6 +142,7 @@ class ProfileScreen extends StatelessWidget {
                             builder: (context) => MyStoriesScreen()));
                   },
                 ),
+                _Stories(userData: user),
                 SizedBox(
                   height: 20,
                 ),
@@ -233,5 +243,123 @@ class __SignOutButtonState extends State<_SignOutButton> {
             onPressed: _signOut,
             child: const Text('Sign out'),
           );
+  }
+}
+
+class _Stories extends StatefulWidget {
+  const _Stories({Key? key, required this.userData}) : super(key: key);
+  final User userData;
+  @override
+  State<_Stories> createState() => _StoriesState();
+}
+
+class _StoriesState extends State<_Stories> {
+  List<Story> stories = [];
+  @override
+  void initState() {
+    FirestoreHelper.getStoriesForUser(widget.userData).then((value) {
+      setState(() {
+        stories = value;
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Card(
+        elevation: 0,
+        child: SizedBox(
+          height: 140,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
+                child: Text(
+                  'Stories',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15,
+                    color: AppColors.textFaded,
+                  ),
+                ),
+              ),
+              stories.length != 0
+                  ? (Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: stories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 60,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StoryViewer(
+                                                  imageList: stories,
+                                                )));
+                                  },
+                                  child: _StoryCard(storyData: stories[index])),
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                  : (const Center(
+                      child: Text(
+                        "There is no story",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                          color: AppColors.textFaded,
+                        ),
+                      ),
+                    ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryCard extends StatelessWidget {
+  const _StoryCard({
+    Key? key,
+    required this.storyData,
+  }) : super(key: key);
+
+  final Story storyData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Avatar.medium(url: storyData.imageUrl),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              timeago.format(storyData.createdTime),
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

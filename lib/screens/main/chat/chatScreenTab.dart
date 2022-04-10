@@ -1,6 +1,9 @@
+import 'package:anonmy/connections/local_notification_api.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/screens/main/chat/anon_message_screen.dart';
 import 'package:anonmy/screens/main/chat/message_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TabBarChat extends StatefulWidget {
   const TabBarChat({Key? key}) : super(key: key);
@@ -10,6 +13,11 @@ class TabBarChat extends StatefulWidget {
 }
 
 class _TabBarChatState extends State<TabBarChat> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

@@ -319,6 +319,15 @@ class FirestoreHelper {
     return message;
   }
 
+  static Stream<QuerySnapshot> ALLMESSAGES(userMail) {
+    // Normal message stream
+    var data = FirebaseFirestore.instance
+        .collection('messages')
+        .where("MessageRoomPeople", arrayContains: userMail)
+        .snapshots();
+    return data;
+  }
+
   static Stream<QuerySnapshot> messages(userMail) {
     // Normal message stream
     var data = FirebaseFirestore.instance
