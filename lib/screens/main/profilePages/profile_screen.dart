@@ -24,6 +24,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
+    print(widget.userData.firstName);
     super.initState();
     setState(() {
       follower = widget.userData.followers.contains(widget.senderData.username);

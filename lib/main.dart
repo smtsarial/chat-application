@@ -1,6 +1,7 @@
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/auth/login.dart';
+import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late String userUID = "loading";
+  late String landingRunned = "true";
 
   @override
   void initState() {
@@ -87,18 +89,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             title: 'anonmy',
             home: (() {
               // your code here
-              if (userUID == "loading") {
-                return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey,
-                    color: Colors.blueGrey,
-                    strokeWidth: 2,
-                  ),
-                );
-              } else if (userUID == "") {
-                return LoginPage();
+              if (landingRunned != "true") {
+                if (userUID == "loading") {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      color: Colors.blueGrey,
+                      strokeWidth: 2,
+                    ),
+                  );
+                } else if (userUID == "") {
+                  return LoginPage();
+                } else {
+                  return SplashScreen();
+                }
               } else {
-                return SplashScreen();
+                LandingScreen();
               }
             }())));
   }
@@ -121,9 +127,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Future<void> _handleAuthenticatedState() async {
     var sharedPreferences = await SharedPreferences.getInstance();
     var _usermail = sharedPreferences.getString("userUID");
+    var _landingRunned = sharedPreferences.getString("landingRunned");
 
     setState(() {
       userUID = _usermail.toString();
+      landingRunned = _landingRunned.toString();
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingScreen extends StatelessWidget {
   @override
@@ -35,12 +36,14 @@ class LandingScreen extends StatelessWidget {
             Spacer(flex: 3),
             FittedBox(
               child: TextButton(
-                  onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SplashScreen(),
-                        ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SplashScreen(),
                       ),
+                    );
+                  },
                   child: Row(
                     children: [
                       Text(
@@ -70,5 +73,10 @@ class LandingScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> saveData(mail) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString("landingRunned", "true");
   }
 }

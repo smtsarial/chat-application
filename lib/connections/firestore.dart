@@ -13,16 +13,6 @@ class FirestoreHelper {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static final DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  static Future denem1e() async {
-    await Authentication().login("sarialsamet@gmail.com", "samet2828");
-    Stream<DatabaseEvent> stream =
-        ref.child("asfasf/messages/sendermessager").orderByValue().onValue;
-    stream.listen((DatabaseEvent event) {
-      var data = event.snapshot.value;
-      print(data);
-    });
-  }
-
   static Future<User> getUserData() async {
     //this method for taking user data
     List<User> details = [];
@@ -50,11 +40,14 @@ class FirestoreHelper {
   static Future<bool> unfollowUser(User user, User removedUser) async {
     //UNFOLLOW USER
     try {
-      db.collection('users').doc(user.id).update({
-        'followers': FieldValue.arrayRemove([removedUser.username])
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'followers': FieldValue.arrayRemove([removedUser.username])
+        });
       });
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -62,11 +55,14 @@ class FirestoreHelper {
   static Future<bool> removeFollowedUser(userId, removedData) async {
     //REMOVES FROM FOLLOWED LIST
     try {
-      db.collection('users').doc(userId).update({
-        'followed': FieldValue.arrayRemove([removedData])
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(userId).update({
+          'followed': FieldValue.arrayRemove([removedData])
+        });
       });
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -74,8 +70,10 @@ class FirestoreHelper {
   static Future<bool> addFollowersToUser(User follower, User user) async {
     //follow user
     try {
-      db.collection('users').doc(user.id).update({
-        'followers': FieldValue.arrayUnion([follower.username])
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'followers': FieldValue.arrayUnion([follower.username])
+        });
       });
       return true;
     } catch (e) {

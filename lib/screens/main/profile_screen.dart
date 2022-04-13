@@ -195,15 +195,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 )),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LandingScreen()));
-                  },
-                  child: const Text('Landing'),
-                )
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/chat/messages/chatDetail_screen.dart';
 import 'package:anonmy/screens/main/chat/messages/components/body.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,6 +41,14 @@ class _ChatScreenState extends State<ChatScreen> {
             title: GestureDetector(
               onTap: () {
                 print("profile");
+                messageRoom.anonim == false
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatDetailScreen(
+                                  chatRoomInfo: messageRoom,
+                                )))
+                    : print("anon");
               },
               child: Row(
                 children: [

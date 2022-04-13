@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
         isErrorOccured = true;
       });
     }
-    print("||||||||" + isErrorOccured.toString());
+    //print("||||||||" + isErrorOccured.toString());
     super.initState();
   }
 
