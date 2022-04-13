@@ -6,16 +6,14 @@ A new Flutter project.
 <table>
   <tr>
     <td>First Screen Page</td>
+    <td>First Screen Page</td>
      <td>Holiday Mention</td>
      <td>Present day in purple and selected day in pink</td>
   </tr>
   <tr>
     <td><img src="https://github.com/smtsarial/chat-application/blob/anonmy/assets/images/Screenshot_1649870462.png" width=270></td>
-    
     <td><img src="https://github.com/smtsarial/chat-application/blob/anonmy/assets/images/Screenshot_1649870469.png" width=270></td>
-    
     <td><img src="https://github.com/smtsarial/chat-application/blob/anonmy/assets/images/Screenshot_1649870475.png" width=270></td>
-    
     <td><img src="https://github.com/smtsarial/chat-application/blob/anonmy/assets/images/Screenshot_1649870481.png" width=270></td>
   </tr> 
   <tr>
