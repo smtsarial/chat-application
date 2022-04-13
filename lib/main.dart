@@ -28,28 +28,41 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  late String userUID = "";
+  late String userUID = "loading";
 
   @override
   void initState() {
     super.initState();
-    _handleAuthenticatedState().then((value) {});
-    WidgetsBinding.instance?.addObserver(this);
-    FirestoreHelper.getUserData().then((value) {
-      FirestoreHelper.ALLMESSAGES(value.email).listen((event) {
-        if (event.docChanges.isNotEmpty) {
-          NotificationApi.showNotification(
-            title: event.docChanges.first.doc['anonim'] == false
-                ? event.docChanges.first.doc['senderUsername'] == value.email
-                    ? event.docChanges.first.doc['senderUsername'] +
-                        " sent message."
-                    : event.docChanges.first.doc['receiverUsername'] +
-                        " sent message."
-                : "Anon-" + event.docChanges.first.doc.id,
-            body: "Message: " + event.docChanges.first.doc['lastMessage'],
-            payload: event.docChanges.first.doc.id,
-          );
-        }
+    _handleAuthenticatedState().then((value) {
+      WidgetsBinding.instance?.addObserver(this);
+      FirestoreHelper.getUserData().then((value) {
+        FirestoreHelper.ALLMESSAGES(value.email).listen((event) {
+          if (event.docChanges.isNotEmpty) {
+            FirestoreHelper.db
+                .collection('messages')
+                .doc(event.docChanges.first.doc.id)
+                .collection('chatMessages')
+                .orderBy("timeToSent", descending: true)
+                .get()
+                .then((value1) {
+              //print(value1.docChanges.first.doc.id);
+              if (value1.docs.first['messageOwnerUsername'] != value.username) {
+                NotificationApi.showNotification(
+                  title: event.docChanges.first.doc['anonim'] == false
+                      ? event.docChanges.first.doc['senderUsername'] ==
+                              value.email
+                          ? event.docChanges.first.doc['senderUsername'] +
+                              " sent message."
+                          : event.docChanges.first.doc['receiverUsername'] +
+                              " sent message."
+                      : "Anon-" + event.docChanges.first.doc.id,
+                  body: "Message: " + event.docChanges.first.doc['lastMessage'],
+                  payload: event.docChanges.first.doc.id,
+                );
+              }
+            });
+          }
+        });
       });
     });
   }
@@ -72,7 +85,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             darkTheme: AppTheme.dark(),
             themeMode: ThemeMode.dark,
             title: 'anonmy',
-            home: userUID == "" ? LoginPage() : SplashScreen()));
+            home: (() {
+              // your code here
+              if (userUID == "loading") {
+                return Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.grey,
+                    color: Colors.blueGrey,
+                    strokeWidth: 2,
+                  ),
+                );
+              } else if (userUID == "") {
+                return LoginPage();
+              } else {
+                return SplashScreen();
+              }
+            }())));
   }
 
   @override

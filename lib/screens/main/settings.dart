@@ -1,9 +1,12 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/profileSetting_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HexColor extends Color {
   static int _getColor(String hex) {
@@ -24,10 +27,14 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool lockInBackground = true;
   bool notificationsEnabled = true;
-  void signOut(context) async {
-    late Authentication auth;
-    auth = Authentication();
-    await auth.signOut().then((value) => value);
+  Future<void> _signOut() async {
+    Authentication().signOut().then((value) async {
+      var sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString("userUID", "");
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    });
   }
 
   @override
@@ -39,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
         ),
         centerTitle: true,
+        backgroundColor: PrimaryColor,
       ),
       body: buildSettingsList(),
     );
@@ -60,16 +68,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            SettingsTile(
-              title: Text('Change Password'),
-              leading: Icon(Icons.password),
-              onPressed: (context) {},
-            ),
+            //SettingsTile(
+            //  title: Text('Change Password'),
+            //  leading: Icon(Icons.password),
+            //  onPressed: (context) {},
+            //),
             SettingsTile(
               title: Text('Sign out'),
               leading: Icon(Icons.exit_to_app),
               onPressed: (context) {
-                signOut(context);
+                _signOut();
               },
             ),
           ],

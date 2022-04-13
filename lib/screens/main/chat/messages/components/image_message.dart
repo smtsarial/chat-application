@@ -22,7 +22,7 @@ class ImageMessage extends StatelessWidget {
             : PrimaryColor,
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: kDefaultPadding /2,
+        horizontal: kDefaultPadding / 2,
         vertical: kDefaultPadding / 2,
       ),
       child: Container(

@@ -5,6 +5,7 @@ import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class StoryPage extends StatefulWidget {
@@ -157,7 +158,17 @@ class _StoryPageState extends State<StoryPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(onPressed: () {}, child: Text("Reset")),
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _currentRangeValues = RangeValues(18, 65);
+                                _filterGenderValue = 1;
+                                filterCity = "İstanbul";
+                                filterGender = "All";
+                                filterAge = [18, 65];
+                              });
+                            },
+                            child: Text("Reset")),
                         Text("Filter"),
                         TextButton(
                             onPressed: () {
@@ -238,14 +249,7 @@ class _StoryPageState extends State<StoryPage> {
                                 },
                               );
                             },
-                            validator: (value) {
-                              if (value == "Gender") {
-                                return 'Please select your gender.';
-                              }
-                              return null;
-                            },
                             items: <String>[
-                              'Şehir',
                               'Adana',
                               'Adıyaman',
                               'Afyon',
@@ -362,7 +366,7 @@ class _StoryPageState extends State<StoryPage> {
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
-                                    filterGender = value.toString();
+                                    filterGender = "All";
                                   }),
                                 ),
                                 MyRadioListTile<int>(
@@ -370,24 +374,20 @@ class _StoryPageState extends State<StoryPage> {
                                   groupValue: _filterGenderValue,
                                   leading: 'Male',
                                   title: Text(''),
-                                  onChanged: (value) => setState(
-                                      () => _filterGenderValue = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = "Male";
+                                  }),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 3,
                                   groupValue: _filterGenderValue,
                                   leading: 'Female',
                                   title: Text(''),
-                                  onChanged: (value) => setState(
-                                      () => _filterGenderValue = value!),
-                                ),
-                                MyRadioListTile<int>(
-                                  value: 4,
-                                  groupValue: _filterGenderValue,
-                                  leading: 'Other',
-                                  title: Text(''),
-                                  onChanged: (value) => setState(
-                                      () => _filterGenderValue = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = "Female";
+                                  }),
                                 ),
                               ],
                             ),
@@ -411,11 +411,13 @@ class _StoryPageState extends State<StoryPage> {
                         "Apply Filter",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        debugPrint("Butona tıklandı");
-                        print(filterAge);
-                        print(filterCity);
-                        print(filterGender);
+                      onPressed: () async {
+                        //debugPrint("Butona tıklandı");
+                        //print(filterAge);
+                        //print(filterCity);
+                        //print(filterGender);
+                        updateFilterUserData()
+                            .then((value) => Navigator.pop(context));
                       },
                     ),
                   ),
@@ -424,6 +426,32 @@ class _StoryPageState extends State<StoryPage> {
             );
           });
         });
+  }
+
+  Future updateFilterUserData() async {
+    List<Story> list = [];
+    await FirestoreHelper.getStoriesForStoryScreen().then((value) {
+      value.forEach((element) {
+        if (DateTime.now().difference(element.createdTime).inHours < 24) {
+          list.add(element);
+        }
+      });
+    });
+    //print(userList.length);
+
+    List<Story> data = list
+        .where((element) =>
+            element.ownerAge >= filterAge[0] &&
+            element.ownerAge <= filterAge[1] &&
+            element.ownerCity == filterCity)
+        .toList();
+    if (filterGender != "All") {
+      data =
+          data.where((element) => element.ownerGender == filterGender).toList();
+    }
+    setState(() {
+      stories = data;
+    });
   }
 
   @override

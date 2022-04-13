@@ -41,7 +41,10 @@ class FirestoreHelper {
       });
     });
 
-    return details[0];
+    return details.length != 0
+        ? details[0]
+        : User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "", [],
+            "", [], "", "", "", "", []);
   }
 
   static Future<bool> unfollowUser(User user, User removedUser) async {
@@ -142,8 +145,18 @@ class FirestoreHelper {
   static Future<bool> saveNewStories(String storyUrl) async {
     try {
       await FirestoreHelper.getUserData().then((value) async {
-        Story story = Story("", value.email, value.username,
-            value.profilePictureUrl, DateTime.now(), storyUrl, []);
+        Story story = Story(
+            "",
+            value.email,
+            value.username,
+            value.profilePictureUrl,
+            DateTime.now(),
+            storyUrl,
+            [],
+            value.age,
+            value.city,
+            value.country,
+            value.gender);
         await db.collection('stories').add(story.toMap()).then((value1) {
           print(value1.id);
           db.collection('users').doc(value.id).update({
@@ -321,6 +334,7 @@ class FirestoreHelper {
 
   static Stream<QuerySnapshot> ALLMESSAGES(userMail) {
     // Normal message stream
+    List<String> myMessageIdList = [];
     var data = FirebaseFirestore.instance
         .collection('messages')
         .where("MessageRoomPeople", arrayContains: userMail)

@@ -57,6 +57,7 @@ class _EditPageState extends State<EditPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Edit Profile"),
+        backgroundColor: PrimaryColor,
       ),
       body: Container(
         padding: EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -109,13 +110,11 @@ class _EditPageState extends State<EditPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: TextFormField(
-                  style: TextStyle(color: TextColor),
                   controller: firstnamecontroller,
                   keyboardType: TextInputType.emailAddress,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: userData.firstName,
-                    hintStyle: TextStyle(color: TextColor),
                     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   ),
                 ),
@@ -123,13 +122,11 @@ class _EditPageState extends State<EditPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: TextFormField(
-                  style: TextStyle(color: TextColor),
                   controller: lastnamecontroller,
                   keyboardType: TextInputType.emailAddress,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: userData.lastName,
-                    hintStyle: TextStyle(color: TextColor),
                     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   ),
                 ),
@@ -137,13 +134,11 @@ class _EditPageState extends State<EditPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: TextFormField(
-                  style: TextStyle(color: TextColor),
                   keyboardType: TextInputType.emailAddress,
                   autofocus: false,
                   readOnly: true,
                   decoration: InputDecoration(
                     hintText: userData.email,
-                    hintStyle: TextStyle(color: TextColor),
                     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   ),
                 ),
@@ -151,13 +146,11 @@ class _EditPageState extends State<EditPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: TextFormField(
-                  style: TextStyle(color: TextColor),
                   controller: descriptioncontroller,
                   keyboardType: TextInputType.emailAddress,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: userData.userBio,
-                    hintStyle: TextStyle(color: TextColor),
                     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   ),
                 ),
@@ -173,7 +166,6 @@ class _EditPageState extends State<EditPage> {
                     ),
                     dropdownColor: PrimaryColor,
                     icon: const Icon(Icons.arrow_drop_down),
-                    style: const TextStyle(color: TextColor),
                     onChanged: (String? newValue) {
                       setState(() {
                         editedCountry = newValue.toString();
@@ -337,7 +329,7 @@ class _EditPageState extends State<EditPage> {
         "userBio": descriptioncontroller.text.isEmpty
             ? userData.userBio
             : descriptioncontroller.text,
-        "country": editedCountry == "" ? userData.country : editedCountry
+        "city": editedCountry == "" ? userData.country : editedCountry
       }).then((value) {
         setState(() {
           _visibleCircular = false;

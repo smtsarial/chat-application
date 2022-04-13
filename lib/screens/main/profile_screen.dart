@@ -29,6 +29,7 @@ class ProfileScreen extends StatelessWidget {
     User user = Provider.of<UserProvider>(context).user;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: PrimaryColor,
           centerTitle: true,
           title: Text(user.firstName + " " + user.lastName),
           actions: [
@@ -194,7 +195,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 )),
-                const _SignOutButton(),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -237,12 +237,10 @@ class __SignOutButtonState extends State<_SignOutButton> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? const CircularProgressIndicator()
-        : TextButton(
-            onPressed: _signOut,
-            child: const Text('Sign out'),
-          );
+    return TextButton(
+      onPressed: _signOut,
+      child: const Text('Sign out'),
+    );
   }
 }
 

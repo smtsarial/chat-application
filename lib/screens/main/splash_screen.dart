@@ -25,16 +25,30 @@ class _SplashScreenState extends State<SplashScreen> {
   User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
       "", [], "", [], "", "", "", "", []);
 
+  bool isLoading = true;
+  bool isErrorOccured = false;
+
   @override
   void initState() {
-    FirestoreHelper.getUserData().then((value) {
-      setState(
-        () {
-          userData = value;
-        },
-      );
-    });
-
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        setState(
+          () {
+            userData = value;
+            isLoading = false;
+          },
+        );
+      }).onError((error, stackTrace) {
+        setState(() {
+          isErrorOccured = true;
+        });
+      });
+    } catch (e) {
+      setState(() {
+        isErrorOccured = true;
+      });
+    }
+    print("||||||||" + isErrorOccured.toString());
     super.initState();
   }
 
@@ -45,16 +59,40 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return userData.id == ""
-        ? Scaffold(body: Center(child: LoginPage()))
-        : (MultiProvider(
-            providers: [
-                ChangeNotifierProvider<MessageRoomProvider>(
-                  create: ((context) => MessageRoomProvider(userData)),
-                )
-              ],
-            child: Scaffold(
-              body: HomeScreen(),
-            )));
+    return (() {
+      // your code here
+      if (isLoading == true) {
+        return Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey,
+            color: Colors.blueGrey,
+            strokeWidth: 2,
+          ),
+        );
+      } else {
+        return (userData.id == "")
+            ? LoginPage()
+            : (MultiProvider(
+                providers: [
+                    ChangeNotifierProvider<MessageRoomProvider>(
+                      create: ((context) => MessageRoomProvider(userData)),
+                    )
+                  ],
+                child: Scaffold(
+                  body: HomeScreen(),
+                )));
+      }
+    }());
   }
 }
+//return userData.id == ""
+//        ? Scaffold(body: Center(child: LoginPage()))
+//        : (MultiProvider(
+//            providers: [
+//                ChangeNotifierProvider<MessageRoomProvider>(
+//                  create: ((context) => MessageRoomProvider(userData)),
+//                )
+//              ],
+//            child: Scaffold(
+//              body: HomeScreen(),
+//            )));

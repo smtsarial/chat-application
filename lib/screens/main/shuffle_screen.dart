@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,12 +23,48 @@ class ShufflePage extends StatefulWidget {
 
 class _ShufflePageState extends State<ShufflePage> {
   late RangeValues _currentRangeValues = RangeValues(18, 65);
-  late int _value = 1;
+  late int _filterGenderValue = 1;
+  late String filterCity = "İstanbul";
+  late String filterGender = "All";
+  late List filterAge = [18, 65];
+
   late List<Story> stories = [];
+  String searchUsername = "";
+
+  List<User> userList = [];
 
   @override
   void initState() {
+    FirebaseFirestore.instance.collection('users').get().then((value) {
+      List<User> list = [];
+      value.docs.forEach((element) {
+        list.add(User.fromMap(element));
+      });
+      setState(() {
+        userList = list;
+      });
+    });
     super.initState();
+  }
+
+  Stream<QuerySnapshot> stream() async* {
+    var _stream = FirebaseFirestore.instance
+        .collection('users')
+        .where("username", isGreaterThanOrEqualTo: searchUsername)
+        .snapshots();
+    yield* _stream;
+  }
+
+  void getAllUsers() {
+    FirebaseFirestore.instance.collection('users').get().then((value) {
+      List<User> list = [];
+      value.docs.forEach((element) {
+        list.add(User.fromMap(element));
+      });
+      setState(() {
+        userList = list;
+      });
+    });
   }
 
   @override
@@ -49,65 +87,52 @@ class _ShufflePageState extends State<ShufflePage> {
                           child: Icon(
                             Icons.filter_list_rounded,
                           )))),
-              const Expanded(
+              Expanded(
                 child: TextField(
+                    onChanged: (value) {
+                      List<User> data = userList
+                          .where((element) => element.username.contains(value))
+                          .toList();
+                      if (userList.length != 0) {
+                        setState(() {
+                          searchUsername = value;
+                          userList = data;
+                        });
+                      } else {
+                        getAllUsers();
+                      }
+                    },
                     decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: PureColor,
-                  ),
-                  hintText: "Search",
-                )),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: PureColor,
+                      ),
+                      hintText: "Search",
+                    )),
               )
             ],
           ),
         ),
-        const Divider(),
+        SizedBox(
+          height: 10,
+        ),
         Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('users').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.builder(
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: userList.length != 0
+                  ? GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              childAspectRatio: 9 / 10,
+                              childAspectRatio: 9 / 11,
                               mainAxisSpacing: 5,
                               crossAxisSpacing: 5),
-                      itemCount: snapshot.data!.docs.length,
+                      itemCount: userList.length,
                       itemBuilder: (BuildContext ctx, index) {
-                        DocumentSnapshot doc = snapshot.data!.docs[index];
-                        return shuffleUserCard(User(
-                            doc.id,
-                            doc["email"],
-                            doc["age"],
-                            doc["chatCount"],
-                            doc["profilePictureUrl"],
-                            doc["followers"],
-                            doc["followed"],
-                            doc["gender"],
-                            doc["isActive"],
-                            doc["lastActiveTime"].toDate(),
-                            doc["firstName"],
-                            doc["lastName"],
-                            doc["likes"],
-                            doc["userBio"],
-                            doc["userTags"],
-                            doc["userType"],
-                            doc["username"],
-                            doc["city"],
-                            doc["country"],
-                            doc['myStoriesId']));
-                      });
-                } else {
-                  return const Text("No data");
-                }
-              }),
-        ))
+                        return shuffleUserCard(userList[index]);
+                      })
+                  : const Text("No data")),
+        )
       ],
     );
   }
@@ -213,6 +238,12 @@ class _ShufflePageState extends State<ShufflePage> {
                       SizedBox(
                         height: 10,
                       ),
+                      Text(
+                        "@" + userData.username,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       userData.isActive
                           ? Container()
                           : Text(timeago.format(userData.lastActiveTime)),
@@ -287,7 +318,17 @@ class _ShufflePageState extends State<ShufflePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(onPressed: () {}, child: Text("Reset")),
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _currentRangeValues = RangeValues(18, 65);
+                                _filterGenderValue = 1;
+                                filterCity = "İstanbul";
+                                filterGender = "All";
+                                filterAge = [18, 65];
+                              });
+                            },
+                            child: Text("Reset")),
                         Text("Filter"),
                         TextButton(
                             onPressed: () {
@@ -313,9 +354,9 @@ class _ShufflePageState extends State<ShufflePage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              _currentRangeValues.start.round().toString() +
+                              filterAge[0].round().toString() +
                                   " - " +
-                                  _currentRangeValues.end.round().toString(),
+                                  filterAge[1].round().toString(),
                             ),
                           ],
                         ),
@@ -328,6 +369,10 @@ class _ShufflePageState extends State<ShufflePage> {
                         min: 18,
                         onChanged: (values) {
                           setState(() {
+                            filterAge = [
+                              values.start.round(),
+                              values.end.round()
+                            ];
                             _currentRangeValues = values;
                           });
                         },
@@ -347,7 +392,7 @@ class _ShufflePageState extends State<ShufflePage> {
                             ),
                           ),
                           DropdownButtonFormField<String>(
-                            value: "Şehir",
+                            value: filterCity,
                             decoration: InputDecoration(
                               hintStyle: TextStyle(color: TextColor),
                               enabledBorder: InputBorder.none,
@@ -357,15 +402,14 @@ class _ShufflePageState extends State<ShufflePage> {
                             dropdownColor: PrimaryColor,
                             icon: const Icon(Icons.arrow_drop_down),
                             style: const TextStyle(color: TextColor),
-                            onChanged: (String? newValue) {},
-                            validator: (value) {
-                              if (value == "Gender") {
-                                return 'Please select your gender.';
-                              }
-                              return null;
+                            onChanged: (String? newValue) {
+                              setState(
+                                () {
+                                  filterCity = newValue.toString();
+                                },
+                              );
                             },
                             items: <String>[
-                              'Şehir',
                               'Adana',
                               'Adıyaman',
                               'Afyon',
@@ -477,35 +521,33 @@ class _ShufflePageState extends State<ShufflePage> {
                               children: [
                                 MyRadioListTile<int>(
                                   value: 1,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'All',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = "All";
+                                  }),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 2,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'Male',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = "Male";
+                                  }),
                                 ),
                                 MyRadioListTile<int>(
                                   value: 3,
-                                  groupValue: _value,
+                                  groupValue: _filterGenderValue,
                                   leading: 'Female',
                                   title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
-                                ),
-                                MyRadioListTile<int>(
-                                  value: 4,
-                                  groupValue: _value,
-                                  leading: 'Other',
-                                  title: Text(''),
-                                  onChanged: (value) =>
-                                      setState(() => _value = value!),
+                                  onChanged: (value) => setState(() {
+                                    _filterGenderValue = value!;
+                                    filterGender = "Female";
+                                  }),
                                 ),
                               ],
                             ),
@@ -529,8 +571,13 @@ class _ShufflePageState extends State<ShufflePage> {
                         "Apply Filter",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        debugPrint("Butona tıklandı");
+                      onPressed: () async {
+                        //debugPrint("Butona tıklandı");
+                        //print(filterAge);
+                        //print(filterCity);
+                        //print(filterGender);
+                        updateFilterUserData()
+                            .then((value) => Navigator.pop(context));
                       },
                     ),
                   ),
@@ -539,5 +586,27 @@ class _ShufflePageState extends State<ShufflePage> {
             );
           });
         });
+  }
+
+  Future updateFilterUserData() async {
+    //print(userList.length);
+    List<User> list = [];
+    await FirebaseFirestore.instance.collection('users').get().then((value) {
+      value.docs.forEach((element) {
+        list.add(User.fromMap(element));
+      });
+    });
+    List<User> data = list
+        .where((element) =>
+            element.age >= filterAge[0] &&
+            element.age <= filterAge[1] &&
+            element.city == filterCity)
+        .toList();
+    if (filterGender != "All") {
+      data = data.where((element) => element.gender == filterGender).toList();
+    }
+    setState(() {
+      userList = data;
+    });
   }
 }

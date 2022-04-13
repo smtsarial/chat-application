@@ -110,23 +110,26 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     sentorNot == false
                         ? IconButton(
                             onPressed: () {
-                              setState(() {
-                                sentorNot = true;
-                              });
-                              sendMessage(messageController.text).then((value) {
-                                messageController.text = "";
-                                if (value != true) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                        "Connection lost please refresh this page! and try again!"),
-                                  ));
-                                } else {
-                                  setState(() {
-                                    sentorNot = false;
-                                  });
-                                }
-                              });
+                              if (messageController.text.length != 0) {
+                                setState(() {
+                                  sentorNot = true;
+                                });
+                                sendMessage(messageController.text)
+                                    .then((value) {
+                                  messageController.text = "";
+                                  if (value != true) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                          "Connection lost please refresh this page! and try again!"),
+                                    ));
+                                  } else {
+                                    setState(() {
+                                      sentorNot = false;
+                                    });
+                                  }
+                                });
+                              }
                             },
                             icon: Icon(Icons.send),
                             color: Theme.of(context)
