@@ -19,6 +19,10 @@ class User {
   late String country;
   late String city;
   late List myStoriesId;
+  late List myYoutubeVideo;
+  late List SpotifyList;
+  late List MovieList;
+  late List hobbies;
 
   User(
       this.id,
@@ -40,7 +44,11 @@ class User {
       this.username,
       this.city,
       this.country,
-      this.myStoriesId);
+      this.myStoriesId,
+      this.myYoutubeVideo,
+      this.SpotifyList,
+      this.MovieList,
+      this.hobbies);
   User.fromMap(dynamic obj) {
     email = obj['email'];
     firstName = obj['firstName'];
@@ -61,6 +69,12 @@ class User {
     city = obj['city'];
     country = obj['country'];
     myStoriesId = obj['myStoriesId'];
+
+    myYoutubeVideo = obj['myYoutubeVideo'];
+    SpotifyList = obj['SpotifyList'];
+    MovieList = obj['MovieList'];
+
+    hobbies = obj['hobbies'];
   }
 
   Map<String, dynamic> toMap() {
@@ -85,6 +99,10 @@ class User {
       map['city'] = this.city;
       map['country'] = this.country;
       map['myStoriesId'] = this.myStoriesId;
+      map['myYoutubeVideo'] = this.myYoutubeVideo;
+      map['SpotifyList'] = this.SpotifyList;
+      map['MovieList'] = this.MovieList;
+      map['hobbies'] = this.hobbies;
     }
     return map;
   }

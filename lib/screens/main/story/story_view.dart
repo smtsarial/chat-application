@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:anonmy/models/story.dart';
-import 'package:anonmy/screens/main/profilePages/profile_screen.dart';
+import 'package:anonmy/screens/main/user_profile_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart' show IterableExtension;

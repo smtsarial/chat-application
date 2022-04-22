@@ -1,3 +1,4 @@
+import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/message_data.dart';
@@ -5,8 +6,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider with ChangeNotifier {
-  User user = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "",
-      [], "", [], "", "", "", "",[]);
+  User user = emptyUser;
 
   UserProvider() {
     FirestoreHelper.getUserData().then((value) => user = value);

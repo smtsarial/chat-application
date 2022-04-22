@@ -1,5 +1,6 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class FollowersList extends StatefulWidget {
@@ -10,8 +11,7 @@ class FollowersList extends StatefulWidget {
 }
 
 class _FollowersListState extends State<FollowersList> {
-  User user = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "",
-      [], "", [], "", "", "", "",[]);
+  User user = emptyUser;
 
   @override
   void initState() {

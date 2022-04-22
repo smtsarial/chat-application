@@ -61,6 +61,8 @@ dependencies:
   flutter_local_notifications: ^9.4.0
   rxdart: ^0.27.3
   settings_ui: ^2.0.2
+  spotify_metadata: ^1.0.1
+  youtube_metadata: ^1.0.0
   
 
 

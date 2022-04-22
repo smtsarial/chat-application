@@ -2,7 +2,11 @@ import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/screens/auth/login.dart';
-import 'package:anonmy/screens/main/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/profilePages/YoutubeVideoList.dart';
+import 'package:anonmy/screens/main/profilePages/myHobbies.dart';
+import 'package:anonmy/screens/main/profilePages/myMovieList.dart';
+import 'package:anonmy/screens/main/profilePages/mySpotifyList.dart';
+import 'package:anonmy/screens/main/profilePages/profileSetting_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -68,11 +72,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            //SettingsTile(
-            //  title: Text('Change Password'),
-            //  leading: Icon(Icons.password),
-            //  onPressed: (context) {},
-            //),
+            SettingsTile(
+              title: Text('My Spotify List'),
+              leading: Icon(Icons.music_note),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => mySpotifyList()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text('My Youtube List'),
+              leading: Icon(Icons.youtube_searched_for),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => myYoutubeList()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text('My Movie List'),
+              leading: Icon(Icons.movie_creation),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => myMovieList()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text('My Hobbie List'),
+              leading: Icon(Icons.sports_tennis),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHobbies()),
+                );
+              },
+            ),
             SettingsTile(
               title: Text('Sign out'),
               leading: Icon(Icons.exit_to_app),
@@ -95,8 +134,7 @@ class EmailSettings extends StatefulWidget {
 }
 
 class _EmailSettingsState extends State<EmailSettings> {
-  User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-      "", [], "", [], "", "", "", "", []);
+  User userData = emptyUser;
   late Authentication auth;
 
   bool _warningMessage = false;

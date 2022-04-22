@@ -1,305 +1,236 @@
-import 'package:anonmy/models/story.dart';
-import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
-import 'package:anonmy/screens/main/storyViewer_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/firestore.dart';
-import 'package:anonmy/models/user.dart';
-import 'package:anonmy/theme.dart';
+import 'package:anonmy/models/story.dart';
+import 'package:anonmy/screens/main/profilePages/followedList.dart';
+import 'package:anonmy/screens/main/profilePages/followersList.dart';
+import 'package:anonmy/screens/main/landing_screen.dart';
+import 'package:anonmy/screens/main/profilePages/myStoriesList_screen.dart';
+import 'package:anonmy/screens/main/profilePages/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/profilePages/settings.dart';
+import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/widgets/avatar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:timeago/timeago.dart' as timeago;
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key, required this.senderData, required this.userData})
-      : super(key: key);
-  final User userData;
-  final User senderData;
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
-  State<Profile> createState() => _ProfileState();
+  Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).user;
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: PrimaryColor,
+          centerTitle: true,
+          title: Text(user.firstName + " " + user.lastName),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen()));
+                },
+                icon: Icon(Icons.settings)),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          child: Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FollowersList()));
+                              },
+                              icon: FaIcon(FontAwesomeIcons.users)),
+                          Text("Followers"),
+                          Text(user.followers.length.toString())
+                        ],
+                      )),
+                      Column(
+                        children: [
+                          Center(
+                            child: Text(
+                              "@" + user.username,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Colors.blue,
+                                  Colors.red,
+                                ],
+                              ),
+                              shape: BoxShape.circle,
+                              color: PrimaryColor,
+                            ),
+                            child: CircleAvatar(
+                              radius: 82,
+                              backgroundImage: CachedNetworkImageProvider(
+                                  user.profilePictureUrl),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                          child: Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FollowedList()));
+                              },
+                              icon: FaIcon(FontAwesomeIcons.users)),
+                          Text("Followed"),
+                          Text(user.followed.length.toString())
+                        ],
+                      )),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                    ),
+                  ),
+                  child: Text(
+                    "Edit My Stories",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyStoriesScreen()));
+                  },
+                ),
+                _Stories(userData: user),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.rocket_launch,
+                          size: 40,
+                          color: Color.fromARGB(255, 255, 153, 0),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Get More Messages!",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Get Shuffle Proote, be on top of the shuffle list.",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      width: 300.0,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: PrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12), // <-- Radius
+                          ),
+                        ),
+                        child: Text(
+                          "Update My Account",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                )),
+              ],
+            ),
+          ),
+        ));
+  }
 }
 
-class _ProfileState extends State<Profile> {
-  bool follower = false;
+class _SignOutButton extends StatefulWidget {
+  const _SignOutButton({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  void initState() {
-    print(widget.userData.firstName);
-    super.initState();
-    setState(() {
-      follower = widget.userData.followers.contains(widget.senderData.username);
+  __SignOutButtonState createState() => __SignOutButtonState();
+}
+
+class __SignOutButtonState extends State<_SignOutButton> {
+  bool _loading = false;
+
+  Future<void> _signOut() async {
+    Authentication().signOut().then((value) async {
+      var sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString("userUID", "");
+      setState(() {
+        _loading = true;
+      });
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SplashScreen()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: body(context),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          const BackButton(),
-          const SizedBox(width: kDefaultPadding * 0.75),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.userData.firstName + " " + widget.userData.lastName,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          )
-        ],
-      ),
-      actions: [
-        const SizedBox(width: kDefaultPadding / 2),
-        Center(
-            child: follower
-                ? GestureDetector(
-                    child: const Text("Unfollow"),
-                    onTap: () {
-                      FirestoreHelper.unfollowUser(
-                              widget.userData, widget.senderData)
-                          .then((value) {
-                        if (value == true) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('You unfollowed ' +
-                                    widget.userData.firstName.toString() +
-                                    " " +
-                                    widget.userData.lastName)),
-                          );
-                          setState(() {
-                            follower = false;
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Error occured please try again!')),
-                          );
-                        }
-                      });
-                    },
-                  )
-                : GestureDetector(
-                    child: const Text("Follow"),
-                    onTap: () {
-                      FirestoreHelper.addFollowersToUser(
-                              widget.senderData, widget.userData)
-                          .then((value) {
-                        if (value == true) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('You followed ' +
-                                    widget.userData.firstName.toString() +
-                                    " " +
-                                    widget.userData.lastName)),
-                          );
-                          setState(() {
-                            follower = true;
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Error occured please try again!')),
-                          );
-                        }
-                      });
-                    },
-                  )),
-        const SizedBox(width: kDefaultPadding / 2),
-      ],
-    );
-  }
-
-  Widget body(context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 22,
-          ),
-          Center(
-            child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Colors.blue,
-                      Colors.red,
-                    ],
-                  ),
-                  shape: BoxShape.circle,
-                  color: PrimaryColor,
-                ),
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 95,
-                      backgroundImage: CachedNetworkImageProvider(
-                          widget.userData.profilePictureUrl),
-                    ),
-                    Positioned(
-                        bottom: 1,
-                        right: 20,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                              color: widget.userData.isActive
-                                  ? Colors.green
-                                  : Colors.red,
-                              borderRadius: BorderRadius.circular(30)),
-                        )),
-                  ],
-                )),
-          ),
-          const SizedBox(
-            height: 22,
-          ),
-          const Divider(),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      FirestoreHelper.checkAvaliableMessageRoom(
-                              widget.senderData.email,
-                              widget.userData.email,
-                              false)
-                          .then((value) {
-                        value.id == ""
-                            ? FirestoreHelper.addNewMessageRoom(
-                                    false, widget.senderData, widget.userData)
-                                .then((value) {
-                                if (value != "") {
-                                  FirestoreHelper.getSpecificChatRoomInfo(value)
-                                      .then((value) {
-                                    if (value.id != "") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatScreen(
-                                                  messageRoom: value)));
-                                    }
-                                  });
-                                }
-                              })
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatScreen(messageRoom: value)));
-                      });
-                    },
-                    child: const Text("Send Message")),
-                TextButton(
-                    onPressed: () {
-                      FirestoreHelper.checkAvaliableMessageRoom(
-                              widget.senderData.email,
-                              widget.userData.email,
-                              true)
-                          .then((value) {
-                        value.id == ""
-                            ? FirestoreHelper.addNewMessageRoom(
-                                    true, widget.senderData, widget.userData)
-                                .then((value) {
-                                if (value != "") {
-                                  FirestoreHelper.getSpecificChatRoomInfo(value)
-                                      .then((value) {
-                                    if (value.id != "") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatScreen(
-                                                  messageRoom: value)));
-                                    }
-                                  });
-                                }
-                              })
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatScreen(messageRoom: value)));
-                      });
-                    },
-                    child: const Text("Send Message Anonymously"))
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-          ),
-          _Stories(
-            userData: widget.userData,
-          ),
-          userSpecificInformationLayer(),
-          const Divider(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Center(
-              child: Text(widget.userData.userBio),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget userSpecificInformationLayer() {
-    return Center(
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(),
-              child: Column(
-                children: [
-                  Icon(Icons.message),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    "Messages",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(widget.userData.chatCount.toString())
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(),
-              child: Column(
-                children: [
-                  FaIcon(FontAwesomeIcons.solidThumbsUp),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    "Followers",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(widget.userData.followers.length.toString())
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return TextButton(
+      onPressed: _signOut,
+      child: const Text('Sign out'),
     );
   }
 }

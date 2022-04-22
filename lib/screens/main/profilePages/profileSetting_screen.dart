@@ -25,8 +25,7 @@ class _EditPageState extends State<EditPage> {
   late ImagePicker picker;
   bool _visibleCircular = false;
   String editedCountry = "";
-  User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-      "", [], "", [], "", "", "", "", []);
+  User userData = emptyUser;
 
   @override
   void initState() {

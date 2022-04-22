@@ -1,4 +1,5 @@
 import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:faker/faker.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -31,10 +32,7 @@ class FirestoreHelper {
       });
     });
 
-    return details.length != 0
-        ? details[0]
-        : User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "", "", [],
-            "", [], "", "", "", "", []);
+    return details.length != 0 ? details[0] : emptyUser;
   }
 
   static Future<bool> unfollowUser(User user, User removedUser) async {
@@ -402,10 +400,114 @@ class FirestoreHelper {
           userType,
           username,
           "Türkiye",
-          "İstanbul", []).toMap());
+          "İstanbul", [], [], [], [], []).toMap());
       return true;
     } catch (e) {
       print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> addSpotifyListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'SpotifyList': FieldValue.arrayUnion([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> removeSpotifyListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'SpotifyList': FieldValue.arrayRemove([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> addMovieListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'MovieList': FieldValue.arrayUnion([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> removeMovieListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'MovieList': FieldValue.arrayRemove([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> addHobbieListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'hobbies': FieldValue.arrayUnion([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> removeHobbieListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'hobbies': FieldValue.arrayRemove([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> addYoutubeListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'myYoutubeVideo': FieldValue.arrayUnion([url])
+        });
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> removeYoutubeListItem(String url) async {
+    try {
+      FirestoreHelper.getUserData().then((value) {
+        db.collection('users').doc(value.id).update({
+          'myYoutubeVideo': FieldValue.arrayRemove([url])
+        });
+      });
+      return true;
+    } catch (e) {
       return false;
     }
   }

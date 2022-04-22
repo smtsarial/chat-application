@@ -1,7 +1,11 @@
+import 'package:anonmy/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter/material.dart';
+
+User emptyUser = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
+    "", [], "", [], "", "", "", "", [], [], [], [], []);
 
 const PrimaryColor = Color.fromRGBO(73, 3, 201, 1);
 const SecondaryColor = Color.fromRGBO(59, 24, 95, 1);

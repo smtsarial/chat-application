@@ -2,6 +2,7 @@ import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
@@ -18,6 +19,16 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   await Firebase.initializeApp();
+  //FirebaseFirestore.instance.collection('users').get().then((value) {
+  //  value.docs.forEach((element) {
+  //    FirebaseFirestore.instance.collection('users').doc(element.id).update({
+  //      "myYoutubeVideo": "",
+  //      "SpotifyList": [],
+  //      "MovieList": [],
+  //      "hobbies": []
+  //    });
+  //  });
+  //});
   runApp(MyApp());
 }
 

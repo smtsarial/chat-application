@@ -2,7 +2,7 @@ import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/chatScreenTab.dart';
-import 'package:anonmy/screens/main/profile_screen.dart';
+import 'package:anonmy/screens/main/profilePages/profile_screen.dart';
 import 'package:anonmy/screens/main/purchase_screen.dart';
 import 'package:anonmy/screens/main/shuffle_screen.dart';
 import 'package:anonmy/screens/main/story_screen.dart';

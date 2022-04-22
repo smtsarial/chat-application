@@ -19,8 +19,7 @@ class ChatDetailScreen extends StatefulWidget {
 }
 
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
-  User RECEIVER = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-      "", [], "", [], "", "", "", "", []);
+  User RECEIVER = emptyUser;
 
   List<ChatMessage> messagesInfo = [];
   bool isLoaded = false;

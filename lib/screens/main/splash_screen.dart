@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../theme.dart';
+
 class SplashScreen extends StatefulWidget {
   static Route get route => MaterialPageRoute(
         builder: (context) => const SplashScreen(),
@@ -22,8 +24,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  User userData = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-      "", [], "", [], "", "", "", "", []);
+  User userData = emptyUser;
 
   bool isLoading = true;
   bool isErrorOccured = false;
