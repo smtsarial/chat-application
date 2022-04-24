@@ -1,5 +1,6 @@
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/l10n/l10n.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,10 +11,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,6 +101,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             darkTheme: AppTheme.dark(),
             themeMode: ThemeMode.dark,
             title: 'anonmy',
+            supportedLocales: L10n.all,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             home: (() {
               // your code here
               if (landingRunned != "true") {

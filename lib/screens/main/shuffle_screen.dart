@@ -13,6 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'user_profile_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShufflePage extends StatefulWidget {
   const ShufflePage({Key? key}) : super(key: key);
@@ -107,7 +108,7 @@ class _ShufflePageState extends State<ShufflePage> {
                         Icons.search,
                         color: PureColor,
                       ),
-                      hintText: "Search",
+                      hintText: AppLocalizations.of(context)!.search,
                     )),
               )
             ],
@@ -256,7 +257,7 @@ class _ShufflePageState extends State<ShufflePage> {
                                   userData.userBio.substring(0, 14) + " ...",
                                 ))
                               : Text(userData.userBio))
-                          : Text("No Description")
+                          : Text(AppLocalizations.of(context)!.nodescription)
                     ],
                   )),
             )
@@ -276,7 +277,7 @@ class _ShufflePageState extends State<ShufflePage> {
                 children: [
                   Icon(Icons.message),
                   Text(
-                    "Messages",
+                    AppLocalizations.of(context)!.messages,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text("2030")
@@ -328,13 +329,13 @@ class _ShufflePageState extends State<ShufflePage> {
                                 filterAge = [18, 65];
                               });
                             },
-                            child: Text("Reset")),
-                        Text("Filter"),
+                            child: Text(AppLocalizations.of(context)!.reset)),
+                        Text(AppLocalizations.of(context)!.filter),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text("Cancel"))
+                            child: Text(AppLocalizations.of(context)!.cancel))
                       ],
                     ),
                   ),
@@ -350,7 +351,7 @@ class _ShufflePageState extends State<ShufflePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "AGE",
+                              AppLocalizations.of(context)!.age,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -387,7 +388,7 @@ class _ShufflePageState extends State<ShufflePage> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "CITY",
+                              AppLocalizations.of(context)!.city,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -508,7 +509,7 @@ class _ShufflePageState extends State<ShufflePage> {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "GENDER",
+                            AppLocalizations.of(context)!.gender,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -522,11 +523,11 @@ class _ShufflePageState extends State<ShufflePage> {
                                 MyRadioListTile<int>(
                                   value: 1,
                                   groupValue: _filterGenderValue,
-                                  leading: 'All',
+                                  leading: AppLocalizations.of(context)!.all,
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
-                                    filterGender = "All";
+                                    filterGender = AppLocalizations.of(context)!.all;
                                   }),
                                 ),
                                 MyRadioListTile<int>(

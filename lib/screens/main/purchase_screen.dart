@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PurchaseScreen extends StatefulWidget {
   const PurchaseScreen({Key? key}) : super(key: key);
@@ -57,14 +58,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 child: Column(
               children: [
                 Text(
-                  "Get to the Top!",
+                  AppLocalizations.of(context)!.gettothetop,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "You can show your profile at the top of the Shuffle and get more messages!",
+                  AppLocalizations.of(context)!.youcanshow,
                   style: TextStyle(),
                   textAlign: TextAlign.center,
                 ),
@@ -103,9 +104,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("VIP Badge"),
+                                  Text(AppLocalizations.of(context)!.vip),
                                   Text(
-                                    "60 Minutes",
+                                    AppLocalizations.of(context)!.sixty,
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -137,12 +138,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Popular"),
+                        Text(AppLocalizations.of(context)!.popular),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "45 Minutes",
+                          AppLocalizations.of(context)!.fourtyfive,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺69,99")
@@ -162,12 +163,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Most Popular"),
+                        Text(AppLocalizations.of(context)!.mostpopular),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "30 Minutes",
+                          AppLocalizations.of(context)!.thirty,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺29,99")
@@ -187,12 +188,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Fast"),
+                        Text(AppLocalizations.of(context)!.fast),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "15 Minutes",
+                          AppLocalizations.of(context)!.fifteen,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺19,99")
@@ -216,14 +217,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 child: Column(
               children: [
                 Text(
-                  "Get more views from Stories!",
+                  AppLocalizations.of(context)!.getmoreviews,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "You can show your profile at the top of the Story and get more messages and views!",
+                  AppLocalizations.of(context)!.youcanshowyourprofile,
                   style: TextStyle(),
                   textAlign: TextAlign.center,
                 ),
@@ -251,12 +252,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Popular"),
+                        Text(AppLocalizations.of(context)!.popular),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "1000 Views",
+                          AppLocalizations.of(context)!.viewsbin,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺99,99")
@@ -276,12 +277,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Most Popular"),
+                        Text(AppLocalizations.of(context)!.mostpopular),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "500 Views",
+                          AppLocalizations.of(context)!.besyuzviews,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺59,99")
@@ -301,12 +302,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Popular"),
+                        Text(AppLocalizations.of(context)!.popular),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          "100 Views",
+                          AppLocalizations.of(context)!.yuzviews,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺19,99")

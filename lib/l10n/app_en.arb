@@ -1,0 +1,31 @@
+{
+    "language":"English",
+    "@language":{
+        "description":"the current language"
+    },
+    "search":"Search",
+    "nodescription":"No Description",
+    "messages":"Messages",
+    "filter":"Filter",
+    "reset":"Reset",
+    "cancel":"Cancel",
+    "age":"Age",
+    "city":"City",
+    "gender":"Gender",
+    "all":"All",
+    "gettothetop":"Get to the top!",
+    "youcanshow":"You can show your profile at the top of the Shuffle and get more messages!",
+    "vip":"VIP Badge",
+    "sixty":"60 Minutes",
+    "popular":"Popular",
+    "fourtyfive":"45 Minutes",
+    "mostpopular":"Most Popular",
+    "thirty":"30 Minutes",
+    "fast":"Fast",
+    "fifteen":"15 Minutes",
+    "getmoreviews":"Get more views from Stories!",
+    "youcanshowyourprofile":"You can show your profile at the top of the Story and get more messages and views!",
+    "viewsbin":"1000 Views",
+    "besyuzviews":"500 Views",
+    "yuzviews":"100 Views"
+}

@@ -29,6 +29,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter  
   provider: ^6.0.2
   intl: ^0.17.0
   firebase_core: ^1.10.0
@@ -86,7 +88,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  generate : true
   uses-material-design: true
   
   assets:
