@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyStoriesScreen extends StatefulWidget {
   const MyStoriesScreen({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Followers List"),
+        title: Text(AppLocalizations.of(context)!.followerslist),
       ),
       body: SafeArea(
         child: Container(
@@ -90,7 +91,9 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                                                               .showSnackBar(
                                                                   SnackBar(
                                                             content: Text(
-                                                                "Successfully removed!"),
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .success),
                                                           ));
                                                           FirestoreHelper
                                                                   .getUserData()
@@ -112,7 +115,9 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                                                             .showSnackBar(
                                                                 SnackBar(
                                                           content: Text(
-                                                              "Error occured!"),
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .erroroccured),
                                                         ));
                                                       }
                                                     },
@@ -129,7 +134,8 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                             },
                           )
                         : Center(
-                            child: Text("There is no followers !",
+                            child: Text(
+                                AppLocalizations.of(context)!.thereisnostories,
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                           ))

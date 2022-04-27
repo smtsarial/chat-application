@@ -4,6 +4,7 @@ import 'package:anonmy/screens/main/chat/anon_message_screen.dart';
 import 'package:anonmy/screens/main/chat/message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TabBarChat extends StatefulWidget {
   const TabBarChat({Key? key}) : super(key: key);
@@ -35,14 +36,14 @@ class _TabBarChatState extends State<TabBarChat> {
                       ? Colors.white
                       : Colors.black,
                 ),
-                text: "Messages",
+                text: AppLocalizations.of(context)!.messages,
               ),
               Tab(
                 icon: Icon(Icons.group_rounded,
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.white
                         : Colors.black),
-                text: "Anon Messages",
+                text: AppLocalizations.of(context)!.anonmessages,
               )
             ],
           ),

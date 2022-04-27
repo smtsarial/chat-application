@@ -3,6 +3,8 @@ import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class MyHobbies extends StatefulWidget {
   const MyHobbies({Key? key}) : super(key: key);
 
@@ -43,7 +45,7 @@ class _MyHobbiesState extends State<MyHobbies> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Hobbie List'),
+          title: Text(AppLocalizations.of(context)!.myhobbies),
         ),
         body: Column(
           children: <Widget>[
@@ -58,7 +60,7 @@ class _MyHobbiesState extends State<MyHobbies> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: "Add Spotify Link",
+                          hintText: AppLocalizations.of(context)!.addspotify,
                         )),
                   ),
                   GestureDetector(
@@ -96,7 +98,7 @@ class _MyHobbiesState extends State<MyHobbies> {
                               ),
                               TextButton(
                                 child: Text(
-                                  ' Remove',
+                                  AppLocalizations.of(context)!.remove,
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 onPressed: () {

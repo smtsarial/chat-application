@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_metadata/spotify_metadata.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class mySpotifyList extends StatefulWidget {
   const mySpotifyList({Key? key}) : super(key: key);
@@ -65,7 +66,7 @@ class _mySpotifyListState extends State<mySpotifyList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Spotify List'),
+          title: Text(AppLocalizations.of(context)!.spotifylist),
         ),
         body: Column(
           children: <Widget>[
@@ -80,7 +81,7 @@ class _mySpotifyListState extends State<mySpotifyList> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: "Add Spotify Link",
+                          hintText: AppLocalizations.of(context)!.addspotify,
                         )),
                   ),
                   GestureDetector(
@@ -122,7 +123,7 @@ class _mySpotifyListState extends State<mySpotifyList> {
                                   ),
                                   TextButton(
                                     child: Text(
-                                      ' Remove',
+                                      AppLocalizations.of(context)!.remove,
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     onPressed: () {

@@ -148,6 +148,7 @@ class _BottomToolsState extends State<BottomTools> {
                               }
                               if (_createVideo) {
                                 debugPrint('creating video');
+                                print("hello ben vide");
                                 await widget.renderWidget();
                               } else {
                                 debugPrint('creating image');

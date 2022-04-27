@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditPage extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _EditPageState extends State<EditPage> {
                 height: 9,
               ),
               Center(
-                child: Text("Tap to edit"),
+                child: Text(AppLocalizations.of(context)!.tapdoedit),
               ),
               SizedBox(
                 height: 25,
@@ -292,7 +293,7 @@ class _EditPageState extends State<EditPage> {
                             visible: _visibleCircular,
                           )
                         : Text(
-                            "UPDATE",
+                            AppLocalizations.of(context)!.update,
                             style: TextStyle(
                                 fontSize: 14,
                                 letterSpacing: 2.2,

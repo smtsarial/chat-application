@@ -2,6 +2,7 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FollowersList extends StatefulWidget {
   const FollowersList({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _FollowersListState extends State<FollowersList> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Followers List"),
+        title: Text(AppLocalizations.of(context)!.followerslist),
       ),
       body: SafeArea(
         child: Container(
@@ -79,7 +80,9 @@ class _FollowersListState extends State<FollowersList> {
                             },
                           )
                         : Center(
-                            child: Text("There is no followers !",
+                            child: Text(
+                                AppLocalizations.of(context)!
+                                    .thereisnofollowers,
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                           ))

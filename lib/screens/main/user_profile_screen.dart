@@ -9,6 +9,7 @@ import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key, required this.senderData, required this.userData})
@@ -63,7 +64,7 @@ class _ProfileState extends State<Profile> {
         Center(
             child: follower
                 ? GestureDetector(
-                    child: const Text("Unfollow"),
+                    child: Text(AppLocalizations.of(context)!.unfollow),
                     onTap: () {
                       FirestoreHelper.unfollowUser(
                               widget.userData, widget.senderData)
@@ -81,16 +82,16 @@ class _ProfileState extends State<Profile> {
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Error occured please try again!')),
+                            SnackBar(
+                                content: Text(AppLocalizations.of(context)!
+                                    .erroroccured)),
                           );
                         }
                       });
                     },
                   )
                 : GestureDetector(
-                    child: const Text("Follow"),
+                    child: Text(AppLocalizations.of(context)!.follow),
                     onTap: () {
                       FirestoreHelper.addFollowersToUser(
                               widget.senderData, widget.userData)
@@ -108,9 +109,11 @@ class _ProfileState extends State<Profile> {
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Error occured please try again!')),
+                            SnackBar(
+                              content: Text(
+                                  AppLocalizations.of(context)!.erroroccured),
+                              backgroundColor: Colors.redAccent,
+                            ),
                           );
                         }
                       });
@@ -204,7 +207,7 @@ class _ProfileState extends State<Profile> {
                                         ChatScreen(messageRoom: value)));
                       });
                     },
-                    child: const Text("Send Message")),
+                    child: Text(AppLocalizations.of(context)!.sendmessage)),
                 TextButton(
                     onPressed: () {
                       FirestoreHelper.checkAvaliableMessageRoom(
@@ -236,7 +239,7 @@ class _ProfileState extends State<Profile> {
                                         ChatScreen(messageRoom: value)));
                       });
                     },
-                    child: const Text("Send Message Anonymously"))
+                    child: Text(AppLocalizations.of(context)!.sendanon))
               ],
             ),
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -273,7 +276,7 @@ class _ProfileState extends State<Profile> {
                     height: 8,
                   ),
                   Text(
-                    "Messages",
+                    AppLocalizations.of(context)!.messages,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(widget.userData.chatCount.toString())
@@ -290,7 +293,7 @@ class _ProfileState extends State<Profile> {
                     height: 8,
                   ),
                   Text(
-                    "Followers",
+                    AppLocalizations.of(context)!.followers,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(widget.userData.followers.length.toString())
@@ -335,10 +338,10 @@ class _StoriesState extends State<_Stories> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  'Stories',
+                  AppLocalizations.of(context)!.stories,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -371,9 +374,9 @@ class _StoriesState extends State<_Stories> {
                         },
                       ),
                     ))
-                  : (const Center(
+                  : (Center(
                       child: Text(
-                        "There is no story",
+                        AppLocalizations.of(context)!.thereisnostories,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 15,

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -66,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                                         builder: (context) => FollowersList()));
                               },
                               icon: FaIcon(FontAwesomeIcons.users)),
-                          Text("Followers"),
+                          Text(AppLocalizations.of(context)!.followers),
                           Text(user.followers.length.toString())
                         ],
                       )),
@@ -115,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
                                         builder: (context) => FollowedList()));
                               },
                               icon: FaIcon(FontAwesomeIcons.users)),
-                          Text("Followed"),
+                          Text(AppLocalizations.of(context)!.followed),
                           Text(user.followed.length.toString())
                         ],
                       )),
@@ -133,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    "Edit My Stories",
+                    AppLocalizations.of(context)!.editmystories,
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -162,7 +163,7 @@ class ProfileScreen extends StatelessWidget {
                           width: 10,
                         ),
                         Text(
-                          "Get More Messages!",
+                          AppLocalizations.of(context)!.getmoremessages,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
@@ -172,7 +173,7 @@ class ProfileScreen extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      "Get Shuffle Proote, be on top of the shuffle list.",
+                      AppLocalizations.of(context)!.getshuffle,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Container(
@@ -187,7 +188,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          "Update My Account",
+                          AppLocalizations.of(context)!.updatemyaccount,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {},
@@ -266,10 +267,10 @@ class _StoriesState extends State<_Stories> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  'Stories',
+                  AppLocalizations.of(context)!.stories,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -302,9 +303,9 @@ class _StoriesState extends State<_Stories> {
                         },
                       ),
                     ))
-                  : (const Center(
+                  : (Center(
                       child: Text(
-                        "There is no story",
+                        AppLocalizations.of(context)!.thereisnostories,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 15,

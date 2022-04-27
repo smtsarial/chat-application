@@ -4,6 +4,7 @@ import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FollowedList extends StatefulWidget {
   const FollowedList({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _FollowedListState extends State<FollowedList> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Followed List"),
+        title: Text(AppLocalizations.of(context)!.nodata),
       ),
       body: SafeArea(
         child: Container(
@@ -90,7 +91,9 @@ class _FollowedListState extends State<FollowedList> {
                                                       ),
                                                     ),
                                                     child: Text(
-                                                      "Unfollow",
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .unfollow,
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                       ),
@@ -131,7 +134,7 @@ class _FollowedListState extends State<FollowedList> {
                             },
                           )
                         : Center(
-                            child: Text("There is no followed user !",
+                            child: Text(AppLocalizations.of(context)!.thereisnofolloweduser,
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
                           ))

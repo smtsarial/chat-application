@@ -2,6 +2,7 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class myMovieList extends StatefulWidget {
   const myMovieList({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _myMovieListState extends State<myMovieList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Movie List'),
+          title: Text(AppLocalizations.of(context)!.mymovies),
         ),
         body: Column(
           children: <Widget>[
@@ -58,7 +59,7 @@ class _myMovieListState extends State<myMovieList> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: "Add Spotify Link",
+                          hintText: AppLocalizations.of(context)!.addmovielink,
                         )),
                   ),
                   GestureDetector(
@@ -96,7 +97,7 @@ class _myMovieListState extends State<myMovieList> {
                               ),
                               TextButton(
                                 child: Text(
-                                  ' Remove',
+                                  AppLocalizations.of(context)!.remove,
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 onPressed: () {

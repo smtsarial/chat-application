@@ -7,6 +7,7 @@ import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _StoryPageState extends State<StoryPage> {
                   child: Icon(Icons.add_a_photo),
                 ),
                 Text(
-                  "Stories",
+                  AppLocalizations.of(context)!.stories,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 GestureDetector(
@@ -137,7 +138,8 @@ class _StoryPageState extends State<StoryPage> {
                           );
                         })
                     : Center(
-                        child: Text("There is no story"),
+                        child: Text(
+                            AppLocalizations.of(context)!.thereisnostories),
                       ))
           ],
         ));
@@ -168,13 +170,13 @@ class _StoryPageState extends State<StoryPage> {
                                 filterAge = [18, 65];
                               });
                             },
-                            child: Text("Reset")),
+                            child: Text(AppLocalizations.of(context)!.reset)),
                         Text("Filter"),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: Text("Cancel"))
+                            child: Text(AppLocalizations.of(context)!.cancel))
                       ],
                     ),
                   ),
@@ -190,7 +192,7 @@ class _StoryPageState extends State<StoryPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "AGE",
+                              AppLocalizations.of(context)!.age,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -227,7 +229,7 @@ class _StoryPageState extends State<StoryPage> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "CITY",
+                              AppLocalizations.of(context)!.city,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -348,7 +350,7 @@ class _StoryPageState extends State<StoryPage> {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "GENDER",
+                            AppLocalizations.of(context)!.gender,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -408,7 +410,7 @@ class _StoryPageState extends State<StoryPage> {
                         ),
                       ),
                       child: Text(
-                        "Apply Filter",
+                        AppLocalizations.of(context)!.applyfilter,
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
@@ -462,7 +464,7 @@ class _StoryPageState extends State<StoryPage> {
   Future takeStory() async {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => StoriesEditor(
-              giphyKey: '[HERE YOUR API KEY]',
+              giphyKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
               onDone: (uri) {
                 debugPrint(uri);
               },

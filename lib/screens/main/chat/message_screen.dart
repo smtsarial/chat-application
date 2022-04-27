@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessagesPage extends StatelessWidget {
   const MessagesPage({Key? key}) : super(key: key);
@@ -67,14 +68,14 @@ class MessagesPage extends StatelessWidget {
                                 document['lastMessage'],
                                 false));
                       } else {
-                        return Text(
-                            "There is no Anon message please check shuffle page");
+                        return Text(AppLocalizations.of(context)!
+                            .thereisnomessageerror);
                       }
                     }).toList(),
                   )
                 : (Center(
                     child: Text(
-                      "There is no message please check shuffle page to send message.",
+                      AppLocalizations.of(context)!.thereisnomessageerror,
                       textAlign: TextAlign.center,
                     ),
                   ));
@@ -174,23 +175,6 @@ class _MessageTitle extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    //Container(
-                    //  width: 18,
-                    //  height: 18,
-                    //  decoration: const BoxDecoration(
-                    //    color: AppColors.secondary,
-                    //    shape: BoxShape.circle,
-                    //  ),
-                    //  child: const Center(
-                    //    child: Text(
-                    //      '1',
-                    //      style: TextStyle(
-                    //        fontSize: 10,
-                    //        color: AppColors.textLigth,
-                    //      ),
-                    //    ),
-                    //  ),
-                    //)
                   ],
                 ),
               ),
@@ -290,23 +274,6 @@ class _MessageTitleReceiver extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    //Container(
-                    //  width: 18,
-                    //  height: 18,
-                    //  decoration: const BoxDecoration(
-                    //    color: AppColors.secondary,
-                    //    shape: BoxShape.circle,
-                    //  ),
-                    //  child: const Center(
-                    //    child: Text(
-                    //      '1',
-                    //      style: TextStyle(
-                    //        fontSize: 10,
-                    //        color: AppColors.textLigth,
-                    //      ),
-                    //    ),
-                    //  ),
-                    //)
                   ],
                 ),
               ),

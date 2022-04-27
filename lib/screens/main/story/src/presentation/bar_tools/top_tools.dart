@@ -117,7 +117,15 @@ class _TopToolsState extends State<TopTools> {
                         _createVideo = false;
                       });
                     }),
-
+                ToolButton(
+                    child: const ImageIcon(
+                      AssetImage('assets/icons/stickers.png'),
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    backGroundColor: Colors.black12,
+                    onTap: () => createGiphyItem(
+                        context: context, giphyKey: controlNotifier.giphyKey)),
                 ToolButton(
                     child: const ImageIcon(
                       AssetImage(

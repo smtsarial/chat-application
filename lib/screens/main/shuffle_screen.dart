@@ -36,15 +36,17 @@ class _ShufflePageState extends State<ShufflePage> {
 
   @override
   void initState() {
-    FirebaseFirestore.instance.collection('users').get().then((value) {
-      List<User> list = [];
-      value.docs.forEach((element) {
-        list.add(User.fromMap(element));
+    if (mounted) {
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        List<User> list = [];
+        value.docs.forEach((element) {
+          list.add(User.fromMap(element));
+        });
+        setState(() {
+          userList = list;
+        });
       });
-      setState(() {
-        userList = list;
-      });
-    });
+    }
     super.initState();
   }
 
@@ -132,7 +134,7 @@ class _ShufflePageState extends State<ShufflePage> {
                       itemBuilder: (BuildContext ctx, index) {
                         return shuffleUserCard(userList[index]);
                       })
-                  : const Text("No data")),
+                  : Text(AppLocalizations.of(context)!.nodata)),
         )
       ],
     );
@@ -527,7 +529,8 @@ class _ShufflePageState extends State<ShufflePage> {
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
-                                    filterGender = AppLocalizations.of(context)!.all;
+                                    filterGender =
+                                        AppLocalizations.of(context)!.all;
                                   }),
                                 ),
                                 MyRadioListTile<int>(

@@ -86,14 +86,3 @@ class _SplashScreenState extends State<SplashScreen> {
     }());
   }
 }
-//return userData.id == ""
-//        ? Scaffold(body: Center(child: LoginPage()))
-//        : (MultiProvider(
-//            providers: [
-//                ChangeNotifierProvider<MessageRoomProvider>(
-//                  create: ((context) => MessageRoomProvider(userData)),
-//                )
-//              ],
-//            child: Scaffold(
-//              body: HomeScreen(),
-//            )));

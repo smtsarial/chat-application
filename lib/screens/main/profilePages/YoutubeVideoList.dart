@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_metadata/youtube_metadata.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class myYoutubeList extends StatefulWidget {
   const myYoutubeList({Key? key}) : super(key: key);
@@ -66,7 +67,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Movie List'),
+          title: Text(AppLocalizations.of(context)!.mymovies),
         ),
         body: Column(
           children: <Widget>[
@@ -81,7 +82,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: "Add Spotify Link",
+                          hintText: AppLocalizations.of(context)!.addmovielink,
                         )),
                   ),
                   GestureDetector(
@@ -131,7 +132,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
                                   ),
                                   TextButton(
                                     child: Text(
-                                      ' Remove',
+                                      AppLocalizations.of(context)!.remove,
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     onPressed: () {

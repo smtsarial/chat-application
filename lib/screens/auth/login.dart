@@ -4,6 +4,7 @@ import 'package:anonmy/theme.dart';
 import 'package:anonmy/screens/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       tag: 'hero',
       child: Center(
         child: Text(
-          "AnonMy",
+          AppLocalizations.of(context)!.anonmy,
           textAlign: TextAlign.center,
           style: TextStyle(
               fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
-        hintText: 'Password',
+        hintText: AppLocalizations.of(context)!.password,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -85,7 +86,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 visible: _visibleCircular,
               )
-            : Text('Log In', style: TextStyle(color: PrimaryColor)),
+            : Text(AppLocalizations.of(context)!.login,
+                style: TextStyle(color: PrimaryColor)),
       ),
     );
 
@@ -98,13 +100,14 @@ class _LoginPageState extends State<LoginPage> {
         },
         padding: EdgeInsets.all(12),
         color: PureColor,
-        child: Text('Register', style: TextStyle(color: PrimaryColor)),
+        child: Text(AppLocalizations.of(context)!.register,
+            style: TextStyle(color: PrimaryColor)),
       ),
     );
 
     final forgotLabel = FlatButton(
       child: Text(
-        'Forgot password?',
+        AppLocalizations.of(context)!.forgotpass,
         style: TextStyle(color: PureColor),
       ),
       onPressed: () {
@@ -187,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           backgroundColor: PrimaryColor,
           title: Text(
-            'Password Reset',
+            AppLocalizations.of(context)!.respass,
             style: TextStyle(color: TextColor),
           ),
           content: SingleChildScrollView(
@@ -209,7 +212,8 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             autofocus: false,
                             decoration: InputDecoration(
-                              hintText: 'Email Address',
+                              hintText:
+                                  AppLocalizations.of(context)!.emailadress,
                               hintStyle: TextStyle(color: TextColor),
                               contentPadding:
                                   EdgeInsets.fromLTRB(2.0, 10.0, 2.0, 10.0),
@@ -235,21 +239,23 @@ class _LoginPageState extends State<LoginPage> {
                       .then((value) {
                     if (value == true) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Password reset mail sent to " +
-                            newTaskController.text),
+                        content: Text(
+                            AppLocalizations.of(context)!.respasssent +
+                                newTaskController.text),
                       ));
                       Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Error occured while sending email!"),
-                      ));
+                          content: Text(
+                        AppLocalizations.of(context)!.errorsendingemail,
+                      )));
                       Navigator.pop(context);
                     }
                   });
                 }
               },
-              child: const Text(
-                'Send Reset Mail',
+              child: Text(
+                AppLocalizations.of(context)!.sentresetmail,
                 style: TextStyle(color: PrimaryColor),
               ),
             ),

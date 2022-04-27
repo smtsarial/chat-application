@@ -11,6 +11,7 @@ import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HexColor extends Color {
   static int _getColor(String hex) {
@@ -45,8 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Settings",
+        title: Text(
+          
+AppLocalizations.of(context)!.settings,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
         ),
         centerTitle: true,
@@ -60,10 +62,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SettingsList(
       sections: [
         SettingsSection(
-          title: Text("Account"),
+          title: Text(
+AppLocalizations.of(context)!.account),
           tiles: [
             SettingsTile(
-              title: Text('User Informations'),
+              title: Text(
+AppLocalizations.of(context)!.userinfo),
               leading: Icon(Icons.email),
               onPressed: (context) {
                 Navigator.push(
@@ -73,7 +77,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text('My Spotify List'),
+              title: Text(
+AppLocalizations.of(context)!.myspotifylist),
               leading: Icon(Icons.music_note),
               onPressed: (context) {
                 Navigator.push(
@@ -83,7 +88,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text('My Youtube List'),
+              title: Text(
+AppLocalizations.of(context)!.myyoutubelist),
               leading: Icon(Icons.youtube_searched_for),
               onPressed: (context) {
                 Navigator.push(
@@ -93,7 +99,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text('My Movie List'),
+              title: Text(
+AppLocalizations.of(context)!.mymovies),
               leading: Icon(Icons.movie_creation),
               onPressed: (context) {
                 Navigator.push(
@@ -103,7 +110,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text('My Hobbie List'),
+              title: Text(
+AppLocalizations.of(context)!.myhobbies),
               leading: Icon(Icons.sports_tennis),
               onPressed: (context) {
                 Navigator.push(
@@ -113,7 +121,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text('Sign out'),
+              title: Text(
+AppLocalizations.of(context)!.signout),
               leading: Icon(Icons.exit_to_app),
               onPressed: (context) {
                 _signOut();
@@ -150,7 +159,6 @@ class _EmailSettingsState extends State<EmailSettings> {
     try {
       auth = Authentication();
       FirestoreHelper.getUserData().then((data) {
-        print("ASFAF" + userDataID);
         setState(() {
           userData = data;
         });
@@ -166,8 +174,9 @@ class _EmailSettingsState extends State<EmailSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "User Settings",
+          title:  Text(
+            
+AppLocalizations.of(context)!.usersettings,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           centerTitle: true,
@@ -259,9 +268,9 @@ class _EmailSettingsState extends State<EmailSettings> {
                       borderRadius: BorderRadius.circular(10),
                       gradient: const LinearGradient(
                           colors: [Colors.blue, Colors.blueAccent])),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Save Information",
+                      AppLocalizations.of(context)!.saveinfo,
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),

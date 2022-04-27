@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/editable_items.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/painting_model.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/control_provider.dart';
@@ -383,7 +384,19 @@ class _MainViewState extends State<MainView> {
                                       controlNotifier: controlNotifier,
                                       renderingNotifier: renderingNotifier,
                                       saveOnGallery: false),
-                                  onDone: (bytes) {
+                                  onDone: (bytes) async {
+                                    if (bytes != null) {
+                                      FirestoreHelper.uploadStoryToStorage(
+                                              bytes)
+                                          .then((imageURL) async {
+                                        print(imageURL);
+                                        FirestoreHelper.saveNewStories(imageURL)
+                                            .then((value) {
+                                          print(value);
+                                          Navigator.pop(context);
+                                        });
+                                      });
+                                    } else {}
                                     setState(() {
                                       widget.onDone!(bytes);
                                     });
@@ -508,6 +521,7 @@ class _MainViewState extends State<MainView> {
                 .then((value) {
               if (value['isSuccess']) {
                 debugPrint(value['filePath']);
+
                 Fluttertoast.showToast(msg: 'Recording successfully saved');
               } else {
                 debugPrint('Gallery saver error: ${value['errorMessage']}');

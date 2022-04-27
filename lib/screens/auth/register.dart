@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
@@ -47,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       tag: 'hero',
       child: Center(
         child: Text(
-          "ANON CHAT",
+          AppLocalizations.of(context)!.anonmy,
           textAlign: TextAlign.center,
           style: TextStyle(
               fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black54),
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       controller: name,
       autofocus: false,
       decoration: InputDecoration(
-        hintText: 'Name',
+        hintText: AppLocalizations.of(context)!.name,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       controller: Surname,
       autofocus: false,
       decoration: InputDecoration(
-        hintText: 'Surname',
+        hintText: AppLocalizations.of(context)!.surname,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -122,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       keyboardType: TextInputType.phone,
       autofocus: false,
       decoration: InputDecoration(
-        hintText: 'Phone Number',
+        hintText: AppLocalizations.of(context)!.phonenumber,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
-        hintText: 'Password',
+        hintText: AppLocalizations.of(context)!.password,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -158,7 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
-        hintText: 'Password',
+        hintText: AppLocalizations.of(context)!.password,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -180,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       autofocus: false,
       obscureText: false,
       decoration: InputDecoration(
-        hintText: 'Username',
+        hintText: AppLocalizations.of(context)!.username,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -201,13 +201,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       obscureText: false,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        hintText: 'Age',
+        hintText: AppLocalizations.of(context)!.age,
         hintStyle: TextStyle(color: TextColor),
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
     );
 
-    String gendervalue = 'Gender';
+    String gendervalue = AppLocalizations.of(context)!.gender;
     final gender = Padding(
         padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
         child: DropdownButtonFormField<String>(
@@ -280,7 +280,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         Visibility(
           child: Text(
-            "Please select profile picture",
+            AppLocalizations.of(context)!.selectimage,
             style: TextStyle(color: Colors.red),
           ),
           visible: showPickedImageError,
@@ -306,14 +306,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 visible: _visibleCircular,
               )
-            : Text('Register', style: TextStyle(color: PrimaryColor)),
+            : Text(AppLocalizations.of(context)!.register,
+                style: TextStyle(color: PrimaryColor)),
       ),
     );
 
     return Scaffold(
       backgroundColor: PrimaryColor,
       appBar: AppBar(
-        title: const Text('REGISTER'),
+        title: Text(AppLocalizations.of(context)!.register),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
