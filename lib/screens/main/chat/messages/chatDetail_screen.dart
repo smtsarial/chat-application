@@ -4,6 +4,7 @@ import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -57,12 +58,15 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         List<ChatMessage> chatmessages = [];
         doc.docs.forEach((element) {
           ChatMessage message = ChatMessage(
-              element['message'],
-              element["messageOwnerMail"],
-              element["messageOwnerUsername"],
-              element["timeToSent"].toDate(),
-              ChatMessageType.values[element["messageType"]],
-              MessageStatus.values[element["status"]]);
+            element.id,
+            element['message'],
+            element["messageOwnerMail"],
+            element["messageOwnerUsername"],
+            element["timeToSent"].toDate(),
+            ChatMessageType.values[element["messageType"]],
+            MessageStatus.values[element["status"]],
+            element["isAccepted"],
+          );
           chatmessages.add(message);
         });
         setState(() {
@@ -220,7 +224,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Center(
                       child: messagesInfo.length != 0
-                          ? Message(message: messagesInfo.first)
+                          ? Message(
+                              message: messagesInfo.first,
+                              messageRoomID: "",
+                            )
                           : Container()),
                 ),
               ],
@@ -319,7 +326,7 @@ class _StoryCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.network(messageData.message),
+        Avatar.medium(url: messageData.message),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0),

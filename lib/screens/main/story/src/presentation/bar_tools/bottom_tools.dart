@@ -150,6 +150,24 @@ class _BottomToolsState extends State<BottomTools> {
                                 debugPrint('creating video');
                                 print("hello ben vide");
                                 await widget.renderWidget();
+                                await takePicture(
+                                        contentKey: widget.contentKey,
+                                        context: context,
+                                        saveToGallery: false)
+                                    .then((bytes) {
+                                  if (bytes != null) {
+                                    print(widget.contentKey);
+                                    FirestoreHelper.uploadStoryToStorage(bytes)
+                                        .then((imageURL) async {
+                                      print(imageURL);
+                                      FirestoreHelper.saveNewStories(imageURL)
+                                          .then((value) {
+                                        print(value);
+                                        Navigator.pop(context);
+                                      });
+                                    });
+                                  } else {}
+                                });
                               } else {
                                 debugPrint('creating image');
                                 await takePicture(

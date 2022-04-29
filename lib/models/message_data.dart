@@ -12,6 +12,7 @@ class MessageRoom {
   late String lastMessage;
   late List MessageRoomPeople;
   late bool anonim;
+  late bool acceptAllMedia;
 
   MessageRoom(
       this.id,
@@ -24,15 +25,6 @@ class MessageRoom {
       this.receiverUsername,
       this.lastMessageTime,
       this.lastMessage,
-      this.anonim);
-}
-
-class MessageData {
-  late String senderName;
-  late String message;
-  late DateTime messageDate;
-  late String profilePicture;
-
-  MessageData(
-      this.message, this.messageDate, this.profilePicture, this.senderName);
+      this.anonim,
+      this.acceptAllMedia);
 }

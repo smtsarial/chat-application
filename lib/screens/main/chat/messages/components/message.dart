@@ -1,4 +1,6 @@
+import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/chat/messages/components/gif_message.dart';
 import 'package:anonmy/screens/main/chat/messages/components/image_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/models/ChatMessage.dart';
@@ -9,14 +11,14 @@ import 'package:provider/provider.dart';
 import 'audio_message.dart';
 import 'text_message.dart';
 import 'video_message.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Message extends StatefulWidget {
-  const Message({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
+  const Message({Key? key, required this.message, required this.messageRoomID})
+      : super(key: key);
 
   final ChatMessage message;
+  final String messageRoomID;
 
   @override
   State<Message> createState() => _MessageState();
@@ -32,9 +34,14 @@ class _MessageState extends State<Message> {
         case ChatMessageType.audio:
           return AudioMessage(message: message);
         case ChatMessageType.image:
-          return ImageMessage(message: message);
+          return ImageMessage(
+            message: message,
+            messageRoomID: widget.messageRoomID,
+          );
         case ChatMessageType.video:
           return VideoMessage(message: message);
+        case ChatMessageType.gif:
+          return GifMessage(message: message);
         default:
           return SizedBox();
       }

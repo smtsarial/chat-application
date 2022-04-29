@@ -121,10 +121,32 @@ class _StoryPageState extends State<StoryPage> {
                                           child: CircleAvatar(
                                             radius: 11,
                                             backgroundImage: Image(
-                                                    image: CachedNetworkImageProvider(
-                                                        stories[index]
-                                                            .ownerProfilePicture))
-                                                .image,
+                                              image: CachedNetworkImageProvider(
+                                                  stories[index]
+                                                      .ownerProfilePicture),
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            loadingProgress
+                                                                .expectedTotalBytes!
+                                                        : null,
+                                                  ),
+                                                );
+                                              },
+                                            ).image,
                                           ),
                                         ),
                                         SizedBox(

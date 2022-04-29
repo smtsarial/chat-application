@@ -3,9 +3,13 @@ import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chatDetail_screen.dart';
 import 'package:anonmy/screens/main/chat/messages/components/body.dart';
+import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_gif_picker/modal_gif_picker.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -17,6 +21,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late MessageRoom messageRoom;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isAnonim = widget.messageRoom.anonim;
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<MessageRoomProvider>(
@@ -80,25 +86,74 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                   SizedBox(width: kDefaultPadding * 0.75),
                   Center(
-                    child: Text(
-                      messageRoom.anonim
-                          ? messageRoom.senderMail ==
-                                  context.watch<UserProvider>().user.email
-                              ? messageRoom.receiverUsername
-                              : ("anon-" + messageRoom.id).substring(0, 15)
-                          : messageRoom.senderMail ==
-                                  context.watch<UserProvider>().user.email
-                              ? messageRoom.receiverUsername
-                              : messageRoom.senderUsername,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )
+                    child: messageRoom.anonim
+                        ? messageRoom.senderMail ==
+                                context.watch<UserProvider>().user.email
+                            ? Text(messageRoom.receiverUsername,
+                                style: TextStyle(fontSize: 16))
+                            : Text(("anon-" + messageRoom.id).substring(0, 10),
+                                style: TextStyle(fontSize: 16))
+                        : messageRoom.senderMail ==
+                                context.watch<UserProvider>().user.email
+                            ? Text(messageRoom.receiverUsername,
+                                style: TextStyle(fontSize: 16))
+                            : Text(messageRoom.senderUsername,
+                                style: TextStyle(fontSize: 16)),
+                  ),
                 ],
               ),
             ),
             actions: [
               Center(
-                child: messageRoom.anonim ? Text("Anon chat!") : Text(""),
+                child: messageRoom.anonim
+                    ? messageRoom.senderMail ==
+                            context.watch<UserProvider>().user.email
+                        ? Row(
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title: const Text('CAUTION'),
+                                              content: const Text(
+                                                  'You can not change chat status after this step. Are you sure ?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'Cancel'),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    try {
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'messages')
+                                                          .doc(widget
+                                                              .messageRoom.id)
+                                                          .update({
+                                                        "anonim": false
+                                                      }).then((value) {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      });
+                                                    } catch (e) {
+                                                      print(e);
+                                                    }
+                                                  },
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            ));
+                                  },
+                                  child: Text("Get out of anonymity")),
+                            ],
+                          )
+                        : Text("")
+                    : Text(""),
               ),
               SizedBox(width: kDefaultPadding / 2),
             ],

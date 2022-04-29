@@ -364,6 +364,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.7"
+  giphy_picker:
+    dependency: "direct main"
+    description:
+      name: giphy_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -633,11 +640,9 @@ packages:
   photo_view:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "23063d535909027b8e198c2cffa83bf8f0480c96"
-      url: "https://github.com/bluefireteam/photo_view"
-    source: git
+      name: photo_view
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.13.0"
   platform:
     dependency: transitive

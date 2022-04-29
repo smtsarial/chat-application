@@ -51,7 +51,8 @@ class MessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                false));
+                                false,
+                                document['acceptAllMedia']));
                       } else if (document['receiverMail'] ==
                           context.watch<UserProvider>().user.email.toString()) {
                         return _MessageTitleReceiver(
@@ -66,7 +67,8 @@ class MessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                false));
+                                false,
+                                document['acceptAllMedia']));
                       } else {
                         return Text(AppLocalizations.of(context)!
                             .thereisnomessageerror);

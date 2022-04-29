@@ -72,13 +72,17 @@ class _BodyState extends State<Body> {
                           DocumentSnapshot doc = snapshot.data!.docs[index];
 
                           return Message(
+                              messageRoomID: widget.messageRoomData.id,
                               message: ChatMessage(
-                                  doc['message'],
-                                  doc["messageOwnerMail"],
-                                  doc["messageOwnerUsername"],
-                                  doc["timeToSent"].toDate(),
-                                  ChatMessageType.values[doc["messageType"]],
-                                  MessageStatus.values[doc["status"]]));
+                                doc.id,
+                                doc['message'],
+                                doc["messageOwnerMail"],
+                                doc["messageOwnerUsername"],
+                                doc["timeToSent"].toDate(),
+                                ChatMessageType.values[doc["messageType"]],
+                                MessageStatus.values[doc["status"]],
+                                doc["isAccepted"],
+                              ));
                         });
                   })),
         ),

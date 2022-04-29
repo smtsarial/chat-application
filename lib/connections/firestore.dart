@@ -225,6 +225,7 @@ class FirestoreHelper {
     try {
       await FirestoreHelper.getUserData().then((value) async {
         await db.collection('messages').add({
+          'acceptAllMedia':false,
           'anonim': anon,
           "lastMessageTime": DateTime.now(),
           "receiverMail": receiverMail,
@@ -244,8 +245,8 @@ class FirestoreHelper {
   }
 
   static Future<MessageRoom> getSpecificChatRoomInfo(id) async {
-    MessageRoom message =
-        MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true);
+    MessageRoom message = MessageRoom(
+        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false);
     try {
       await db.collection('messages').doc(id).get().then((data) {
         message = MessageRoom(
@@ -259,7 +260,8 @@ class FirestoreHelper {
             data['receiverUsername'],
             data['lastMessageTime'].toDate(),
             data['lastMessage'],
-            data['anonim']);
+            data['anonim'],
+            data['acceptAllMedia']);
       });
       return message;
     } catch (e) {
@@ -273,6 +275,7 @@ class FirestoreHelper {
     String id = "";
     try {
       await db.collection('messages').add({
+        'acceptAllMedia':false,
         'anonim': anonOrNot,
         "lastMessageTime": DateTime.now(),
         "receiverMail": receiver.email,
@@ -297,8 +300,8 @@ class FirestoreHelper {
   static Future<MessageRoom> checkAvaliableMessageRoom(
       String receiverMail, String senderMail, bool anon) async {
     //THIS FUNCTION CHECKS IF THERE IS A CURRENT MESSAGEROOM
-    MessageRoom message =
-        MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true);
+    MessageRoom message = MessageRoom(
+        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false);
     await db
         .collection('messages')
         .where("MessageRoomPeople", arrayContains: senderMail)
@@ -320,7 +323,8 @@ class FirestoreHelper {
                 element.get('receiverUsername'),
                 element.get('lastMessageTime').toDate(),
                 element.get('lastMessage'),
-                element.get('anonim'));
+                element.get('anonim'),
+                element.get('acceptAllMedia'));
           }
         }
       });

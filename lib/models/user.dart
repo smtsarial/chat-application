@@ -23,6 +23,7 @@ class User {
   late List SpotifyList;
   late List MovieList;
   late List hobbies;
+  late bool showStatus;
 
   User(
       this.id,
@@ -48,7 +49,8 @@ class User {
       this.myYoutubeVideo,
       this.SpotifyList,
       this.MovieList,
-      this.hobbies);
+      this.hobbies,
+      this.showStatus);
   User.fromMap(dynamic obj) {
     email = obj['email'];
     firstName = obj['firstName'];
@@ -69,11 +71,9 @@ class User {
     city = obj['city'];
     country = obj['country'];
     myStoriesId = obj['myStoriesId'];
-
     myYoutubeVideo = obj['myYoutubeVideo'];
     SpotifyList = obj['SpotifyList'];
     MovieList = obj['MovieList'];
-
     hobbies = obj['hobbies'];
   }
 

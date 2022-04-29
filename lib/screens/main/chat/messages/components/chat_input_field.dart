@@ -8,6 +8,7 @@ import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_gif_picker/modal_gif_picker.dart';
 
 class ChatInputField extends StatefulWidget {
   const ChatInputField({Key? key, required this.messageRoom}) : super(key: key);
@@ -22,10 +23,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
   bool _imageload = false;
   late ImagePicker picker;
   bool sentorNot = false;
+  bool _gifloaded = false;
+  late String _giflink;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     picker = new ImagePicker();
   }
@@ -94,6 +96,59 @@ class _ChatInputFieldState extends State<ChatInputField> {
                             ),
                           ),
                     IconButton(
+                      onPressed: () async {
+                        final gif = await ModalGifPicker.pickModalSheetGif(
+                          context: context,
+                          apiKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
+                          rating: GiphyRating.r,
+                          sticker: true,
+                          backDropColor: Colors.black,
+                          crossAxisCount: 3,
+                          childAspectRatio: 1.2,
+                          topDragColor: Colors.white.withOpacity(0.2),
+                        );
+                        print(gif);
+                        if (gif != null) {
+                          setState(() {
+                            _gifloaded = true;
+                            _giflink = gif.embedUrl.toString();
+                          });
+                          await updateLastMessageInfo("GIF")
+                              .then((value) async {
+                            if (value == true) {
+                              await FirestoreHelper.getUserData()
+                                  .then((value) async {
+                                await FirestoreHelper.db
+                                    .collection('messages')
+                                    .doc(widget.messageRoom.id)
+                                    .collection('chatMessages')
+                                    .add({
+                                  "messageOwnerMail": value.email,
+                                  "messageOwnerUsername": value.username,
+                                  "timeToSent": DateTime.now(),
+                                  "messageType": 4,
+                                  "status": 0,
+                                  "message": gif.id,
+                                  "isAccepted": false
+                                });
+                              });
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.gif_rounded,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .color!
+                            .withOpacity(0.64),
+                      ),
+                    ),
+                    IconButton(
                       onPressed: () {
                         SelectImageFromGallery();
                       },
@@ -110,26 +165,25 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     sentorNot == false
                         ? IconButton(
                             onPressed: () {
-                              if (messageController.text.length != 0) {
-                                setState(() {
-                                  sentorNot = true;
-                                });
-                                sendMessage(messageController.text)
-                                    .then((value) {
-                                  messageController.text = "";
-                                  if (value != true) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          "Connection lost please refresh this page! and try again!"),
-                                    ));
-                                  } else {
-                                    setState(() {
-                                      sentorNot = false;
-                                    });
-                                  }
-                                });
-                              }
+                              setState(() {
+                                sentorNot = true;
+                              });
+                              sendMessage(messageController.text).then((value) {
+                                messageController.text = "";
+                                if (value != true) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                        "Connection lost please refresh this page! and try again!"),
+                                  ));
+                                } else {
+                                  setState(() {
+                                    sentorNot = false;
+                                    _image = File("path");
+                                    _imageload = false;
+                                  });
+                                }
+                              });
                             },
                             icon: Icon(Icons.send),
                             color: Theme.of(context)
@@ -170,6 +224,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   Future<bool> sendMessage(String message) async {
     try {
+      print("asfasfasfasfa");
       print(_image);
       if (_imageload == true) {
         await FirestoreHelper.uploadChatImagesToStorage(_image)
@@ -187,7 +242,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   "timeToSent": DateTime.now(),
                   "messageType": 2,
                   "status": 0,
-                  "message": imageURL
+                  "message": imageURL,
+                  "isAccepted": false,
                 });
               });
               return true;
@@ -197,29 +253,31 @@ class _ChatInputFieldState extends State<ChatInputField> {
           });
         });
       } else {
-        await updateLastMessageInfo(message).then((value) async {
-          if (value == true) {
-            await FirestoreHelper.getUserData().then((value) async {
-              await FirestoreHelper.db
-                  .collection('messages')
-                  .doc(widget.messageRoom.id)
-                  .collection('chatMessages')
-                  .add({
-                "messageOwnerMail": value.email,
-                "messageOwnerUsername": value.username,
-                "timeToSent": DateTime.now(),
-                "messageType": 0,
-                "status": 0,
-                "message": message
+        if (message.length != 0) {
+          await updateLastMessageInfo(message).then((value) async {
+            if (value == true) {
+              await FirestoreHelper.getUserData().then((value) async {
+                await FirestoreHelper.db
+                    .collection('messages')
+                    .doc(widget.messageRoom.id)
+                    .collection('chatMessages')
+                    .add({
+                  "messageOwnerMail": value.email,
+                  "messageOwnerUsername": value.username,
+                  "timeToSent": DateTime.now(),
+                  "messageType": 0,
+                  "status": 0,
+                  "message": message,
+                  "isAccepted": false,
+                });
               });
-            });
-            return true;
-          } else {
-            return false;
-          }
-        });
+              return true;
+            } else {
+              return false;
+            }
+          });
+        }
       }
-
       return true;
     } catch (e) {
       print(e);

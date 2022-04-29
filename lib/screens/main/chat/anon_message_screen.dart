@@ -50,7 +50,8 @@ class AnonMessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                true));
+                                true,
+                                document['acceptAllMedia']));
                       } else if (document['receiverMail'] ==
                           context.watch<UserProvider>().user.email.toString()) {
                         return _MessageTitleReceiver(
@@ -65,7 +66,8 @@ class AnonMessagesPage extends StatelessWidget {
                                 document["receiverUsername"],
                                 document['lastMessageTime'].toDate(),
                                 document['lastMessage'],
-                                true));
+                                true,
+                                document['acceptAllMedia']));
                       } else {
                         return Text(AppLocalizations.of(context)!
                             .thereisnomessageerror);

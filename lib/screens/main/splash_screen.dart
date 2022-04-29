@@ -63,12 +63,22 @@ class _SplashScreenState extends State<SplashScreen> {
     return (() {
       // your code here
       if (isLoading == true) {
-        return Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.grey,
-            color: Colors.blueGrey,
-            strokeWidth: 2,
-          ),
+        return Scaffold(
+          body: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+                color: Colors.blueGrey,
+                strokeWidth: 2,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text("ANONMY")
+            ],
+          )),
         );
       } else {
         return (userData.id == "")

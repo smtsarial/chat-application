@@ -385,18 +385,6 @@ class _MainViewState extends State<MainView> {
                                       renderingNotifier: renderingNotifier,
                                       saveOnGallery: false),
                                   onDone: (bytes) async {
-                                    if (bytes != null) {
-                                      FirestoreHelper.uploadStoryToStorage(
-                                              bytes)
-                                          .then((imageURL) async {
-                                        print(imageURL);
-                                        FirestoreHelper.saveNewStories(imageURL)
-                                            .then((value) {
-                                          print(value);
-                                          Navigator.pop(context);
-                                        });
-                                      });
-                                    } else {}
                                     setState(() {
                                       widget.onDone!(bytes);
                                     });

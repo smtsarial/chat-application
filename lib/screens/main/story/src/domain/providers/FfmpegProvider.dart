@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:anonmy/connections/firestore.dart';
 import 'package:ffmpeg_kit_flutter_min_gpl/ffmpeg_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -31,9 +32,13 @@ class FfmpegProvider with ChangeNotifier {
         debugPrint(
             'FFmpeg process exited with rc ==> ${await rc.getReturnCode()}');
         debugPrint('FFmpeg process exited with rc ==> ${rc.getCommand()}');
+
+        debugPrint('FFmpeg 111111111111111 ==> ${FfmpegPaths.videoOutputPath}');
+
         var res = await rc.getReturnCode();
 
         if (res!.getValue() == 0) {
+          print("Widget was render successfully.");
           return {
             'success': true,
             'msg': 'Widget was render successfully.',
