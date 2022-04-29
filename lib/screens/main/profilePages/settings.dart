@@ -1,14 +1,19 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/profilePages/YoutubeVideoList.dart';
+import 'package:anonmy/screens/main/profilePages/blockedList.dart';
 import 'package:anonmy/screens/main/profilePages/myHobbies.dart';
 import 'package:anonmy/screens/main/profilePages/myMovieList.dart';
 import 'package:anonmy/screens/main/profilePages/mySpotifyList.dart';
 import 'package:anonmy/screens/main/profilePages/profileSetting_screen.dart';
 import 'package:anonmy/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -47,8 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          
-AppLocalizations.of(context)!.settings,
+          AppLocalizations.of(context)!.settings,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
         ),
         centerTitle: true,
@@ -62,12 +66,10 @@ AppLocalizations.of(context)!.settings,
     return SettingsList(
       sections: [
         SettingsSection(
-          title: Text(
-AppLocalizations.of(context)!.account),
+          title: Text(AppLocalizations.of(context)!.account),
           tiles: [
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.userinfo),
+              title: Text(AppLocalizations.of(context)!.userinfo),
               leading: Icon(Icons.email),
               onPressed: (context) {
                 Navigator.push(
@@ -77,8 +79,7 @@ AppLocalizations.of(context)!.userinfo),
               },
             ),
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.myspotifylist),
+              title: Text(AppLocalizations.of(context)!.myspotifylist),
               leading: Icon(Icons.music_note),
               onPressed: (context) {
                 Navigator.push(
@@ -88,8 +89,7 @@ AppLocalizations.of(context)!.myspotifylist),
               },
             ),
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.myyoutubelist),
+              title: Text(AppLocalizations.of(context)!.myyoutubelist),
               leading: Icon(Icons.youtube_searched_for),
               onPressed: (context) {
                 Navigator.push(
@@ -99,8 +99,7 @@ AppLocalizations.of(context)!.myyoutubelist),
               },
             ),
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.mymovies),
+              title: Text(AppLocalizations.of(context)!.mymovies),
               leading: Icon(Icons.movie_creation),
               onPressed: (context) {
                 Navigator.push(
@@ -110,8 +109,7 @@ AppLocalizations.of(context)!.mymovies),
               },
             ),
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.myhobbies),
+              title: Text(AppLocalizations.of(context)!.myhobbies),
               leading: Icon(Icons.sports_tennis),
               onPressed: (context) {
                 Navigator.push(
@@ -121,8 +119,65 @@ AppLocalizations.of(context)!.myhobbies),
               },
             ),
             SettingsTile(
-              title: Text(
-AppLocalizations.of(context)!.signout),
+              title: Text(AppLocalizations.of(context)!.myblockedlist),
+              leading: Icon(Icons.block),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BlockedUsers()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text("Delete all messages"),
+              leading: Icon(Icons.folder_delete_outlined),
+              onPressed: (context) {
+                showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          title: const Text('CAUTION'),
+                          content: const Text(
+                              'You will all message data and you can not retrieve back!'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                try {
+                                  await FirestoreHelper.getUserData()
+                                      .then((value) async {
+                                    await FirebaseFirestore.instance
+                                        .collection('messages')
+                                        .where("MessageRoomPeople",
+                                            arrayContains: value.email)
+                                        .get()
+                                        .then((value) {
+                                      value.docs.forEach((element) async {
+                                        await FirestoreHelper.db
+                                            .collection('messages')
+                                            .doc(element.id)
+                                            .delete()
+                                            .then((value) {
+                                          Fluttertoast.showToast(
+                                              msg: "All Message data removed!");
+                                        });
+                                      });
+                                    });
+                                  }).then((value) => Navigator.pop(context));
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ));
+              },
+            ),
+            SettingsTile(
+              title: Text(AppLocalizations.of(context)!.signout),
               leading: Icon(Icons.exit_to_app),
               onPressed: (context) {
                 _signOut();
@@ -174,9 +229,8 @@ class _EmailSettingsState extends State<EmailSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title:  Text(
-            
-AppLocalizations.of(context)!.usersettings,
+          title: Text(
+            AppLocalizations.of(context)!.usersettings,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           centerTitle: true,

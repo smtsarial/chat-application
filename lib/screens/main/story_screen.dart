@@ -1,3 +1,4 @@
+import 'package:anonmy/connections/adhelper.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/story/stories_editor.dart';
@@ -8,6 +9,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+// TODO: Import google_mobile_ads.dart
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage({Key? key}) : super(key: key);
@@ -24,6 +28,17 @@ class _StoryPageState extends State<StoryPage> {
   late String filterGender = "All";
   late List filterAge = [18, 65];
 
+  static final _kAdIndex = 1;
+  late BannerAd _ad;
+  bool _isAdLoaded = false;
+
+  int _getDestinationItemIndex(int rawIndex) {
+    if (rawIndex >= _kAdIndex && _isAdLoaded) {
+      return rawIndex - 1;
+    }
+    return rawIndex;
+  }
+
   @override
   void initState() {
     if (mounted) {
@@ -34,10 +49,32 @@ class _StoryPageState extends State<StoryPage> {
             stor1es.add(element);
           }
         });
-        setState(() {
-          stories = stor1es;
-        });
+        if (mounted) {
+          setState(() {
+            stories = stor1es;
+          });
+        }
       });
+      _ad = BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        size: AdSize.mediumRectangle,
+        request: AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            setState(() {
+              _isAdLoaded = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            // Releases an ad resource when it fails to load
+            ad.dispose();
+
+            print(
+                'Ad load failed (code=${error.code} message=${error.message})');
+          },
+        ),
+      );
+      _ad.load();
     }
     super.initState();
   }
@@ -82,82 +119,101 @@ class _StoryPageState extends State<StoryPage> {
                                 childAspectRatio: 9 / 16,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2),
-                        itemCount: stories.length,
+                        itemCount: stories.length + (_isAdLoaded ? 1 : 0),
                         itemBuilder: (BuildContext ctx, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => StoryViewer(
-                                            imageList: [stories[index]],
-                                          )));
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: PrimaryColor,
-                                      image: DecorationImage(
-                                        image: CachedNetworkImageProvider(
-                                            stories[index].imageUrl),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
-                                Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(137, 0, 0, 0),
-                                    )),
-                                Positioned(
-                                    left: 4,
-                                    bottom: 10,
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor: PureColor,
-                                          radius: 12,
-                                          child: CircleAvatar(
-                                            radius: 11,
-                                            backgroundImage: Image(
-                                              image: CachedNetworkImageProvider(
-                                                  stories[index]
-                                                      .ownerProfilePicture),
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    value: loadingProgress
-                                                                .expectedTotalBytes !=
-                                                            null
-                                                        ? loadingProgress
-                                                                .cumulativeBytesLoaded /
-                                                            loadingProgress
-                                                                .expectedTotalBytes!
-                                                        : null,
-                                                  ),
-                                                );
-                                              },
-                                            ).image,
+                          // TODO: Render a banner ad
+                          if (_isAdLoaded && index == _kAdIndex) {
+                            return Container(
+                              child: AdWidget(ad: _ad),
+                              width: _ad.size.width.toDouble(),
+                              height: _ad.size.height.toDouble(),
+                              alignment: Alignment.center,
+                            );
+                          } else {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => StoryViewer(
+                                              imageList: [
+                                                stories[
+                                                    _getDestinationItemIndex(
+                                                        index)]
+                                              ],
+                                            )));
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: PrimaryColor,
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                              stories[_getDestinationItemIndex(
+                                                      index)]
+                                                  .imageUrl),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )),
+                                  Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(137, 0, 0, 0),
+                                      )),
+                                  Positioned(
+                                      left: 4,
+                                      bottom: 10,
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: PureColor,
+                                            radius: 12,
+                                            child: CircleAvatar(
+                                              radius: 11,
+                                              backgroundImage: Image(
+                                                image: CachedNetworkImageProvider(
+                                                    stories[_getDestinationItemIndex(
+                                                            index)]
+                                                        .ownerProfilePicture),
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes!
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                              ).image,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(stories[index].ownerUsername)
-                                      ],
-                                    )),
-                              ],
-                            ),
-                          );
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(stories[_getDestinationItemIndex(
+                                                  index)]
+                                              .ownerUsername)
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            );
+                          }
                         })
                     : Center(
                         child: Text(
@@ -481,6 +537,7 @@ class _StoryPageState extends State<StoryPage> {
   @override
   void dispose() {
     super.dispose();
+    _ad.dispose();
   }
 
   Future takeStory() async {

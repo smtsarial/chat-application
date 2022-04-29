@@ -1,4 +1,5 @@
 import 'package:anonmy/models/story.dart';
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,8 +7,11 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,6 +42,26 @@ class _ProfileState extends State<Profile> {
       appBar: buildAppBar(),
       body: body(context),
     );
+  }
+
+  void handleClick(String value) {
+    if (value == "Block this user") {
+      try {
+        FirestoreHelper.db
+            .collection('users')
+            .doc(Provider.of<UserProvider>(context, listen: false).user.id)
+            .update({
+          "blockedUsers": FieldValue.arrayUnion([widget.userData.email])
+        }).then((value) {
+          Navigator.pop(context);
+
+          Fluttertoast.showToast(msg: widget.senderData.username + " Blocked!");
+        });
+      } catch (e) {
+        print(e);
+        Fluttertoast.showToast(msg: 'Error');
+      }
+    }
   }
 
   AppBar buildAppBar() {
@@ -119,6 +143,17 @@ class _ProfileState extends State<Profile> {
                       });
                     },
                   )),
+        PopupMenuButton<String>(
+          onSelected: handleClick,
+          itemBuilder: (BuildContext context) {
+            return {'Block this user'}.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
         const SizedBox(width: kDefaultPadding / 2),
       ],
     );

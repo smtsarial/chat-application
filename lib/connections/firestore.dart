@@ -225,7 +225,7 @@ class FirestoreHelper {
     try {
       await FirestoreHelper.getUserData().then((value) async {
         await db.collection('messages').add({
-          'acceptAllMedia':false,
+          'acceptAllMedia': false,
           'anonim': anon,
           "lastMessageTime": DateTime.now(),
           "receiverMail": receiverMail,
@@ -275,7 +275,7 @@ class FirestoreHelper {
     String id = "";
     try {
       await db.collection('messages').add({
-        'acceptAllMedia':false,
+        'acceptAllMedia': false,
         'anonim': anonOrNot,
         "lastMessageTime": DateTime.now(),
         "receiverMail": receiver.email,
@@ -404,7 +404,14 @@ class FirestoreHelper {
           userType,
           username,
           "Türkiye",
-          "İstanbul", [], [], [], [], []).toMap());
+          "İstanbul",
+          [],
+          [],
+          [],
+          [],
+          [],
+          true,
+          []).toMap());
       return true;
     } catch (e) {
       print(e);

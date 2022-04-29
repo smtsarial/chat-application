@@ -3,6 +3,7 @@ import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:youtube_metadata/youtube_metadata.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -59,7 +60,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
                   } else {}
                 },
               )
-            : print("youtube videosu değil")
+            : Fluttertoast.showToast(msg: "Please add valid link!")
         : (print("object"));
   }
 
@@ -67,7 +68,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.mymovies),
+          title: Text(AppLocalizations.of(context)!.myyoutubelist),
         ),
         body: Column(
           children: <Widget>[
@@ -82,7 +83,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.addmovielink,
+                          hintText: "Add Youtube Link",
                         )),
                   ),
                   GestureDetector(

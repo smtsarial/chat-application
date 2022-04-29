@@ -247,12 +247,13 @@ class _StoriesState extends State<_Stories> {
   List<Story> stories = [];
   @override
   void initState() {
-    FirestoreHelper.getStoriesForUser(widget.userData).then((value) {
-      setState(() {
-        stories = value;
+    if (mounted) {
+      FirestoreHelper.getStoriesForUser(widget.userData).then((value) {
+        setState(() {
+          stories = value;
+        });
       });
-    });
-
+    }
     super.initState();
   }
 

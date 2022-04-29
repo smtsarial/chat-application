@@ -79,7 +79,8 @@
     "surname":"Surname",
     "phonenumber":"Phone Number",
     "username":"Username",
-    "selectimage":"Please select profile picture"
+    "selectimage":"Please select profile picture",
+    "myblockedlist":"Blocked Users"
 
 
 }

@@ -6,6 +6,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -270,6 +271,34 @@ class _EditPageState extends State<EditPage> {
               SizedBox(
                 height: 15,
               ),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0, left: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Show my online status?",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      CupertinoSwitch(
+                          value: userData.showStatus,
+                          onChanged: (value) {
+                            try {
+                              FirestoreHelper.db
+                                  .collection('users')
+                                  .doc(userData.id)
+                                  .update({"showStatus": value}).then((value) {
+                                Authentication().getUser().then((value) {
+                                  FirestoreHelper.getUserData().then((value) =>
+                                      setState((() => userData = value)));
+                                });
+                              });
+                            } catch (e) {
+                              print(e);
+                            }
+                          })
+                    ],
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

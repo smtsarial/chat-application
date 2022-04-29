@@ -60,7 +60,7 @@ class _MyHobbiesState extends State<MyHobbies> {
                         controller: nameController,
                         onChanged: (value) {},
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.addspotify,
+                          hintText: "Add New Hobbie",
                         )),
                   ),
                   GestureDetector(

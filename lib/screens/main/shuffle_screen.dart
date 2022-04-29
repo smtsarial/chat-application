@@ -31,21 +31,13 @@ class _ShufflePageState extends State<ShufflePage> {
 
   late List<Story> stories = [];
   String searchUsername = "";
-
+  bool isLoaded = false;
   List<User> userList = [];
 
   @override
   void initState() {
     if (mounted) {
-      FirebaseFirestore.instance.collection('users').get().then((value) {
-        List<User> list = [];
-        value.docs.forEach((element) {
-          list.add(User.fromMap(element));
-        });
-        setState(() {
-          userList = list;
-        });
-      });
+      getAllUsers().then((value) {});
     }
     super.initState();
   }
@@ -58,15 +50,29 @@ class _ShufflePageState extends State<ShufflePage> {
     yield* _stream;
   }
 
-  void getAllUsers() {
-    FirebaseFirestore.instance.collection('users').get().then((value) {
+  Future getAllUsers() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy("userType", descending: true)
+        .get()
+        .then((value) async {
       List<User> list = [];
       value.docs.forEach((element) {
         list.add(User.fromMap(element));
       });
-      setState(() {
-        userList = list;
+      await FirestoreHelper.getUserData().then((value) {
+        for (int i = 0; i < list.length; i++) {
+          if (value.blockedUsers.toList().contains(list[i].email)) {
+            list.removeAt(i);
+          }
+        }
       });
+      if (mounted) {
+        setState(() {
+          userList = list;
+          isLoaded = true;
+        });
+      }
     });
   }
 
@@ -121,20 +127,29 @@ class _ShufflePageState extends State<ShufflePage> {
         ),
         Expanded(
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: userList.length != 0
-                  ? GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 9 / 11,
-                              mainAxisSpacing: 5,
-                              crossAxisSpacing: 5),
-                      itemCount: userList.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return shuffleUserCard(userList[index]);
-                      })
-                  : Text(AppLocalizations.of(context)!.nodata)),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: isLoaded
+                ? userList.length != 0
+                    ? GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 9 / 11,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 5),
+                        itemCount: userList.length,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return shuffleUserCard(userList[index]);
+                        })
+                    : Text(AppLocalizations.of(context)!.nodata)
+                : Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey,
+                      color: Colors.blueGrey,
+                      strokeWidth: 2,
+                    ),
+                  ),
+          ),
         )
       ],
     );
@@ -221,13 +236,15 @@ class _ShufflePageState extends State<ShufflePage> {
                               top: 0,
                               right: 0,
                               child: userData.isActive
-                                  ? Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green,
-                                      ),
-                                    )
+                                  ? userData.showStatus
+                                      ? Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green,
+                                          ),
+                                        )
+                                      : Container()
                                   : Container()),
                         ],
                       ),
@@ -247,9 +264,11 @@ class _ShufflePageState extends State<ShufflePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      userData.isActive
-                          ? Container()
-                          : Text(timeago.format(userData.lastActiveTime)),
+                      userData.showStatus
+                          ? userData.isActive
+                              ? Container()
+                              : Text(timeago.format(userData.lastActiveTime))
+                          : Container(),
                       SizedBox(
                         height: 10,
                       ),
@@ -265,45 +284,6 @@ class _ShufflePageState extends State<ShufflePage> {
             )
           ],
         ));
-  }
-
-  Widget userSpecificInformationLayer() {
-    return Center(
-      child: Container(
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(),
-              child: Column(
-                children: [
-                  Icon(Icons.message),
-                  Text(
-                    AppLocalizations.of(context)!.messages,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text("2030")
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(),
-              child: Column(
-                children: [
-                  FaIcon(FontAwesomeIcons.solidThumbsUp),
-                  Text(
-                    "Followers",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text("203")
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void settingModalBottomSheet(context1) {

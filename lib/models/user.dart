@@ -24,6 +24,7 @@ class User {
   late List MovieList;
   late List hobbies;
   late bool showStatus;
+  late List blockedUsers;
 
   User(
       this.id,
@@ -50,7 +51,8 @@ class User {
       this.SpotifyList,
       this.MovieList,
       this.hobbies,
-      this.showStatus);
+      this.showStatus,
+      this.blockedUsers);
   User.fromMap(dynamic obj) {
     email = obj['email'];
     firstName = obj['firstName'];
@@ -75,6 +77,8 @@ class User {
     SpotifyList = obj['SpotifyList'];
     MovieList = obj['MovieList'];
     hobbies = obj['hobbies'];
+    showStatus = obj['showStatus'];
+    blockedUsers = obj['blockedUsers'];
   }
 
   Map<String, dynamic> toMap() {
@@ -103,6 +107,8 @@ class User {
       map['SpotifyList'] = this.SpotifyList;
       map['MovieList'] = this.MovieList;
       map['hobbies'] = this.hobbies;
+      map['showStatus'] = this.showStatus;
+      map['blockedUsers'] = this.blockedUsers;
     }
     return map;
   }

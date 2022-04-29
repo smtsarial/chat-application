@@ -10,7 +10,7 @@ import 'package:anonmy/screens/main/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,6 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   bool isLoading = true;
   bool isErrorOccured = false;
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
+  }
 
   @override
   void initState() {
