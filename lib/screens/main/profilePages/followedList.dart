@@ -40,6 +40,9 @@ class _FollowedListState extends State<FollowedList> {
         child: Container(
             child: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             user.id == ""
                 ? Center(
                     child: CircularProgressIndicator(
@@ -134,7 +137,9 @@ class _FollowedListState extends State<FollowedList> {
                             },
                           )
                         : Center(
-                            child: Text(AppLocalizations.of(context)!.thereisnofolloweduser,
+                            child: Text(
+                                AppLocalizations.of(context)!
+                                    .thereisnofolloweduser,
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
                           ))

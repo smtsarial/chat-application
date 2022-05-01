@@ -16,4 +16,9 @@ class UserProvider with ChangeNotifier {
     FirestoreHelper.getUserData().then((value) => user = value);
     notifyListeners();
   }
+
+  void signOut() {
+    user = emptyUser;
+    notifyListeners();
+  }
 }

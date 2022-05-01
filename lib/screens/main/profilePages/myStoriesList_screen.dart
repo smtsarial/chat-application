@@ -16,12 +16,14 @@ class MyStoriesScreen extends StatefulWidget {
 
 class _MyStoriesScreenState extends State<MyStoriesScreen> {
   List<Story> stories = [];
+  bool isLoaded = false;
   @override
   void initState() {
     FirestoreHelper.getUserData().then((value) {
       FirestoreHelper.getStoriesForUser(value).then((value) {
         setState(() {
           stories = value;
+          isLoaded = true;
         });
       });
     });
@@ -39,106 +41,117 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
         child: Container(
             child: Column(
           children: [
-            stories.length == 0
-                ? Center(
+            SizedBox(
+              height: 15,
+            ),
+            isLoaded
+                ? stories.length == 0
+                    ? Center(child: Text("There is no saved story."))
+                    : Expanded(
+                        child: stories.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: stories.length,
+                                itemBuilder: (context, position) {
+                                  Story item = stories[position];
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                          onTap: () => {},
+                                          leading: Container(
+                                              height: double.infinity,
+                                              child: CircleAvatar(
+                                                radius: 70,
+                                                backgroundImage:
+                                                    CachedNetworkImageProvider(
+                                                        item.imageUrl),
+                                              )),
+                                          title: Text(
+                                            timeago.format(item.createdTime),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          trailing: Wrap(
+                                            spacing: 12,
+                                            children: [
+                                              Container(
+                                                child: Column(
+                                                  children: [
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          try {
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'stories')
+                                                                .doc(item.id)
+                                                                .delete()
+                                                                .then((value) {
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      SnackBar(
+                                                                content: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .success),
+                                                              ));
+                                                              FirestoreHelper
+                                                                      .getUserData()
+                                                                  .then(
+                                                                      (value) {
+                                                                FirestoreHelper
+                                                                        .getStoriesForUser(
+                                                                            value)
+                                                                    .then(
+                                                                        (value) {
+                                                                  setState(() {
+                                                                    stories =
+                                                                        value;
+                                                                  });
+                                                                });
+                                                              });
+                                                            });
+                                                          } catch (e) {
+                                                            print(e);
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .erroroccured),
+                                                            ));
+                                                          }
+                                                        },
+                                                        icon: Icon(Icons
+                                                            .remove_circle_rounded)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                      Divider()
+                                    ],
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                    AppLocalizations.of(context)!
+                                        .thereisnostories,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                              ))
+                : Center(
                     child: CircularProgressIndicator(
                       backgroundColor: Colors.grey,
                       color: Colors.blueGrey,
                       strokeWidth: 2,
                     ),
                   )
-                : Expanded(
-                    child: stories.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: stories.length,
-                            itemBuilder: (context, position) {
-                              Story item = stories[position];
-                              return Column(
-                                children: [
-                                  ListTile(
-                                      onTap: () => {},
-                                      leading: Container(
-                                          height: double.infinity,
-                                          child: CircleAvatar(
-                                            radius: 70,
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                                    item.imageUrl),
-                                          )),
-                                      title: Text(
-                                        timeago.format(item.createdTime),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      trailing: Wrap(
-                                        spacing: 12,
-                                        children: [
-                                          Container(
-                                            child: Column(
-                                              children: [
-                                                IconButton(
-                                                    onPressed: () {
-                                                      try {
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'stories')
-                                                            .doc(item.id)
-                                                            .delete()
-                                                            .then((value) {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  SnackBar(
-                                                            content: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .success),
-                                                          ));
-                                                          FirestoreHelper
-                                                                  .getUserData()
-                                                              .then((value) {
-                                                            FirestoreHelper
-                                                                    .getStoriesForUser(
-                                                                        value)
-                                                                .then((value) {
-                                                              setState(() {
-                                                                stories = value;
-                                                              });
-                                                            });
-                                                          });
-                                                        });
-                                                      } catch (e) {
-                                                        print(e);
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
-                                                          content: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .erroroccured),
-                                                        ));
-                                                      }
-                                                    },
-                                                    icon: Icon(Icons
-                                                        .remove_circle_rounded)),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                  Divider()
-                                ],
-                              );
-                            },
-                          )
-                        : Center(
-                            child: Text(
-                                AppLocalizations.of(context)!.thereisnostories,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                          ))
           ],
         )),
       ),

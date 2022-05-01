@@ -22,8 +22,12 @@ class _myYoutubeListState extends State<myYoutubeList> {
   TextEditingController nameController = TextEditingController();
   @override
   void initState() {
+    getAllYoutubeList();
     super.initState();
-    FirestoreHelper.getUserData().then((value) {
+  }
+
+  Future getAllYoutubeList() async {
+    await FirestoreHelper.getUserData().then((value) {
       setState(() {
         youtubeList = value.myYoutubeVideo;
       });
@@ -32,7 +36,6 @@ class _myYoutubeListState extends State<myYoutubeList> {
             isLoaded = true;
           });
         }));
-    ;
   }
 
   Future getYoutubeInfo() async {
@@ -57,7 +60,12 @@ class _myYoutubeListState extends State<myYoutubeList> {
                       youtubeList.insert(0, nameController.text);
                       nameController.text = "";
                     });
-                  } else {}
+                    Fluttertoast.showToast(
+                        msg: "Youtube Video Added to profile!!");
+                    getAllYoutubeList();
+                  } else {
+                    Fluttertoast.showToast(msg: "Error occured!");
+                  }
                 },
               )
             : Fluttertoast.showToast(msg: "Please add valid link!")

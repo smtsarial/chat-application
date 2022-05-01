@@ -49,6 +49,9 @@ class _MyHobbiesState extends State<MyHobbies> {
         ),
         body: Column(
           children: <Widget>[
+            SizedBox(
+              height: 15,
+            ),
             Container(
               child: Row(
                 children: [

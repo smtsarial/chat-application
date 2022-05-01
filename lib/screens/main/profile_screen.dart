@@ -222,6 +222,7 @@ class __SignOutButtonState extends State<_SignOutButton> {
       setState(() {
         _loading = true;
       });
+      Provider.of<UserProvider>(context).signOut();
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SplashScreen()));
     });

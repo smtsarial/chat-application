@@ -48,6 +48,9 @@ class _myMovieListState extends State<myMovieList> {
         ),
         body: Column(
           children: <Widget>[
+            SizedBox(
+              height: 15,
+            ),
             Container(
               child: Row(
                 children: [

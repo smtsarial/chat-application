@@ -35,6 +35,9 @@ class _FollowersListState extends State<FollowersList> {
         child: Container(
             child: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             user.id == ""
                 ? Center(
                     child: CircularProgressIndicator(

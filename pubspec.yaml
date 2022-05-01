@@ -47,7 +47,10 @@ dependencies:
   cached_network_image: ^3.2.0
   image: ^3.1.0
   path_provider: ^2.0.8
-  photo_view: ^0.13.0
+  photo_view:
+    git:
+      url: https://github.com/bluefireteam/photo_view
+      ref: master
   image_gallery_saver: ^1.7.1
   align_positioned: ^3.0.0
   gallery_media_picker: ^0.0.7
@@ -68,6 +71,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   giphy_picker: ^2.0.0
   google_mobile_ads: ^0.13.0
+  search_choices: ^2.0.19
 
 
 dev_dependencies:

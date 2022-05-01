@@ -4,8 +4,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:search_choices/search_choices.dart';
 import 'package:spotify_metadata/spotify_metadata.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+class SearchBarStyle {
+  final Color backgroundColor;
+  final EdgeInsetsGeometry padding;
+  final BorderRadius borderRadius;
+
+  const SearchBarStyle(
+      {this.backgroundColor = const Color.fromRGBO(142, 142, 147, .15),
+      this.padding = const EdgeInsets.all(5.0),
+      this.borderRadius: const BorderRadius.all(Radius.circular(5.0))});
+}
 
 class mySpotifyList extends StatefulWidget {
   const mySpotifyList({Key? key}) : super(key: key);
@@ -22,8 +34,14 @@ class _mySpotifyListState extends State<mySpotifyList> {
   TextEditingController nameController = TextEditingController();
   @override
   void initState() {
+    if (mounted) {
+      spotifyList();
+    }
     super.initState();
-    FirestoreHelper.getUserData().then((value) {
+  }
+
+  Future spotifyList() async {
+    await FirestoreHelper.getUserData().then((value) {
       setState(() {
         spotifyLists = value.SpotifyList;
       });
@@ -56,6 +74,8 @@ class _mySpotifyListState extends State<mySpotifyList> {
                       spotifyLists.insert(0, nameController.text);
                       nameController.text = "";
                     });
+                    Fluttertoast.showToast(msg: "Music added!");
+                    spotifyList();
                   } else {}
                 },
               )
@@ -63,6 +83,18 @@ class _mySpotifyListState extends State<mySpotifyList> {
         : (print("object"));
   }
 
+  List<DropdownMenuItem> items = [
+    DropdownMenuItem(
+      child: Text("asfasf"),
+    ),
+    DropdownMenuItem(
+      child: Text("asfasf1"),
+    ),
+    DropdownMenuItem(
+      child: Text("asfasf2"),
+    )
+  ];
+  DropdownMenuItem selected = DropdownMenuItem(child: Text(""));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +103,23 @@ class _mySpotifyListState extends State<mySpotifyList> {
         ),
         body: Column(
           children: <Widget>[
+            SearchChoices.single(
+              items: items,
+              value: selected,
+              hint: "Select one",
+              searchHint: "Select one",
+              onChanged: (value) {
+                print(selected.value);
+                setState(() {
+                  selected = value;
+                });
+                print(value);
+              },
+              isExpanded: true,
+            ),
+            SizedBox(
+              height: 15,
+            ),
             Container(
               child: Row(
                 children: [

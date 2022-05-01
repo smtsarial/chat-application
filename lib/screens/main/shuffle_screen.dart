@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anonmy/connections/adhelper.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'user_profile_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -34,10 +36,42 @@ class _ShufflePageState extends State<ShufflePage> {
   bool isLoaded = false;
   List<User> userList = [];
 
+  static final _kAdIndex = 7;
+  late BannerAd _ad;
+  bool _isAdLoaded = false;
+
+  int _getDestinationItemIndex(int rawIndex) {
+    if (rawIndex >= _kAdIndex && _isAdLoaded) {
+      return rawIndex - 1;
+    }
+    return rawIndex;
+  }
+
   @override
   void initState() {
     if (mounted) {
-      getAllUsers().then((value) {});
+      getAllUsers().then((value) {
+        _ad = BannerAd(
+          adUnitId: AdHelper.bannerAdUnitId,
+          size: AdSize.mediumRectangle,
+          request: AdRequest(),
+          listener: BannerAdListener(
+            onAdLoaded: (_) {
+              setState(() {
+                _isAdLoaded = true;
+              });
+            },
+            onAdFailedToLoad: (ad, error) {
+              // Releases an ad resource when it fails to load
+              ad.dispose();
+
+              print(
+                  'Ad load failed (code=${error.code} message=${error.message})');
+            },
+          ),
+        );
+        _ad.load();
+      });
     }
     super.initState();
   }
@@ -85,9 +119,6 @@ class _ShufflePageState extends State<ShufflePage> {
             children: [
               GestureDetector(
                   onTap: () {
-                    //"Provider.of<MessageProvider>(context, listen: false)",
-                    //    .checkUsername();
-
                     settingModalBottomSheet(context);
                   },
                   child: const Card(
@@ -137,9 +168,24 @@ class _ShufflePageState extends State<ShufflePage> {
                                 childAspectRatio: 9 / 11,
                                 mainAxisSpacing: 5,
                                 crossAxisSpacing: 5),
-                        itemCount: userList.length,
+                        itemCount: userList.length +
+                            (userList.length >= 7
+                                ? _isAdLoaded
+                                    ? 1
+                                    : 0
+                                : 0),
                         itemBuilder: (BuildContext ctx, index) {
-                          return shuffleUserCard(userList[index]);
+                          if (_isAdLoaded && index == _kAdIndex) {
+                            return Container(
+                              child: AdWidget(ad: _ad),
+                              width: _ad.size.width.toDouble(),
+                              height: _ad.size.height.toDouble(),
+                              alignment: Alignment.center,
+                            );
+                          } else {
+                            return shuffleUserCard(
+                                userList[_getDestinationItemIndex(index)]);
+                          }
                         })
                     : Text(AppLocalizations.of(context)!.nodata)
                 : Center(

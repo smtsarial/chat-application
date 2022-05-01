@@ -28,7 +28,7 @@ class _StoryPageState extends State<StoryPage> {
   late String filterGender = "All";
   late List filterAge = [18, 65];
 
-  static final _kAdIndex = 1;
+  static final _kAdIndex = 2;
   late BannerAd _ad;
   bool _isAdLoaded = false;
 
@@ -119,9 +119,13 @@ class _StoryPageState extends State<StoryPage> {
                                 childAspectRatio: 9 / 16,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2),
-                        itemCount: stories.length + (_isAdLoaded ? 1 : 0),
+                        itemCount: stories.length +
+                            (stories.length >= 2
+                                ? _isAdLoaded
+                                    ? 1
+                                    : 0
+                                : 0),
                         itemBuilder: (BuildContext ctx, index) {
-                          // TODO: Render a banner ad
                           if (_isAdLoaded && index == _kAdIndex) {
                             return Container(
                               child: AdWidget(ad: _ad),

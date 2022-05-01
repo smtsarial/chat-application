@@ -45,6 +45,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late String userUID = "loading";
   late String landingRunned = "true";
+  bool appOpened = false;
 
   @override
   void initState() {
@@ -63,18 +64,21 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 .then((value1) {
               //print(value1.docChanges.first.doc.id);
               if (value1.docs.first['messageOwnerUsername'] != value.username) {
-                NotificationApi.showNotification(
-                  title: event.docChanges.first.doc['anonim'] == false
-                      ? event.docChanges.first.doc['senderUsername'] ==
-                              value.email
-                          ? event.docChanges.first.doc['senderUsername'] +
-                              " sent message."
-                          : event.docChanges.first.doc['receiverUsername'] +
-                              " sent message."
-                      : "Anon-" + event.docChanges.first.doc.id,
-                  body: "Message: " + event.docChanges.first.doc['lastMessage'],
-                  payload: event.docChanges.first.doc.id,
-                );
+                if (appOpened == false) {
+                  NotificationApi.showNotification(
+                    title: event.docChanges.first.doc['anonim'] == false
+                        ? event.docChanges.first.doc['senderUsername'] ==
+                                value.email
+                            ? event.docChanges.first.doc['senderUsername'] +
+                                " sent message."
+                            : event.docChanges.first.doc['receiverUsername'] +
+                                " sent message."
+                        : "Anon-" + event.docChanges.first.doc.id,
+                    body:
+                        "Message: " + event.docChanges.first.doc['lastMessage'],
+                    payload: event.docChanges.first.doc.id,
+                  );
+                }
               }
             });
           }
@@ -137,10 +141,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     if (isBackground == false) {
       FirestoreHelper.changeUserActiveStatusAndTime(true).then((value) {
         print(value);
+        setState(() {
+          appOpened = true;
+        });
       });
     } else {
       FirestoreHelper.changeUserActiveStatusAndTime(false).then((value) {
         print(value);
+        setState(() {
+          appOpened = false;
+        });
       });
     }
   }
