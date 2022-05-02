@@ -2,10 +2,29 @@ import 'package:anonmy/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:flutter/material.dart';
+const String REGISTERED_APP_ID = "6204";
+const String REGISTERED_AUTH_KEY = "3L6MknPCfmutGO6";
+const String REGISTERED_AUTH_SECRET = "dhjvGJO7h9GhPu9";
+
+final String PARAM_SESSION_ID = 'session_id';
+final String PARAM_CALL_TYPE = 'call_type';
+final String PARAM_CALLER_ID = 'caller_id';
+final String PARAM_CALLER_NAME = 'caller_name';
+final String PARAM_CALL_OPPONENTS = 'call_opponents';
+final String PARAM_IOS_VOIP = 'ios_voip';
+final String PARAM_SIGNAL_TYPE = 'signal_type';
+
+final String SIGNAL_TYPE_START_CALL = "startCall";
+final String SIGNAL_TYPE_END_CALL = "endCall";
+final String SIGNAL_TYPE_REJECT_CALL = "rejectCall";
 
 User emptyUser = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-    "", [], "", [], "", "", "", "", [], [], [], [], [], true, []);
+    "", [], "", [], "", "", "", "", [], [], [], [], [], true, [], "", 0);
+
+class CallTypes {
+  static const VIDEO_CALL = 1;
+  static const AUDIO_CALL = 2;
+}
 
 const PrimaryColor = Color.fromRGBO(73, 3, 201, 1);
 const SecondaryColor = Color.fromRGBO(59, 24, 95, 1);

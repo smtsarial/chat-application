@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:anonmy/connections/local_notification_api.dart';
+import 'package:anonmy/managers/call_manager.dart';
+import 'package:anonmy/providers/pref_util.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
@@ -65,6 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CallManager.instance.init(context);
     return (() {
       // your code here
       if (isLoading == true) {

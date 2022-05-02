@@ -1,3 +1,4 @@
+import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -152,7 +153,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                   child: Text("Get out of anonymity")),
                             ],
                           )
-                        : Text("")
+                        : Padding(
+                            padding: EdgeInsets.all(12),
+                            child: FloatingActionButton(
+                              heroTag: "VideoCall",
+                              child: Icon(
+                                Icons.videocam,
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.blue,
+                              onPressed: () => CallManager.instance
+                                  .startNewCall(context, CallTypes.VIDEO_CALL,
+                                      {messageRoom.senderCubeId}),
+                            ),
+                          )
                     : Text(""),
               ),
               SizedBox(width: kDefaultPadding / 2),

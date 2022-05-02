@@ -1,6 +1,9 @@
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/l10n/l10n.dart';
+import 'package:anonmy/managers/push_notifications_manager.dart';
+import 'package:anonmy/providers/platform_utils.dart';
+import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +54,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    SharedPrefs.getUser().then((value) {
+      print(value!.fullName);
+    });
+    FirestoreHelper.getUserData().then((value) {
+      SharedPrefs.updateUser(
+          CubeUser(id: value.cubeid, password: value.videoServicePassword));
+    });
+    initConnectycube();
+    initForegroundService();
+    PushNotificationsManager.instance.init();
+    //Authentication ---------------------------------------------
     _handleAuthenticatedState().then((value) {
       WidgetsBinding.instance?.addObserver(this);
       FirestoreHelper.getUserData().then((value) {
@@ -165,4 +180,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       landingRunned = _landingRunned.toString();
     });
   }
+}
+
+initConnectycube() {
+  init(
+    REGISTERED_APP_ID,
+    REGISTERED_AUTH_KEY,
+    REGISTERED_AUTH_SECRET,
+    onSessionRestore: () {
+      return SharedPrefs.getUser().then((savedUser) {
+        return createSession(savedUser);
+      });
+    },
+  );
 }

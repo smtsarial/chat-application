@@ -25,6 +25,8 @@ class User {
   late List hobbies;
   late bool showStatus;
   late List blockedUsers;
+  late String videoServicePassword;
+  late int cubeid;
 
   User(
       this.id,
@@ -52,7 +54,9 @@ class User {
       this.MovieList,
       this.hobbies,
       this.showStatus,
-      this.blockedUsers);
+      this.blockedUsers,
+      this.videoServicePassword,
+      this.cubeid);
   User.fromMap(dynamic obj) {
     email = obj['email'];
     firstName = obj['firstName'];
@@ -79,6 +83,8 @@ class User {
     hobbies = obj['hobbies'];
     showStatus = obj['showStatus'];
     blockedUsers = obj['blockedUsers'];
+    videoServicePassword = obj['videoServicePassword'];
+    cubeid = obj['cubeid'];
   }
 
   Map<String, dynamic> toMap() {
@@ -109,6 +115,8 @@ class User {
       map['hobbies'] = this.hobbies;
       map['showStatus'] = this.showStatus;
       map['blockedUsers'] = this.blockedUsers;
+      map["videoServicePassword"] = this.videoServicePassword;
+      map["cubeid"] = this.cubeid;
     }
     return map;
   }

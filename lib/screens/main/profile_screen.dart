@@ -1,5 +1,8 @@
 import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/managers/call_manager.dart';
+import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/models/story.dart';
+import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/profilePages/followedList.dart';
 import 'package:anonmy/screens/main/profilePages/followersList.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
@@ -14,6 +17,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -222,6 +226,11 @@ class __SignOutButtonState extends State<_SignOutButton> {
       setState(() {
         _loading = true;
       });
+      CallManager.instance.destroy();
+      CubeChatConnection.instance.destroy();
+      await PushNotificationsManager.instance.unsubscribe();
+      await SharedPrefs.deleteUserData();
+      await signOut();
       Provider.of<UserProvider>(context).signOut();
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SplashScreen()));

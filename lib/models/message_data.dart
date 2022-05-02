@@ -13,6 +13,8 @@ class MessageRoom {
   late List MessageRoomPeople;
   late bool anonim;
   late bool acceptAllMedia;
+  late int senderCubeId;
+  late int receiverCubeId;
 
   MessageRoom(
       this.id,
@@ -26,5 +28,7 @@ class MessageRoom {
       this.lastMessageTime,
       this.lastMessage,
       this.anonim,
-      this.acceptAllMedia);
+      this.acceptAllMedia,
+      this.senderCubeId,
+      this.receiverCubeId);
 }

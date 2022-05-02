@@ -1,7 +1,6 @@
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:faker/faker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/helper.dart';
@@ -220,8 +219,8 @@ class FirestoreHelper {
     return stories;
   }
 
-  static Future<bool> sendMessageNormally(
-      receiverMail, receiverUsername, receiverProfilePictureUrl, anon) async {
+  static Future<bool> sendMessageNormally(receiverMail, receiverUsername,
+      receiverCubeId, receiverProfilePictureUrl, anon) async {
     try {
       await FirestoreHelper.getUserData().then((value) async {
         await db.collection('messages').add({
@@ -235,7 +234,9 @@ class FirestoreHelper {
           "senderProfilePictureUrl": value.profilePictureUrl,
           "senderUsername": value.username,
           "lastMessage": "",
-          "MessageRoomPeople": [receiverMail, value.email]
+          "MessageRoomPeople": [receiverMail, value.email],
+          "senderCubeId": value.cubeid,
+          "receiverCubeId": receiverCubeId
         });
       });
       return true;
@@ -246,7 +247,7 @@ class FirestoreHelper {
 
   static Future<MessageRoom> getSpecificChatRoomInfo(id) async {
     MessageRoom message = MessageRoom(
-        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false);
+        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
     try {
       await db.collection('messages').doc(id).get().then((data) {
         message = MessageRoom(
@@ -261,7 +262,9 @@ class FirestoreHelper {
             data['lastMessageTime'].toDate(),
             data['lastMessage'],
             data['anonim'],
-            data['acceptAllMedia']);
+            data['acceptAllMedia'],
+            data['senderCubeId'],
+            data['receiverCubeId']);
       });
       return message;
     } catch (e) {
@@ -285,7 +288,9 @@ class FirestoreHelper {
         "senderProfilePictureUrl": sender.profilePictureUrl,
         "senderUsername": sender.username,
         "lastMessage": "selam",
-        "MessageRoomPeople": [sender.email, receiver.email]
+        "MessageRoomPeople": [sender.email, receiver.email],
+        "senderCubeId": sender.cubeid,
+        "receiverCubeId": receiver.cubeid
       }).then((value) {
         id = value.id;
         return id;
@@ -301,7 +306,7 @@ class FirestoreHelper {
       String receiverMail, String senderMail, bool anon) async {
     //THIS FUNCTION CHECKS IF THERE IS A CURRENT MESSAGEROOM
     MessageRoom message = MessageRoom(
-        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false);
+        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
     await db
         .collection('messages')
         .where("MessageRoomPeople", arrayContains: senderMail)
@@ -324,7 +329,9 @@ class FirestoreHelper {
                 element.get('lastMessageTime').toDate(),
                 element.get('lastMessage'),
                 element.get('anonim'),
-                element.get('acceptAllMedia'));
+                element.get('acceptAllMedia'),
+                element.get('senderCubeId'),
+                element.get('receiverCubeId'));
           }
         }
       });
@@ -365,53 +372,57 @@ class FirestoreHelper {
   }
 
   static Future<bool> addNewUser(
-    id,
-    email,
-    age,
-    chatCount,
-    profilePictureUrl,
-    followers,
-    followed,
-    gender,
-    isActive,
-    lastActiveTime,
-    firstName,
-    lastName,
-    likes,
-    userBio,
-    userTags,
-    userType,
-    username,
-  ) async {
+      id,
+      email,
+      age,
+      chatCount,
+      profilePictureUrl,
+      followers,
+      followed,
+      gender,
+      isActive,
+      lastActiveTime,
+      firstName,
+      lastName,
+      likes,
+      userBio,
+      userTags,
+      userType,
+      username,
+      videoServicePassword,
+      cubeid) async {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(
-          id,
-          email,
-          age,
-          chatCount,
-          profilePictureUrl,
-          followers,
-          followed,
-          gender,
-          isActive,
-          lastActiveTime,
-          firstName,
-          lastName,
-          likes,
-          userBio,
-          userTags,
-          userType,
-          username,
-          "Türkiye",
-          "İstanbul",
-          [],
-          [],
-          [],
-          [],
-          [],
-          true,
-          []).toMap());
+              id,
+              email,
+              age,
+              chatCount,
+              profilePictureUrl,
+              followers,
+              followed,
+              gender,
+              isActive,
+              lastActiveTime,
+              firstName,
+              lastName,
+              likes,
+              userBio,
+              userTags,
+              userType,
+              username,
+              "Türkiye",
+              "İstanbul",
+              [],
+              [],
+              [],
+              [],
+              [],
+              true,
+              [],
+              videoServicePassword,
+              cubeid)
+          .toMap());
       return true;
     } catch (e) {
       print(e);

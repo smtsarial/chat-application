@@ -87,8 +87,8 @@ class _EditPageState extends State<EditPage> {
                         )
                       : CircleAvatar(
                           radius: 95,
-                          backgroundImage: CachedNetworkImageProvider(
-                              userData.profilePictureUrl),
+                          backgroundImage:
+                              Image.network(userData.profilePictureUrl).image,
                         ),
                 ),
               ),
@@ -151,7 +151,9 @@ class _EditPageState extends State<EditPage> {
                   keyboardType: TextInputType.emailAddress,
                   autofocus: false,
                   decoration: InputDecoration(
-                    hintText: userData.userBio,
+                    hintText: userData.userBio.length != 0
+                        ? userData.userBio
+                        : "Please add description.",
                     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   ),
                 ),

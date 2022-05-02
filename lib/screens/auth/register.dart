@@ -1,12 +1,18 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:anonmy/main.dart';
+import 'package:anonmy/providers/pref_util.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -379,6 +385,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future signUpValidation(gendervalue) async {
+    String uuid = Uuid().v4();
+
     if (_imageload != true) {
       setState(() {
         _visibleCircular = false;
@@ -389,108 +397,135 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _visibleCircular = true;
       });
+      initConnectycube();
+      CubeUser user = CubeUser(
+          login: usernameController.text,
+          password: uuid.toString(),
+          email: emailController.text,
+          fullName: name.text + " " + Surname.text);
 
       if (passwordController.text == passwordController2.text) {
-        await Authentication()
-            .signUp(emailController.text, passwordController.text)
-            .then((value) => {
-                  if (value == true)
-                    {
-                      if (_imageload != true)
-                        {
-                          Authentication().deleteAccount().whenComplete(() {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Error occured please try again!')),
-                            );
-                            setState(() {
-                              _visibleCircular = false;
-                              showPickedImageError = true;
-                            });
-                          }),
-                        }
-                      else
-                        {
-                          FirestoreHelper.uploadProfilePictureToStorage(_image)
-                              .then((imageURL) async {
-                            if (imageUrl.contains(".com")) {
-                              FirestoreHelper.addNewUser(
-                                      "",
-                                      emailController.text,
-                                      int.parse(ageController.text),
-                                      0,
-                                      imageURL,
-                                      [],
-                                      [],
-                                      gendervalue,
-                                      true,
-                                      DateTime.now(),
-                                      name.text,
-                                      Surname.text,
-                                      [],
-                                      "",
-                                      [],
-                                      "basic",
-                                      usernameController.text)
-                                  .then((value) async {
-                                if (value == true) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Başarılı Şekilde Kayıt Olundu')),
-                                  );
-                                  var _userEmail = await Authentication().login(
-                                      emailController.text,
-                                      passwordController.text);
-                                  await saveData(_userEmail.toString());
-                                  FocusManager.instance.primaryFocus!.unfocus();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SplashScreen()));
-                                } else {
-                                  Authentication()
-                                      .deleteAccount()
-                                      .whenComplete(() {
+        signUp(user).then((cubeUser) async {
+          SharedPrefs.saveNewUser(cubeUser);
+          print(cubeUser);
+          Fluttertoast.showToast(msg: "cube ser signed up ");
+          await Authentication()
+              .signUp(emailController.text, passwordController.text)
+              .then((value) => {
+                    if (value == true)
+                      {
+                        if (_imageload != true)
+                          {
+                            Authentication().deleteAccount().whenComplete(() {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Error occured please try again!')),
+                              );
+                              setState(() {
+                                _visibleCircular = false;
+                                showPickedImageError = true;
+                              });
+                            }),
+                          }
+                        else
+                          {
+                            FirestoreHelper.uploadProfilePictureToStorage(
+                                    _image)
+                                .then((imageURL) async {
+                              if (imageUrl.contains(".com")) {
+                                FirestoreHelper.addNewUser(
+                                        "",
+                                        emailController.text,
+                                        int.parse(ageController.text),
+                                        0,
+                                        imageURL,
+                                        [],
+                                        [],
+                                        gendervalue,
+                                        true,
+                                        DateTime.now(),
+                                        name.text,
+                                        Surname.text,
+                                        [],
+                                        "",
+                                        [],
+                                        "basic",
+                                        usernameController.text,
+                                        uuid.toString(),
+                                        cubeUser.id)
+                                    .then((value) async {
+                                  if (value == true) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text(
-                                              'Error occured please try again!')),
+                                              'Başarılı Şekilde Kayıt Olundu')),
                                     );
-                                    setState(() {
-                                      _visibleCircular = false;
+                                    var _userEmail = await Authentication()
+                                        .login(emailController.text,
+                                            passwordController.text);
+                                    await saveData(_userEmail.toString());
+                                    FocusManager.instance.primaryFocus!
+                                        .unfocus();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SplashScreen()));
+                                  } else {
+                                    Authentication()
+                                        .deleteAccount()
+                                        .whenComplete(() {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Error occured please try again!')),
+                                      );
+                                      setState(() {
+                                        _visibleCircular = false;
+                                      });
                                     });
-                                  });
-                                }
-                              });
-                            } else {
-                              Authentication().deleteAccount().whenComplete(() {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Error occured please try again!')),
-                                );
-                                setState(() {
-                                  _visibleCircular = false;
+                                  }
                                 });
-                              });
-                            }
-                          })
-                        }
-                    }
-                  else
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Error occured please try again!')),
-                      ),
-                      setState(() {
-                        _visibleCircular = false;
-                      })
-                    }
-                });
+                              } else {
+                                Authentication()
+                                    .deleteAccount()
+                                    .whenComplete(() {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Error occured please try again!')),
+                                  );
+                                  setState(() {
+                                    _visibleCircular = false;
+                                  });
+                                });
+                              }
+                            })
+                          }
+                      }
+                    else
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Error occured please try again!')),
+                        ),
+                        setState(() {
+                          _visibleCircular = false;
+                        })
+                      }
+                  });
+        }).catchError((error) {
+          print("Error occured during the video call setup!");
+          Fluttertoast.showToast(
+              msg: "Error occured during the video call setup!");
+          Fluttertoast.showToast(msg: error);
+          setState(() {
+            _visibleCircular = false;
+          });
+        });
+        ;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter the same password!')),

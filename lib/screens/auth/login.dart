@@ -1,8 +1,11 @@
 import 'package:anonmy/connections/auth.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/screens/auth/register.dart';
+import 'package:connectycube_sdk/connectycube_calls.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -160,7 +163,6 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _warningMessage = true;
         _warningMessageContent = "Please fill all fields!";
-
         _visibleCircular = false;
       });
     } else {
@@ -169,12 +171,25 @@ class _LoginPageState extends State<LoginPage> {
         _userEmail =
             await auth.login(emailController.text, passwordController.text);
 
+        await FirestoreHelper.getUserData().then((value) {
+          SharedPrefs.saveNewUser(CubeUser(
+              id: value.cubeid,
+              login: value.username,
+              fullName: value.firstName + " " + value.lastName,
+              password: value.videoServicePassword));
+          SharedPrefs.updateUser(CubeUser(
+              id: value.cubeid,
+              login: value.username,
+              fullName: value.firstName + " " + value.lastName,
+              password: value.videoServicePassword));
+        });
+
         await saveData(_userEmail.toString());
         FocusManager.instance.primaryFocus!.unfocus();
-        Provider.of<UserProvider>(context);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SplashScreen()));
       } catch (err) {
+        print(err);
         setState(() {
           _warningMessage = true;
           _warningMessageContent = "Your information wrong";
