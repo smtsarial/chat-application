@@ -1,5 +1,6 @@
 import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/providers/platform_utils.dart';
+import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -135,13 +136,12 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   void _onSessionClosed(session) {
     log("_onSessionClosed", TAG);
     _callSession.removeSessionCallbacksListener();
-    Fluttertoast.showToast(msg: "Error during starting the call functions!");
-    //Navigator.pushReplacement(
-    //  context,
-    //  MaterialPageRoute(
-    //    builder: (context) => LoginScreen(),
-    //  ),
-    //);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SplashScreen(),
+      ),
+    );
   }
 
   void _onRemoteStreamAdd(int opponentId, MediaStream stream) async {

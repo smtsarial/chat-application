@@ -81,6 +81,7 @@ class PushNotificationsManager {
         .then((cubeSubscriptions) {
       log('[subscribe] subscription SUCCESS', PushNotificationsManager.TAG);
       SharedPrefs.saveSubscriptionToken(token);
+      print(token);
       cubeSubscriptions.forEach((subscription) {
         if (subscription.device!.clientIdentificationSequence == token) {
           SharedPrefs.saveSubscriptionId(subscription.id!);

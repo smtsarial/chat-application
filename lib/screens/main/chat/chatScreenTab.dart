@@ -18,69 +18,10 @@ class TabBarChat extends StatefulWidget {
 }
 
 class _TabBarChatState extends State<TabBarChat> {
-  _loginToCC(BuildContext context, CubeUser user) {
-    if (CubeSessionManager.instance.isActiveSessionValid() &&
-        CubeSessionManager.instance.activeSession!.user != null) {
-      if (CubeChatConnection.instance.isAuthenticated()) {
-        print("hello");
-        //_goSelectOpponentsScreen(context, user);
-      } else {
-        _loginToCubeChat(context, user);
-      }
-    } else {
-      createSession(user).then((cubeSession) {
-        _loginToCubeChat(context, user);
-      }).catchError((exception) {
-        _processLoginError(exception);
-      });
-    }
-  }
-
-  void _loginToCubeChat(BuildContext context, CubeUser user) {
-    FirestoreHelper.getUserData().then((value) {
-      print("********************/***************************"+value.email);
-      CubeChatConnection.instance
-          .login(CubeUser(
-              id: value.cubeid,
-              login: value.username,
-              fullName: value.firstName + " " + value.lastName,
-              password: value.videoServicePassword))
-          .then((cubeUser) {
-        print(cubeUser);
-        SharedPrefs.saveNewUser(user);
-      }).catchError((exception) {
-        _processLoginError(exception);
-      });
-    });
-  }
-
-  void _processLoginError(exception) {
-    log("Login error $exception");
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Login Error"),
-            content: Text("Something went wrong during login to ConnectyCube"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        });
-  }
-
   @override
   void initState() {
     //initConnectycube();
-    SharedPrefs.getUser().then((loggedUser) {
-      if (loggedUser != null) {
-        _loginToCC(context, loggedUser);
-      }
-    });
+
     super.initState();
   }
 

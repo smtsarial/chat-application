@@ -8,6 +8,7 @@ import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggab
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_gif_picker/modal_gif_picker.dart';
@@ -153,19 +154,37 @@ class _ChatScreenState extends State<ChatScreen> {
                                   child: Text("Get out of anonymity")),
                             ],
                           )
-                        : Padding(
-                            padding: EdgeInsets.all(12),
-                            child: FloatingActionButton(
-                              heroTag: "VideoCall",
-                              child: Icon(
-                                Icons.videocam,
-                                color: Colors.white,
+                        : Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(5),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.videocam,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => CallManager.instance
+                                      .startNewCall(
+                                          context,
+                                          CallTypes.VIDEO_CALL,
+                                          {messageRoom.senderCubeId}),
+                                ),
                               ),
-                              backgroundColor: Colors.blue,
-                              onPressed: () => CallManager.instance
-                                  .startNewCall(context, CallTypes.VIDEO_CALL,
-                                      {messageRoom.senderCubeId}),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.all(5),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.call,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => CallManager.instance
+                                      .startNewCall(
+                                          context,
+                                          CallType.AUDIO_CALL,
+                                          {messageRoom.senderCubeId}),
+                                ),
+                              ),
+                            ],
                           )
                     : Text(""),
               ),

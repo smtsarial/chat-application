@@ -1,15 +1,20 @@
+import 'dart:convert';
+
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/l10n/l10n.dart';
+import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:anonmy/theme.dart';
@@ -51,12 +56,86 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late String landingRunned = "true";
   bool appOpened = false;
 
+  _loginToCC(BuildContext context, CubeUser user) {
+    if (CubeSessionManager.instance.isActiveSessionValid() &&
+        CubeSessionManager.instance.activeSession!.user != null) {
+      if (CubeChatConnection.instance.isAuthenticated()) {
+        print("hello");
+        //_goSelectOpponentsScreen(context, user);
+      } else {
+        _loginToCubeChat(context, user);
+      }
+    } else {
+      createSession(user).then((cubeSession) {
+        _loginToCubeChat(context, user);
+      }).catchError((exception) {
+        _processLoginError(exception);
+      });
+    }
+  }
+
+  void _loginToCubeChat(BuildContext context, CubeUser user) {
+    FirestoreHelper.getUserData().then((value) {
+      print("********************/***************************" + value.email);
+      CubeChatConnection.instance
+          .login(CubeUser(
+              id: value.cubeid,
+              login: value.username,
+              fullName: value.firstName + " " + value.lastName,
+              password: value.videoServicePassword))
+          .then((cubeUser) {
+        print(cubeUser);
+        SharedPrefs.saveNewUser(user);
+      }).catchError((exception) {
+        _processLoginError(exception);
+      });
+    });
+  }
+
+  void _processLoginError(exception) {
+    log("Login error $exception");
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Login Error"),
+            content: Text("Something went wrong during login to ConnectyCube"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> onBackgroundMessage(RemoteMessage message) {
+    log('[onBackgroundMessage] message: $message');
+    NotificationApi.showNotification(body: message.data.toString());
+    return Future.value();
+  }
+
   @override
   void initState() {
     super.initState();
-    SharedPrefs.getUser().then((value) {
-      print(value!.fullName);
+
+    Firebase.initializeApp();
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+    // request permissions for showing notification in iOS
+    firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
+
+    // add listener for foreground push notifications
+    FirebaseMessaging.onMessage.listen((remoteMessage) {
+      log('[onMessage] message: ' + remoteMessage.data.toString());
+      NotificationApi.showNotification(
+          body: "Someone calling you!", title: "CALL");
     });
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+
+    initForegroundService();
     FirestoreHelper.getUserData().then((value) {
       SharedPrefs.updateUser(
           CubeUser(id: value.cubeid, password: value.videoServicePassword));
@@ -64,6 +143,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     initConnectycube();
     initForegroundService();
     PushNotificationsManager.instance.init();
+    SharedPrefs.getUser().then((loggedUser) {
+      if (loggedUser != null) {
+        _loginToCC(context, loggedUser);
+      }
+    });
+
     //Authentication ---------------------------------------------
     _handleAuthenticatedState().then((value) {
       WidgetsBinding.instance?.addObserver(this);

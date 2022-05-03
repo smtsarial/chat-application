@@ -41,7 +41,6 @@ class CallManager {
     } else {
       _initChatConnectionStateListener();
     }
-
     _initCallKit();
   }
 
@@ -79,8 +78,9 @@ class CallManager {
       } else if (callState == CallState.ACCEPTED) {
         acceptCall(_currentCall!.sessionId);
       } else if (callState == CallState.UNKNOWN) {
-        // ConnectycubeFlutterCallKit.setCallState(sessionId: _currentCall.sessionId, callState: CallState.PENDING);
-        // _showIncomingCallScreen(_currentCall);
+        ConnectycubeFlutterCallKit.setCallState(
+            sessionId: _currentCall!.sessionId, callState: CallState.PENDING);
+        _showIncomingCallScreen(_currentCall!);
         if (Platform.isWindows || Platform.isMacOS || kIsWeb) {
           _showIncomingCallScreen(_currentCall!);
         }
