@@ -22,6 +22,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -217,10 +218,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               if (landingRunned != "true") {
                 if (userUID == "loading") {
                   return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: Colors.blueGrey,
-                      strokeWidth: 2,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.deepPurple,
+                      highlightColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/seffaf_renkli.png",
+                        height: 150,
+                      ),
                     ),
                   );
                 } else if (userUID == "") {

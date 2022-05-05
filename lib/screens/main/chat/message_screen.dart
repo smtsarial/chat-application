@@ -9,6 +9,7 @@ import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -27,10 +28,13 @@ class MessagesPage extends StatelessWidget {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData)
               return Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.grey,
-                  color: Colors.blueGrey,
-                  strokeWidth: 2,
+                child: Shimmer.fromColors(
+                  baseColor: Colors.deepPurple,
+                  highlightColor: Colors.white,
+                  child: Image.asset(
+                    "assets/images/seffaf_renkli.png",
+                    height: 100,
+                  ),
                 ),
               );
             return snapshot.requireData.size != 0

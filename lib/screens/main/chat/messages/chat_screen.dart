@@ -4,6 +4,7 @@ import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chatDetail_screen.dart';
 import 'package:anonmy/screens/main/chat/messages/components/body.dart';
+import 'package:anonmy/screens/main/chat/messages/receiverStatus.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -87,21 +88,39 @@ class _ChatScreenState extends State<ChatScreen> {
                                   messageRoom.senderProfilePictureUrl),
                             ),
                   SizedBox(width: kDefaultPadding * 0.75),
-                  Center(
-                    child: messageRoom.anonim
-                        ? messageRoom.senderMail ==
-                                context.watch<UserProvider>().user.email
-                            ? Text(messageRoom.receiverUsername,
-                                style: TextStyle(fontSize: 16))
-                            : Text(("anon-" + messageRoom.id).substring(0, 10),
-                                style: TextStyle(fontSize: 16))
-                        : messageRoom.senderMail ==
-                                context.watch<UserProvider>().user.email
-                            ? Text(messageRoom.receiverUsername,
-                                style: TextStyle(fontSize: 16))
-                            : Text(messageRoom.senderUsername,
-                                style: TextStyle(fontSize: 16)),
-                  ),
+                  Container(
+                      alignment: Alignment.bottomLeft,
+                      child: messageRoom.anonim
+                          ? messageRoom.senderMail ==
+                                  context.watch<UserProvider>().user.email
+                              ? Column(
+                                  children: [
+                                    Text(messageRoom.receiverUsername,
+                                        style: TextStyle(fontSize: 16)),
+                                    ReceiverStatus(
+                                        receiverMail: messageRoom.receiverMail)
+                                  ],
+                                )
+                              : Column(children: [
+                                  Text(
+                                      ("anon-" + messageRoom.id)
+                                          .substring(0, 10),
+                                      style: TextStyle(fontSize: 16))
+                                ])
+                          : messageRoom.senderMail ==
+                                  context.watch<UserProvider>().user.email
+                              ? Column(children: [
+                                  Text(messageRoom.receiverUsername,
+                                      style: TextStyle(fontSize: 16)),
+                                  ReceiverStatus(
+                                      receiverMail: messageRoom.receiverMail)
+                                ])
+                              : Column(children: [
+                                  Text(messageRoom.senderUsername,
+                                      style: TextStyle(fontSize: 16)),
+                                  ReceiverStatus(
+                                      receiverMail: messageRoom.senderMail)
+                                ])),
                 ],
               ),
             ),

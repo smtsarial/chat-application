@@ -75,6 +75,8 @@ dependencies:
   connectycube_flutter_call_kit: ^2.0.2
   flutter_background: ^1.1.0
   firebase_messaging: ^11.3.0
+  in_app_purchase: ^3.0.2
+  shimmer: ^2.0.0
 
 
 dev_dependencies:
@@ -87,6 +89,8 @@ flutter:
   
   assets:
     - assets/images/welcome_image.png
+    - assets/images/seffaf_renkli.png
+    - assets/images/renkli_mor.png
     - assets/icons/align_center.png
     - assets/icons/align_left.png
     - assets/icons/align_rigth.png

@@ -4,6 +4,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -146,10 +147,13 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                                         fontWeight: FontWeight.bold)),
                               ))
                 : Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: Colors.blueGrey,
-                      strokeWidth: 2,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.deepPurple,
+                      highlightColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/seffaf_renkli.png",
+                        height: 150,
+                      ),
                     ),
                   )
           ],

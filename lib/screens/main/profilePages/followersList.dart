@@ -3,6 +3,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FollowersList extends StatefulWidget {
   const FollowersList({Key? key}) : super(key: key);
@@ -40,10 +41,13 @@ class _FollowersListState extends State<FollowersList> {
             ),
             user.id == ""
                 ? Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: Colors.blueGrey,
-                      strokeWidth: 2,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.deepPurple,
+                      highlightColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/seffaf_renkli.png",
+                        height: 150,
+                      ),
                     ),
                   )
                 : Expanded(

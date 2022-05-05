@@ -34,6 +34,25 @@ class FirestoreHelper {
     return details.length != 0 ? details[0] : emptyUser;
   }
 
+  static Future<User> getSpecificUserInfo(String mail) async {
+    //this method for taking user data
+    List<User> details = [];
+    var data = await db
+        .collection('users')
+        .where("email", isEqualTo: mail.toString())
+        .get();
+    if (data != null) {
+      details = data.docs.map((document) => User.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+      i++;
+    });
+
+    return details.length != 0 ? details[0] : emptyUser;
+  }
+
   static Future<bool> unfollowUser(User user, User removedUser) async {
     //UNFOLLOW USER
     try {
@@ -287,7 +306,7 @@ class FirestoreHelper {
         "senderMail": sender.email,
         "senderProfilePictureUrl": sender.profilePictureUrl,
         "senderUsername": sender.username,
-        "lastMessage": "selam",
+        "lastMessage": "",
         "MessageRoomPeople": [sender.email, receiver.email],
         "senderCubeId": sender.cubeid,
         "receiverCubeId": receiver.cubeid

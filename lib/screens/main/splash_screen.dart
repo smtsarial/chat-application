@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,16 +38,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return MobileAds.instance.initialize();
   }
 
+
   @override
   void initState() {
     try {
       FirestoreHelper.getUserData().then((value) {
-        setState(
-          () {
-            userData = value;
-            isLoading = false;
-          },
-        );
+        Timer(Duration(seconds: 3), () {
+          setState(
+            () {
+              userData = value;
+              isLoading = false;
+            },
+          );
+        });
       }).onError((error, stackTrace) {
         setState(() {
           isErrorOccured = true;
@@ -57,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
         isErrorOccured = true;
       });
     }
-    //print("||||||||" + isErrorOccured.toString());
     super.initState();
   }
 
@@ -70,22 +73,23 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     CallManager.instance.init(context);
     return (() {
-      // your code here
       if (isLoading == true) {
         return Scaffold(
           body: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(
-                backgroundColor: Colors.grey,
-                color: Colors.blueGrey,
-                strokeWidth: 2,
+              Shimmer.fromColors(
+                baseColor: Colors.deepPurple,
+                highlightColor: Colors.white,
+                child: Image.asset(
+                  "assets/images/seffaf_renkli.png",
+                  height: 150,
+                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              Text("ANONMY")
             ],
           )),
         );

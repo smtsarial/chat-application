@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'user_profile_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,26 +52,26 @@ class _ShufflePageState extends State<ShufflePage> {
   void initState() {
     if (mounted) {
       getAllUsers().then((value) {
-        _ad = BannerAd(
-          adUnitId: AdHelper.bannerAdUnitId,
-          size: AdSize.mediumRectangle,
-          request: AdRequest(),
-          listener: BannerAdListener(
-            onAdLoaded: (_) {
-              setState(() {
-                _isAdLoaded = true;
-              });
-            },
-            onAdFailedToLoad: (ad, error) {
-              // Releases an ad resource when it fails to load
-              ad.dispose();
-
-              print(
-                  'Ad load failed (code=${error.code} message=${error.message})');
-            },
-          ),
-        );
-        _ad.load();
+        //_ad = BannerAd(
+        //  adUnitId: AdHelper.bannerAdUnitId,
+        //  size: AdSize.mediumRectangle,
+        //  request: AdRequest(),
+        //  listener: BannerAdListener(
+        //    onAdLoaded: (_) {
+        //      setState(() {
+        //        _isAdLoaded = true;
+        //      });
+        //    },
+        //    onAdFailedToLoad: (ad, error) {
+        //      // Releases an ad resource when it fails to load
+        //      ad.dispose();
+//
+        //      print(
+        //          'Ad load failed (code=${error.code} message=${error.message})');
+        //    },
+        //  ),
+        //);
+        //_ad.load();
       });
     }
     super.initState();
@@ -189,10 +190,13 @@ class _ShufflePageState extends State<ShufflePage> {
                         })
                     : Text(AppLocalizations.of(context)!.nodata)
                 : Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: Colors.blueGrey,
-                      strokeWidth: 2,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.deepPurple,
+                      highlightColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/seffaf_renkli.png",
+                        height: 100,
+                      ),
                     ),
                   ),
           ),

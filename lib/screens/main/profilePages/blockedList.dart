@@ -5,6 +5,7 @@ import 'package:anonmy/widgets/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BlockedUsers extends StatefulWidget {
   const BlockedUsers({Key? key}) : super(key: key);
@@ -65,10 +66,13 @@ class _BlockedUsersState extends State<BlockedUsers> {
             ),
             isLoaded == false
                 ? Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: Colors.blueGrey,
-                      strokeWidth: 2,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.deepPurple,
+                      highlightColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/seffaf_renkli.png",
+                        height: 150,
+                      ),
                     ),
                   )
                 : Expanded(

@@ -202,6 +202,7 @@
     <uses-permission android:name="android.permission.SERIAL_PORT" />
     <uses-permission android:name="android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY" />
     <uses-permission android:name="android.permission.UPDATE_LOCK" />
+    <uses-permission android:name="com.android.vending.BILLING" />
    <application
         android:label="anonmy"
         android:name="${applicationName}"
