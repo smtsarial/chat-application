@@ -1,14 +1,15 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/auth/login.dart';
-import 'package:anonmy/screens/main/profilePages/YoutubeVideoList.dart';
-import 'package:anonmy/screens/main/profilePages/blockedList.dart';
-import 'package:anonmy/screens/main/profilePages/myHobbies.dart';
-import 'package:anonmy/screens/main/profilePages/myMovieList.dart';
-import 'package:anonmy/screens/main/profilePages/mySpotifyList.dart';
-import 'package:anonmy/screens/main/profilePages/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/personalProfilePages/YoutubeVideoList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/blockedList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/myHobbies.dart';
+import 'package:anonmy/screens/main/personalProfilePages/myMovieList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/mySpotifyList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/profileSetting_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Authentication().signOut().then((value) async {
       var sharedPreferences = await SharedPreferences.getInstance();
       await sharedPreferences.setString("userUID", "");
-
+      FirestoreHelper.changeToOfflineStatus;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
     });

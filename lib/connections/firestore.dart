@@ -3,7 +3,6 @@ import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:anonmy/connections/auth.dart';
-import 'package:anonmy/helper.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -51,6 +50,22 @@ class FirestoreHelper {
     });
 
     return details.length != 0 ? details[0] : emptyUser;
+  }
+
+  static Future<bool> changeToOfflineStatus() async {
+    //change to user status
+    try {
+      FirestoreHelper.getUserData().then((value) async {
+        await db
+            .collection('users')
+            .doc(value.id)
+            .update({'isActive': false, 'lastActiveTime': DateTime.now()});
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   static Future<bool> unfollowUser(User user, User removedUser) async {

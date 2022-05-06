@@ -32,16 +32,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   await Firebase.initializeApp();
-  //FirebaseFirestore.instance.collection('users').get().then((value) {
-  //  value.docs.forEach((element) {
-  //    FirebaseFirestore.instance.collection('users').doc(element.id).update({
-  //      "myYoutubeVideo": "",
-  //      "SpotifyList": [],
-  //      "MovieList": [],
-  //      "hobbies": []
-  //    });
-  //  });
-  //});
   runApp(MyApp());
 }
 
@@ -56,12 +46,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late String userUID = "loading";
   late String landingRunned = "true";
   bool appOpened = false;
+  bool isBackground = false;
 
   _loginToCC(BuildContext context, CubeUser user) {
     if (CubeSessionManager.instance.isActiveSessionValid() &&
         CubeSessionManager.instance.activeSession!.user != null) {
       if (CubeChatConnection.instance.isAuthenticated()) {
-        print("hello");
         //_goSelectOpponentsScreen(context, user);
       } else {
         _loginToCubeChat(context, user);
@@ -101,7 +91,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Login Error"),
-            content: Text("Something went wrong during login to ConnectyCube"),
+            content: Text("Something went wrong during login to video service"),
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),
@@ -156,32 +146,35 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       FirestoreHelper.getUserData().then((value) {
         FirestoreHelper.ALLMESSAGES(value.email).listen((event) {
           if (event.docChanges.isNotEmpty) {
-            FirestoreHelper.db
-                .collection('messages')
-                .doc(event.docChanges.first.doc.id)
-                .collection('chatMessages')
-                .orderBy("timeToSent", descending: true)
-                .get()
-                .then((value1) {
-              //print(value1.docChanges.first.doc.id);
-              if (value1.docs.first['messageOwnerUsername'] != value.username) {
-                if (appOpened == false) {
-                  NotificationApi.showNotification(
-                    title: event.docChanges.first.doc['anonim'] == false
-                        ? event.docChanges.first.doc['senderUsername'] ==
-                                value.email
-                            ? event.docChanges.first.doc['senderUsername'] +
-                                " sent message."
-                            : event.docChanges.first.doc['receiverUsername'] +
-                                " sent message."
-                        : "Anon-" + event.docChanges.first.doc.id,
-                    body:
-                        "Message: " + event.docChanges.first.doc['lastMessage'],
-                    payload: event.docChanges.first.doc.id,
-                  );
+            if (isBackground == true) {
+              FirestoreHelper.db
+                  .collection('messages')
+                  .doc(event.docChanges.first.doc.id)
+                  .collection('chatMessages')
+                  .orderBy("timeToSent", descending: true)
+                  .get()
+                  .then((value1) {
+                //print(value1.docChanges.first.doc.id);
+                if (value1.docs.first['messageOwnerUsername'] !=
+                    value.username) {
+                  if (appOpened == false) {
+                    NotificationApi.showNotification(
+                      title: event.docChanges.first.doc['anonim'] == false
+                          ? event.docChanges.first.doc['senderUsername'] ==
+                                  value.email
+                              ? event.docChanges.first.doc['senderUsername'] +
+                                  " sent message."
+                              : event.docChanges.first.doc['receiverUsername'] +
+                                  " sent message."
+                          : "Anon-" + event.docChanges.first.doc.id,
+                      body: "Message: " +
+                          event.docChanges.first.doc['lastMessage'],
+                      payload: event.docChanges.first.doc.id,
+                    );
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         });
       });
@@ -241,11 +234,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    final isBackground = state == AppLifecycleState.paused;
+    isBackground = state == AppLifecycleState.paused;
     if (isBackground == false) {
       FirestoreHelper.changeUserActiveStatusAndTime(true).then((value) {
         print(value);
         setState(() {
+          isBackground = false;
           appOpened = true;
         });
       });
@@ -253,6 +247,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       FirestoreHelper.changeUserActiveStatusAndTime(false).then((value) {
         print(value);
         setState(() {
+          isBackground = true;
           appOpened = false;
         });
       });

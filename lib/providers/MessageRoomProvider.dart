@@ -31,6 +31,17 @@ class MessageRoomProvider with ChangeNotifier {
     });
   }
 
+  Future removeSavedMessages() async {
+    // Normal message stream
+    messages = FirebaseFirestore.instance
+        .collection('messages')
+        .where("anonim", isEqualTo: false)
+        .where("MessageRoomPeople", arrayContains: "userMail")
+        .orderBy("lastMessageTime", descending: true)
+        .snapshots();
+    anonmessages = messages;
+  }
+
   MessageRoomProvider(User userData) {
     messages = FirestoreHelper.messages(userData.email);
     anonmessages = FirestoreHelper.ANONmessages(userData.email);

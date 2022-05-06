@@ -1,6 +1,8 @@
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/firestore.dart';
@@ -55,7 +57,7 @@ class _ProfileState extends State<Profile> {
         }).then((value) {
           Navigator.pop(context);
 
-          Fluttertoast.showToast(msg: widget.senderData.username + " Blocked!");
+          Fluttertoast.showToast(msg: widget.userData.username + " Blocked!");
         });
       } catch (e) {
         print(e);
@@ -204,82 +206,115 @@ class _ProfileState extends State<Profile> {
                 )),
           ),
           const SizedBox(
-            height: 22,
+            height: 5,
+          ),
+          Center(
+            child: Text(
+              "@" + widget.userData.username,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
           ),
           const Divider(),
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
-                    onPressed: () {
-                      FirestoreHelper.checkAvaliableMessageRoom(
-                              widget.senderData.email,
-                              widget.userData.email,
-                              false)
-                          .then((value) {
-                        value.id == ""
-                            ? FirestoreHelper.addNewMessageRoom(
-                                    false, widget.senderData, widget.userData)
-                                .then((value) {
-                                if (value != "") {
-                                  FirestoreHelper.getSpecificChatRoomInfo(value)
-                                      .then((value) {
-                                    if (value.id != "") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatScreen(
-                                                  messageRoom: value)));
-                                    }
-                                  });
-                                }
-                              })
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatScreen(messageRoom: value)));
-                      });
-                    },
-                    child: Text(AppLocalizations.of(context)!.sendmessage)),
-                TextButton(
-                    onPressed: () {
-                      FirestoreHelper.checkAvaliableMessageRoom(
-                              widget.senderData.email,
-                              widget.userData.email,
-                              true)
-                          .then((value) {
-                        value.id == ""
-                            ? FirestoreHelper.addNewMessageRoom(
-                                    true, widget.senderData, widget.userData)
-                                .then((value) {
-                                if (value != "") {
-                                  FirestoreHelper.getSpecificChatRoomInfo(value)
-                                      .then((value) {
-                                    if (value.id != "") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatScreen(
-                                                  messageRoom: value)));
-                                    }
-                                  });
-                                }
-                              })
-                            : Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChatScreen(messageRoom: value)));
-                      });
-                    },
-                    child: Text(AppLocalizations.of(context)!.sendanon))
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                    ),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.sendmessage,
+                    style: TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                  onPressed: () {
+                    FirestoreHelper.checkAvaliableMessageRoom(
+                            widget.senderData.email,
+                            widget.userData.email,
+                            false)
+                        .then((value) {
+                      value.id == ""
+                          ? FirestoreHelper.addNewMessageRoom(
+                                  false, widget.senderData, widget.userData)
+                              .then((value) {
+                              if (value != "") {
+                                FirestoreHelper.getSpecificChatRoomInfo(value)
+                                    .then((value) {
+                                  if (value.id != "") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                                messageRoom: value)));
+                                  }
+                                });
+                              }
+                            })
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChatScreen(messageRoom: value)));
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                    ),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.sendanon,
+                    style: TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                  onPressed: () {
+                    FirestoreHelper.checkAvaliableMessageRoom(
+                            widget.senderData.email,
+                            widget.userData.email,
+                            true)
+                        .then((value) {
+                      value.id == ""
+                          ? FirestoreHelper.addNewMessageRoom(
+                                  true, widget.senderData, widget.userData)
+                              .then((value) {
+                              if (value != "") {
+                                FirestoreHelper.getSpecificChatRoomInfo(value)
+                                    .then((value) {
+                                  if (value.id != "") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                                messageRoom: value)));
+                                  }
+                                });
+                              }
+                            })
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChatScreen(messageRoom: value)));
+                    });
+                  },
+                ),
               ],
             ),
             padding: const EdgeInsets.symmetric(horizontal: 20),
           ),
           _Stories(
+            userData: widget.userData,
+          ),
+          SpotifyCard(userData: widget.userData),
+          YoutubeCard(
             userData: widget.userData,
           ),
           userSpecificInformationLayer(),
@@ -369,7 +404,7 @@ class _StoriesState extends State<_Stories> {
       child: Card(
         elevation: 0,
         child: SizedBox(
-          height: 140,
+          height: stories.length == 0 ? 80 : 150,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

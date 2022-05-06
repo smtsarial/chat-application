@@ -14,7 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'user_profile_screen.dart';
+import 'personDetailScreens/user_profile_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -38,7 +38,7 @@ class _ShufflePageState extends State<ShufflePage> {
   List<User> userList = [];
 
   static final _kAdIndex = 7;
-  late BannerAd _ad;
+  //late BannerAd _ad;
   bool _isAdLoaded = false;
 
   int _getDestinationItemIndex(int rawIndex) {
@@ -178,9 +178,9 @@ class _ShufflePageState extends State<ShufflePage> {
                         itemBuilder: (BuildContext ctx, index) {
                           if (_isAdLoaded && index == _kAdIndex) {
                             return Container(
-                              child: AdWidget(ad: _ad),
-                              width: _ad.size.width.toDouble(),
-                              height: _ad.size.height.toDouble(),
+                              //child: AdWidget(ad: _ad),
+                              //width: _ad.size.width.toDouble(),
+                              //height: _ad.size.height.toDouble(),
                               alignment: Alignment.center,
                             );
                           } else {

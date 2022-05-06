@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/managers/call_manager.dart';
-import 'package:anonmy/providers/pref_util.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
-import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../theme.dart';
@@ -34,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
   bool isErrorOccured = false;
 
   Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
     return MobileAds.instance.initialize();
   }
 

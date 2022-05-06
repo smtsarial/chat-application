@@ -3,12 +3,14 @@ import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/pref_util.dart';
-import 'package:anonmy/screens/main/profilePages/followedList.dart';
-import 'package:anonmy/screens/main/profilePages/followersList.dart';
+import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
+import 'package:anonmy/screens/main/personalProfilePages/followedList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/followersList.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
-import 'package:anonmy/screens/main/profilePages/myStoriesList_screen.dart';
-import 'package:anonmy/screens/main/profilePages/profileSetting_screen.dart';
-import 'package:anonmy/screens/main/profilePages/settings.dart';
+import 'package:anonmy/screens/main/personalProfilePages/myStoriesList_screen.dart';
+import 'package:anonmy/screens/main/personalProfilePages/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/personalProfilePages/settings.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -130,25 +132,11 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: PrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                    ),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.editmystories,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyStoriesScreen()));
-                  },
-                ),
                 _Stories(userData: user),
+                SpotifyCard(userData: user),
+                YoutubeCard(
+                  userData: user,
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -207,45 +195,6 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _SignOutButton extends StatefulWidget {
-  const _SignOutButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  __SignOutButtonState createState() => __SignOutButtonState();
-}
-
-class __SignOutButtonState extends State<_SignOutButton> {
-  bool _loading = false;
-
-  Future<void> _signOut() async {
-    Authentication().signOut().then((value) async {
-      var sharedPreferences = await SharedPreferences.getInstance();
-      await sharedPreferences.setString("userUID", "");
-      setState(() {
-        _loading = true;
-      });
-      CallManager.instance.destroy();
-      CubeChatConnection.instance.destroy();
-      await PushNotificationsManager.instance.unsubscribe();
-      await SharedPrefs.deleteUserData();
-      await signOut();
-      Provider.of<UserProvider>(context).signOut();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SplashScreen()));
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: _signOut,
-      child: const Text('Sign out'),
-    );
-  }
-}
-
 class _Stories extends StatefulWidget {
   const _Stories({Key? key, required this.userData}) : super(key: key);
   final User userData;
@@ -279,16 +228,29 @@ class _StoriesState extends State<_Stories> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
-                child: Text(
-                  AppLocalizations.of(context)!.stories,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 15,
-                    color: AppColors.textFaded,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8, top: 0, bottom: 0),
+                    child: Text(
+                      AppLocalizations.of(context)!.stories,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                        color: AppColors.textFaded,
+                      ),
+                    ),
                   ),
-                ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyStoriesScreen()));
+                      },
+                      child: Text(AppLocalizations.of(context)!.editmystories)),
+                ],
               ),
               stories.length != 0
                   ? (Expanded(

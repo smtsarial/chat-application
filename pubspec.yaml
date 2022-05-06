@@ -60,6 +60,7 @@ dependencies:
   permission_handler: ^8.1.4+2
   fluttertoast: ^8.0.9
   timeago: ^3.2.2
+  url_launcher: ^6.1.0
   story_view: ^0.13.2
   flutter_svg: ^1.0.3
   flutter_local_notifications: ^9.4.0

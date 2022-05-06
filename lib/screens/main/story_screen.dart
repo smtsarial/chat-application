@@ -541,7 +541,7 @@ class _StoryPageState extends State<StoryPage> {
   @override
   void dispose() {
     super.dispose();
-    _ad.dispose();
+    //_ad.dispose();
   }
 
   Future takeStory() async {

@@ -145,6 +145,7 @@ class _BlockedUsersState extends State<BlockedUsers> {
                                                           ])
                                                         });
                                                       }).then((value) {
+                                                        list.remove(item);
                                                         getAllBlockedUsers()
                                                             .then((value) {
                                                           setState(() {
