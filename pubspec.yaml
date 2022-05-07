@@ -78,6 +78,9 @@ dependencies:
   firebase_messaging: ^11.3.0
   in_app_purchase: ^3.0.2
   shimmer: ^2.0.0
+  youtube_api: ^1.0.4
+  easy_search_bar: ^2.3.1
+  spotify: ^0.7.0
 
 
 dev_dependencies:

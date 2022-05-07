@@ -2,8 +2,10 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:youtube_api/youtube_api.dart';
 import 'package:youtube_metadata/youtube_metadata.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -20,9 +22,13 @@ class _myYoutubeListState extends State<myYoutubeList> {
   bool isLoaded = false;
 
   TextEditingController nameController = TextEditingController();
+  YoutubeAPI youtube = YoutubeAPI("AIzaSyBye3_hHJNwixjPHJYcv__yPmW83-4lJwo");
+  List<YouTubeVideo> videoResult = [];
+
   @override
   void initState() {
     getAllYoutubeList();
+
     super.initState();
   }
 
@@ -72,12 +78,48 @@ class _myYoutubeListState extends State<myYoutubeList> {
         : (print("object"));
   }
 
+  List<String> _suggestions = [
+    'Afeganistan',
+    'Albania',
+    'Algeria',
+    'Australia',
+    'Brazil',
+    'German',
+    'Madagascar',
+    'Mozambique',
+    'Portugal',
+    'Zambia'
+  ];
+
+  Future<void> callAPI(String query) async {
+    videoResult = await youtube.search(query,
+        order: 'relevance', videoDuration: 'any', regionCode: 'TR');
+    videoResult = await youtube.nextPage();
+    videoResult.forEach((element) {
+      setState(() {
+        _suggestions.add(element.title);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.myyoutubelist),
-        ),
+        appBar: EasySearchBar(
+            searchBackgroundColor: Colors.grey,
+            title: Text(AppLocalizations.of(context)!.myyoutubelist),
+            isFloating: true,
+            onSearch: (value) {
+              callAPI(value).then((value) {
+                print(videoResult);
+              });
+              print(value);
+            },
+            onSuggestionTap: (value) {
+              print("tiklandi");
+              print(value);
+            },
+            suggestions: _suggestions),
         body: Column(
           children: <Widget>[
             Container(

@@ -9,21 +9,16 @@ import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:anonmy/theme.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
@@ -111,7 +106,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-
     Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
