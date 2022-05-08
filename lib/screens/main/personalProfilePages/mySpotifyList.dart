@@ -34,7 +34,8 @@ class _mySpotifyListState extends State<mySpotifyList> {
       search =
           await spotify.search.get(query.length != 0 ? query : "").first(3);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      print(e);
+      //Fluttertoast.showToast(msg: e.toString());
     }
 
     if (search != null) {
@@ -206,6 +207,7 @@ class _mySpotifyListState extends State<mySpotifyList> {
                                                   spotifyLinkss[index])
                                               .then((value) {
                                             setState(() {
+                                              spotifyLinkss.remove(index);
                                               isLoaded = false;
                                             });
                                             value

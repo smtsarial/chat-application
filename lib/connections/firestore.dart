@@ -466,7 +466,7 @@ class FirestoreHelper {
 
   static Future<bool> addSpotifyListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'SpotifyList': FieldValue.arrayUnion([url])
         });
@@ -479,7 +479,7 @@ class FirestoreHelper {
 
   static Future<bool> removeSpotifyListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'SpotifyList': FieldValue.arrayRemove([url])
         });
@@ -492,7 +492,7 @@ class FirestoreHelper {
 
   static Future<bool> addMovieListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'MovieList': FieldValue.arrayUnion([url])
         });
@@ -505,7 +505,7 @@ class FirestoreHelper {
 
   static Future<bool> removeMovieListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'MovieList': FieldValue.arrayRemove([url])
         });
@@ -518,7 +518,7 @@ class FirestoreHelper {
 
   static Future<bool> addHobbieListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'hobbies': FieldValue.arrayUnion([url])
         });
@@ -531,7 +531,7 @@ class FirestoreHelper {
 
   static Future<bool> removeHobbieListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'hobbies': FieldValue.arrayRemove([url])
         });
@@ -544,7 +544,7 @@ class FirestoreHelper {
 
   static Future<bool> addYoutubeListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'myYoutubeVideo': FieldValue.arrayUnion([url])
         });
@@ -557,7 +557,7 @@ class FirestoreHelper {
 
   static Future<bool> removeYoutubeListItem(String url) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         db.collection('users').doc(value.id).update({
           'myYoutubeVideo': FieldValue.arrayRemove([url])
         });
@@ -570,7 +570,7 @@ class FirestoreHelper {
 
   static Future<bool> changeUserActiveStatusAndTime(bool isActive) async {
     try {
-      FirestoreHelper.getUserData().then((value) {
+      await FirestoreHelper.getUserData().then((value) {
         if (isActive == true) {
           db.collection('users').doc(value.id).update({"isActive": isActive});
         } else {

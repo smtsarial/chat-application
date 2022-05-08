@@ -214,8 +214,9 @@ class _EasySearchBarState extends State<EasySearchBar>
                   showWhenUnlinked: false,
                   offset: Offset(0.0, size.height),
                   child: Container(
-                      constraints:
-                          const BoxConstraints(maxHeight: 650, minHeight: 550),
+                      constraints: BoxConstraints(
+                          maxHeight: 650,
+                          minHeight: _suggestions.length != 0 ? 450 : 0),
                       margin: const EdgeInsets.all(0),
                       child: FilterableList(
                           loading: _isLoading,
@@ -487,6 +488,8 @@ class _EasySearchBarState extends State<EasySearchBar>
                                                                 .text);
                                                         _focusNode.unfocus();
                                                         closeOverlay();
+                                                        _searchController.text =
+                                                            "";
                                                       },
                                                       maxLines: 1,
                                                       controller: _searchController,

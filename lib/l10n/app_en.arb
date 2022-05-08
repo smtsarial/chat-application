@@ -80,7 +80,8 @@
     "phonenumber":"Phone Number",
     "username":"Username",
     "selectimage":"Please select profile picture",
-    "myblockedlist":"Blocked Users"
+    "myblockedlist":"Blocked Users",
+    "addYoutubeLink":"Add YouTube Link"
 
 
 }

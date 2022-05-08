@@ -137,7 +137,6 @@ class _SpotifyCard extends StatelessWidget {
         children: [
           Container(
             height: 80,
-            width: 120,
             child: Image(
                 image: CachedNetworkImageProvider(spotifyData.thumbnailUrl)),
           ),
@@ -145,7 +144,9 @@ class _SpotifyCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 2.0),
               child: Text(
-                spotifyData.title,
+                spotifyData.title.length >= 15
+                    ? spotifyData.title.substring(0, 15)
+                    : spotifyData.title,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 11,

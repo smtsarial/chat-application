@@ -1,6 +1,7 @@
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
@@ -315,6 +316,9 @@ class _ProfileState extends State<Profile> {
           ),
           SpotifyCard(userData: widget.userData),
           YoutubeCard(
+            userData: widget.userData,
+          ),
+          HobbiesWidget(
             userData: widget.userData,
           ),
           userSpecificInformationLayer(),

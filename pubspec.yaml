@@ -81,6 +81,7 @@ dependencies:
   youtube_api: ^1.0.4
   easy_search_bar: ^2.3.1
   spotify: ^0.7.0
+  tmdb_api: ^2.1.2
 
 
 dev_dependencies:
