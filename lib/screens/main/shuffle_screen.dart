@@ -220,6 +220,19 @@ class _ShufflePageState extends State<ShufflePage> {
             Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
+                  border: Border.all(
+                      color: (() {
+                        if (userData.userType == "basic") {
+                          return const Color.fromARGB(255, 61, 61, 61);
+                        } else if (userData.userType == "z-admin") {
+                          return Color.fromARGB(255, 35, 179, 200);
+                        } else if (userData.userType.contains("shuffle")) {
+                          return PrimaryColor;
+                        } else {
+                          return const Color.fromARGB(255, 61, 61, 61);
+                        }
+                      })(),
+                      width: 2.5),
                   color: Theme.of(context).brightness == Brightness.dark
                       ? const Color.fromARGB(255, 61, 61, 61)
                       : const Color.fromARGB(255, 255, 255, 255),
@@ -252,7 +265,7 @@ class _ShufflePageState extends State<ShufflePage> {
                                       end: Alignment.bottomLeft,
                                       colors: [
                                         Colors.blue,
-                                        Colors.red,
+                                        Colors.green,
                                       ],
                                     ))
                                   : (LinearGradient(
@@ -277,7 +290,7 @@ class _ShufflePageState extends State<ShufflePage> {
                           Positioned(
                             bottom: 0,
                             right: 0,
-                            child: userData.userType != "basic"
+                            child: userData.userType.contains('shuffle')
                                 ? Icon(FontAwesomeIcons.crown,
                                     color: Colors.yellow)
                                 : Container(),

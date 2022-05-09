@@ -135,7 +135,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     end: Alignment.bottomLeft,
                     colors: [
                       Colors.blue,
-                      Colors.red,
+                      Colors.green,
                     ],
                   ),
                   shape: BoxShape.circle,

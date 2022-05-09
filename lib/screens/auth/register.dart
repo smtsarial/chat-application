@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:anonmy/main.dart';
 import 'package:anonmy/providers/pref_util.dart';
+import 'package:anonmy/screens/main/personalProfilePages/privacypolicy.dart';
+import 'package:anonmy/screens/main/personalProfilePages/termofuse.dart';
+import 'package:anonmy/screens/main/personalProfilePages/turkishprivacypolicy.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/auth.dart';
@@ -363,11 +366,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 registerButton,
                 SizedBox(height: 24.0),
                 Divider(),
-                Center(
-                  child: Text(
-                    "When you register, you will be deemed to have accepted our privacy and KVKK documents.",
-                    style: TextStyle(color: TextColor),
-                    textAlign: TextAlign.center,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PrivacyPolicyScreen()),
+                    );
+                  },
+                  child: Center(
+                    child: Text(
+                      "When you register, you will be deemed to have accepted our privacy.",
+                      style: TextStyle(color: TextColor),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TermOfUse()),
+                    );
+                  },
+                  child: Center(
+                    child: Text(
+                      "When you register, you will be deemed to have accepted our KVKK documents.",
+                      style: TextStyle(color: TextColor),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 SizedBox(height: 24.0),

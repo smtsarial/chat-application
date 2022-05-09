@@ -49,7 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
             automaticallyImplyLeading: false,
             title: GestureDetector(
               onTap: () {
-                print("profile");
                 messageRoom.anonim == false
                     ? Navigator.push(
                         context,
@@ -205,7 +204,34 @@ class _ChatScreenState extends State<ChatScreen> {
                               ),
                             ],
                           )
-                    : Text(""),
+                    : Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.videocam,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => CallManager.instance
+                                  .startNewCall(context, CallTypes.VIDEO_CALL,
+                                      {messageRoom.senderCubeId}),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.call,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => CallManager.instance
+                                  .startNewCall(context, CallType.AUDIO_CALL,
+                                      {messageRoom.senderCubeId}),
+                            ),
+                          ),
+                        ],
+                      ),
               ),
               SizedBox(width: kDefaultPadding / 2),
             ],

@@ -9,7 +9,11 @@ import 'package:anonmy/screens/main/personalProfilePages/blockedList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myHobbies.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myMovieList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/mySpotifyList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/privacypolicy.dart';
+import 'package:anonmy/screens/main/personalProfilePages/termofuse.dart';
+import 'package:anonmy/screens/main/personalProfilePages/turkishprivacypolicy.dart';
 import 'package:anonmy/screens/main/personalProfilePages/profileSetting_screen.dart';
+import 'package:anonmy/screens/main/personalProfilePages/turkishtermofuse.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -89,16 +93,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            SettingsTile(
-              title: Text(AppLocalizations.of(context)!.myyoutubelist),
-              leading: Icon(Icons.youtube_searched_for),
-              onPressed: (context) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => myYoutubeList()),
-                );
-              },
-            ),
+            //SettingsTile(
+            //  title: Text(AppLocalizations.of(context)!.myyoutubelist),
+            //  leading: Icon(Icons.youtube_searched_for),
+            //  onPressed: (context) {
+            //    Navigator.push(
+            //      context,
+            //      MaterialPageRoute(builder: (context) => myYoutubeList()),
+            //    );
+            //  },
+            //),
             SettingsTile(
               title: Text(AppLocalizations.of(context)!.mymovies),
               leading: Icon(Icons.movie_creation),
@@ -126,6 +130,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => BlockedUsers()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text("Turkish Terms Of Use"),
+              leading: Icon(Icons.document_scanner_sharp),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TurkishTermOfUse()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text("Terms Of Use"),
+              leading: Icon(Icons.document_scanner_sharp),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TermOfUse()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text("Turkish Privacy Policy"),
+              leading: Icon(Icons.document_scanner_sharp),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TurkishPrivacyPolicyScreen()),
+                );
+              },
+            ),
+            SettingsTile(
+              title: Text("Privacy Policy"),
+              leading: Icon(Icons.document_scanner_sharp),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PrivacyPolicyScreen()),
                 );
               },
             ),

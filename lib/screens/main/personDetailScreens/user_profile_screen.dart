@@ -2,6 +2,7 @@ import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/movieWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
@@ -178,7 +179,7 @@ class _ProfileState extends State<Profile> {
                     end: Alignment.bottomLeft,
                     colors: [
                       Colors.blue,
-                      Colors.red,
+                      Colors.green,
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -315,9 +316,10 @@ class _ProfileState extends State<Profile> {
             userData: widget.userData,
           ),
           SpotifyCard(userData: widget.userData),
-          YoutubeCard(
-            userData: widget.userData,
-          ),
+          //YoutubeCard(
+          //  userData: widget.userData,
+          //),
+          MovieWidget(userData: widget.userData),
           HobbiesWidget(
             userData: widget.userData,
           ),

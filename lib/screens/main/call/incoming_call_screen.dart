@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 
-
 class IncomingCallScreen extends StatelessWidget {
   static const String TAG = "IncomingCallScreen";
   final P2PSession _callSession;

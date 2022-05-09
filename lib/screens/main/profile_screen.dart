@@ -4,6 +4,7 @@ import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/movieWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/personalProfilePages/followedList.dart';
@@ -98,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                                 end: Alignment.bottomLeft,
                                 colors: [
                                   Colors.blue,
-                                  Colors.red,
+                                  Colors.green,
                                 ],
                               ),
                               shape: BoxShape.circle,
@@ -135,7 +136,10 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 _Stories(userData: user),
                 SpotifyCard(userData: user),
-                YoutubeCard(
+                //YoutubeCard(
+                //  userData: user,
+                //),
+                MovieWidget(
                   userData: user,
                 ),
                 HobbiesWidget(

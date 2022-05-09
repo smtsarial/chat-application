@@ -82,6 +82,7 @@ dependencies:
   easy_search_bar: ^2.3.1
   spotify: ^0.7.0
   tmdb_api: ^2.1.2
+  syncfusion_flutter_pdfviewer: ^20.1.52-beta
 
 
 dev_dependencies:
@@ -121,6 +122,10 @@ flutter:
     - assets/svg/cloud.svg
     - assets/svg/rocket.svg
     - assets/svg/crown.svg
+    - assets/pdfs/Gizlilik Politikası (Türkçe).pdf
+    - assets/pdfs/Kullanım Şartları (Türkçe).pdf
+    - assets/pdfs/Privacy Policy.pdf
+    - assets/pdfs/Terms Of Use.pdf
 
   fonts:
     - family: Alegreya

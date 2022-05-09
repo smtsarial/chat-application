@@ -17,12 +17,14 @@ class _ReceiverStatusState extends State<ReceiverStatus> {
   User user = emptyUser;
   @override
   void initState() {
-    FirestoreHelper.getSpecificUserInfo(widget.receiverMail).then((value) {
-      print(value.age);
-      setState(() {
-        user = value;
+    if (mounted) {
+      FirestoreHelper.getSpecificUserInfo(widget.receiverMail).then((value) {
+        print(value.age);
+        setState(() {
+          user = value;
+        });
       });
-    });
+    }
     super.initState();
   }
 

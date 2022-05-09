@@ -1,4 +1,5 @@
 import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/seach_Bar/easy_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class myYoutubeList extends StatefulWidget {
 
 class _myYoutubeListState extends State<myYoutubeList> {
   bool isLoaded = false;
-  YoutubeAPI youtube = YoutubeAPI("AIzaSyDnfTj8E3A0vTUral0taQhiYP4nvfQacpA");
+  YoutubeAPI youtube = YoutubeAPI(YOUTUBE_API_KEY);
   List<YouTubeVideo> videoResult = [];
   List<String> _youtubeLinks = [];
   List<MetaDataModel> _savedVideoResult = [];
@@ -100,7 +101,7 @@ class _myYoutubeListState extends State<myYoutubeList> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            FirestoreHelper.addYoutubeListItem(
+                            await FirestoreHelper.addYoutubeListItem(
                                     videoResult[_youtubeLinks.indexOf(value)]
                                         .url
                                         .toString())

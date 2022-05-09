@@ -29,6 +29,12 @@ class _SpotifyCardState extends State<SpotifyCard> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    metaData;
+  }
+
   Future spotifyList() async {
     await getSpotifyInfo(widget.userData.SpotifyList).then((value) {
       setState(() {
@@ -40,9 +46,11 @@ class _SpotifyCardState extends State<SpotifyCard> {
   Future getSpotifyInfo(spotifyLists) async {
     spotifyLists.forEach((element) async {
       SpotifyApi.getData(element).then((value) {
-        setState(() {
-          metaData.add(value);
-        });
+        if (mounted) {
+          setState(() {
+            metaData.add(value);
+          });
+        }
       });
     });
   }
@@ -82,20 +90,24 @@ class _SpotifyCardState extends State<SpotifyCard> {
                     ))
                   : metaData.length != 0
                       ? (Expanded(
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: metaData.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.fromLTRB(2, 1, 8, 2),
-                                child: SizedBox(
-                                  child: GestureDetector(
-                                      onTap: () {},
-                                      child: _SpotifyCard(
-                                          spotifyData: metaData[index])),
-                                ),
-                              );
-                            },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: metaData.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(2, 1, 8, 2),
+                                  child: SizedBox(
+                                    child: GestureDetector(
+                                        onTap: () {},
+                                        child: _SpotifyCard(
+                                            spotifyData: metaData[index])),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ))
                       : (Center(
