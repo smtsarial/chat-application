@@ -1,11 +1,21 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/consumable_store.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 
 class PurchaseScreen extends StatefulWidget {
   const PurchaseScreen({Key? key}) : super(key: key);
@@ -15,6 +25,14 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
+  List<String> _kProductIds = <String>[
+    "shuffle_60",
+    "shuffle_45",
+    "shuffle_30",
+    "story_60",
+    "story_45",
+    "story_15",
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,7 +252,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
               ],
             )),
           )),
-
           Container(
               child: Center(
             child: Row(
@@ -257,7 +274,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           height: 20,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.viewsbin,
+                          AppLocalizations.of(context)!.sixty,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺59,99")
@@ -282,7 +299,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           height: 20,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.besyuzviews,
+                          AppLocalizations.of(context)!.fourtyfive,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺39,99")
@@ -307,7 +324,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           height: 20,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.yuzviews,
+                          AppLocalizations.of(context)!.fifteen,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text("₺19,99")

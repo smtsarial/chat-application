@@ -8,6 +8,7 @@ import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/auth/login.dart';
+import 'package:anonmy/screens/main/consumable_store.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -22,6 +23,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+
+//void main() {
+//  runApp(
+//    const MaterialApp(home: Purchase()),
+//  );
+//}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

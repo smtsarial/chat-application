@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<UserProvider>(context);
     Provider.of<MessageRoomProvider>(context);
     return SafeArea(
-        child: user.userType == "basic"
+        child: user.userType != "basic"
             ? Scaffold(
                 body: ValueListenableBuilder(
                   valueListenable: pageIndex,

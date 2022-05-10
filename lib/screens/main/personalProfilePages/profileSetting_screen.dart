@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
@@ -87,8 +86,8 @@ class _EditPageState extends State<EditPage> {
                         )
                       : CircleAvatar(
                           radius: 95,
-                          backgroundImage:
-                              Image.network(userData.profilePictureUrl).image,
+                          backgroundImage: CachedNetworkImageProvider(
+                              userData.profilePictureUrl),
                         ),
                 ),
               ),
@@ -341,34 +340,68 @@ class _EditPageState extends State<EditPage> {
   }
 
   Future updateUser() async {
-    if (_imageload != true) {
-      setState(() {
-        _visibleCircular = false;
-      });
-    }
     if (_formKey.currentState!.validate()) {
       setState(() {
         _visibleCircular = true;
       });
-      FirebaseFirestore.instance.collection('users').doc(userData.id).update({
-        "firstName": firstnamecontroller.text.isEmpty
-            ? userData.firstName
-            : firstnamecontroller.text,
-        "lastName": lastnamecontroller.text.isEmpty
-            ? userData.lastName
-            : lastnamecontroller.text,
-        "userBio": descriptioncontroller.text.isEmpty
-            ? userData.userBio
-            : descriptioncontroller.text,
-        "city": editedCountry == "" ? userData.country : editedCountry
-      }).then((value) {
+      if (_imageload != true) {
         setState(() {
           _visibleCircular = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Profile updated successfully"),
-        ));
-      });
+      } else {
+        await FirestoreHelper.uploadProfilePictureToStorage(_image)
+            .then((value) {
+          if (value.contains(".com")) {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(userData.id)
+                .update({
+              "firstName": firstnamecontroller.text.isEmpty
+                  ? userData.firstName
+                  : firstnamecontroller.text,
+              "lastName": lastnamecontroller.text.isEmpty
+                  ? userData.lastName
+                  : lastnamecontroller.text,
+              "userBio": descriptioncontroller.text.isEmpty
+                  ? userData.userBio
+                  : descriptioncontroller.text,
+              "city": editedCountry == "" ? userData.country : editedCountry,
+              "profilePictureUrl": value
+            }).then((value) {
+              setState(() {
+                _visibleCircular = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Profile updated successfully"),
+              ));
+            });
+          } else {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(userData.id)
+                .update({
+              "firstName": firstnamecontroller.text.isEmpty
+                  ? userData.firstName
+                  : firstnamecontroller.text,
+              "lastName": lastnamecontroller.text.isEmpty
+                  ? userData.lastName
+                  : lastnamecontroller.text,
+              "userBio": descriptioncontroller.text.isEmpty
+                  ? userData.userBio
+                  : descriptioncontroller.text,
+              "city": editedCountry == "" ? userData.country : editedCountry,
+            }).then((value) {
+              setState(() {
+                _visibleCircular = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "Profile updated successfully except profile picture!"),
+              ));
+            });
+          }
+        });
+      }
     }
   }
 
