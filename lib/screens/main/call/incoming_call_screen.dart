@@ -1,18 +1,46 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/managers/call_manager.dart';
+import 'package:anonmy/models/user.dart';
+import 'package:anonmy/theme.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 
-class IncomingCallScreen extends StatelessWidget {
+class IncomingCallScreen extends StatefulWidget {
   static const String TAG = "IncomingCallScreen";
   final P2PSession _callSession;
 
   IncomingCallScreen(this._callSession);
 
   @override
+  State<IncomingCallScreen> createState() => _IncomingCallScreenState();
+}
+
+class _IncomingCallScreenState extends State<IncomingCallScreen> {
+  User callingUser = emptyUser;
+
+  Future getCallingUser() async {
+    print(widget._callSession.callerId.toString());
+    await FirestoreHelper.getSpecificUserInfoByCubeId(
+            widget._callSession.callerId)
+        .then((value) {
+      setState(() {
+        callingUser = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getCallingUser().then((value) => null);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _callSession.onSessionClosed = (callSession) {
-      log("_onSessionClosed", TAG);
+    widget._callSession.onSessionClosed = (callSession) {
+      log("_onSessionClosed", IncomingCallScreen.TAG);
       Navigator.pop(context);
     };
 
@@ -33,7 +61,7 @@ class IncomingCallScreen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 86),
-                child: Text(_callSession.opponentsIds.join(", "),
+                child: Text(callingUser.firstName + " " + callingUser.lastName,
                     style: TextStyle(fontSize: 18)),
               ),
               Row(
@@ -48,7 +76,8 @@ class IncomingCallScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                       backgroundColor: Colors.red,
-                      onPressed: () => _rejectCall(context, _callSession),
+                      onPressed: () =>
+                          _rejectCall(context, widget._callSession),
                     ),
                   ),
                   Padding(
@@ -60,7 +89,8 @@ class IncomingCallScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                       backgroundColor: Colors.green,
-                      onPressed: () => _acceptCall(context, _callSession),
+                      onPressed: () =>
+                          _acceptCall(context, widget._callSession),
                     ),
                   ),
                 ],
@@ -73,7 +103,7 @@ class IncomingCallScreen extends StatelessWidget {
   _getCallTitle() {
     var callType;
 
-    switch (_callSession.callType) {
+    switch (widget._callSession.callType) {
       case CallType.VIDEO_CALL:
         callType = "Video";
         break;

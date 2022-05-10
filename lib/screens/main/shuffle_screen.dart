@@ -10,6 +10,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -579,7 +580,7 @@ class _ShufflePageState extends State<ShufflePage> {
                                 MyRadioListTile<int>(
                                   value: 2,
                                   groupValue: _filterGenderValue,
-                                  leading: 'Male',
+                                  leading: AppLocalizations.of(context)!.male,
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
@@ -589,7 +590,7 @@ class _ShufflePageState extends State<ShufflePage> {
                                 MyRadioListTile<int>(
                                   value: 3,
                                   groupValue: _filterGenderValue,
-                                  leading: 'Female',
+                                  leading: AppLocalizations.of(context)!.female,
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
@@ -615,7 +616,7 @@ class _ShufflePageState extends State<ShufflePage> {
                         ),
                       ),
                       child: Text(
-                        "Apply Filter",
+                        AppLocalizations.of(context)!.applyfilter,
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
@@ -623,8 +624,16 @@ class _ShufflePageState extends State<ShufflePage> {
                         //print(filterAge);
                         //print(filterCity);
                         //print(filterGender);
-                        updateFilterUserData()
-                            .then((value) => Navigator.pop(context));
+                        FirestoreHelper.getUserData().then((value) {
+                          if (value.userType.contains("shuffle")) {
+                            updateFilterUserData()
+                                .then((value) => Navigator.pop(context));
+                          } else {
+                            Fluttertoast.showToast(
+                                msg:
+                                    "Please update your account to use filter");
+                          }
+                        });
                       },
                     ),
                   ),

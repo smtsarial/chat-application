@@ -9,8 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-// TODO: Import google_mobile_ads.dart
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class StoryPage extends StatefulWidget {
@@ -253,7 +252,7 @@ class _StoryPageState extends State<StoryPage> {
                               });
                             },
                             child: Text(AppLocalizations.of(context)!.reset)),
-                        Text("Filter"),
+                        Text(AppLocalizations.of(context)!.filter),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
@@ -456,7 +455,7 @@ class _StoryPageState extends State<StoryPage> {
                                 MyRadioListTile<int>(
                                   value: 2,
                                   groupValue: _filterGenderValue,
-                                  leading: 'Male',
+                                  leading: AppLocalizations.of(context)!.male,
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
@@ -466,7 +465,7 @@ class _StoryPageState extends State<StoryPage> {
                                 MyRadioListTile<int>(
                                   value: 3,
                                   groupValue: _filterGenderValue,
-                                  leading: 'Female',
+                                  leading: AppLocalizations.of(context)!.female,
                                   title: Text(''),
                                   onChanged: (value) => setState(() {
                                     _filterGenderValue = value!;
@@ -500,8 +499,16 @@ class _StoryPageState extends State<StoryPage> {
                         //print(filterAge);
                         //print(filterCity);
                         //print(filterGender);
-                        updateFilterUserData()
-                            .then((value) => Navigator.pop(context));
+                        FirestoreHelper.getUserData().then((value) {
+                          if (value.userType.contains("shuffle")) {
+                            updateFilterUserData()
+                                .then((value) => Navigator.pop(context));
+                          } else {
+                            Fluttertoast.showToast(
+                                msg:
+                                    "Please update your account to use filter");
+                          }
+                        });
                       },
                     ),
                   ),

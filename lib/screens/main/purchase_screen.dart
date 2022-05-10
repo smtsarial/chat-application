@@ -171,7 +171,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           AppLocalizations.of(context)!.thirty,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text("₺29,99")
+                        Text("₺49,99")
                       ],
                     ),
                   ),
@@ -196,7 +196,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           AppLocalizations.of(context)!.fifteen,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text("₺19,99")
+                        Text("₺29,99")
                       ],
                     ),
                   ),
@@ -260,7 +260,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           AppLocalizations.of(context)!.viewsbin,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text("₺99,99")
+                        Text("₺59,99")
                       ],
                     ),
                   ),
@@ -285,7 +285,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           AppLocalizations.of(context)!.besyuzviews,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text("₺59,99")
+                        Text("₺39,99")
                       ],
                     ),
                   ),

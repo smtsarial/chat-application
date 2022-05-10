@@ -134,7 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text("Turkish Terms Of Use"),
+              title: Text(AppLocalizations.of(context)!.turkishtermsof),
               leading: Icon(Icons.document_scanner_sharp),
               onPressed: (context) {
                 Navigator.push(
@@ -144,7 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text("Terms Of Use"),
+              title: Text(AppLocalizations.of(context)!.termofuse),
               leading: Icon(Icons.document_scanner_sharp),
               onPressed: (context) {
                 Navigator.push(
@@ -154,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text("Turkish Privacy Policy"),
+              title: Text(AppLocalizations.of(context)!.turkishcprivacy),
               leading: Icon(Icons.document_scanner_sharp),
               onPressed: (context) {
                 Navigator.push(
@@ -165,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text("Privacy Policy"),
+              title: Text(AppLocalizations.of(context)!.privacypolicy),
               leading: Icon(Icons.document_scanner_sharp),
               onPressed: (context) {
                 Navigator.push(
@@ -176,19 +176,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
-              title: Text("Delete all messages"),
+              title: Text(AppLocalizations.of(context)!.deleteallmessages),
               leading: Icon(Icons.folder_delete_outlined),
               onPressed: (context) {
                 showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          title: const Text('CAUTION'),
-                          content: const Text(
-                              'You will all message data and you can not retrieve back!'),
+                          title: Text(AppLocalizations.of(context)!.caution),
+                          content: Text(AppLocalizations.of(context)!
+                              .youwillallmessagedataandyocannotretrieveback),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -208,7 +208,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             .delete()
                                             .then((value) {
                                           Fluttertoast.showToast(
-                                              msg: "All Message data removed!");
+                                              msg: AppLocalizations.of(context)!
+                                                  .addedsuccessfully);
                                         });
                                       });
                                     });
@@ -217,7 +218,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   print(e);
                                 }
                               },
-                              child: const Text('OK'),
+                              child: Text(AppLocalizations.of(context)!.accept),
                             ),
                           ],
                         ));

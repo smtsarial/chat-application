@@ -89,15 +89,16 @@ class _myYoutubeListState extends State<myYoutubeList> {
             await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                      title: const Text('CAUTION'),
-                      content: Text(value + " will add your profile."),
+                      title: Text(AppLocalizations.of(context)!.caution),
+                      content: Text(value +
+                          AppLocalizations.of(context)!.willaddyourprofile),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             value = "";
                           },
-                          child: const Text('Decline'),
+                          child: Text(AppLocalizations.of(context)!.decline),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -112,11 +113,12 @@ class _myYoutubeListState extends State<myYoutubeList> {
                               } else {
                                 getAllYoutubeList();
                                 Fluttertoast.showToast(
-                                    msg: "Error video not added");
+                                    msg: AppLocalizations.of(context)!
+                                        .erroroccured);
                               }
                             });
                           },
-                          child: const Text('Accept'),
+                          child: Text(AppLocalizations.of(context)!.accept),
                         ),
                       ],
                     ));

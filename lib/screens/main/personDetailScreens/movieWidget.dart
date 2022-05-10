@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tmdb_api/tmdb_api.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MovieWidget extends StatefulWidget {
   const MovieWidget({Key? key, required this.userData}) : super(key: key);
@@ -65,7 +66,7 @@ class _MovieWidgetState extends State<MovieWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  "Movie List",
+                  AppLocalizations.of(context)!.movielist,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -108,7 +109,7 @@ class _MovieWidgetState extends State<MovieWidget> {
                         ))
                       : (Center(
                           child: Text(
-                            "There is no added movie.",
+                            AppLocalizations.of(context)!.thereisnomovie,
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 15,

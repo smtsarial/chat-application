@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BlockedUsers extends StatefulWidget {
   const BlockedUsers({Key? key}) : super(key: key);
@@ -55,7 +56,7 @@ class _BlockedUsersState extends State<BlockedUsers> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Blocked Users"),
+        title: Text(AppLocalizations.of(context)!.blockedusers),
       ),
       body: SafeArea(
         child: Container(
@@ -120,7 +121,9 @@ class _BlockedUsersState extends State<BlockedUsers> {
                                                       ),
                                                     ),
                                                     child: Text(
-                                                      "Remove",
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .remove,
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                       ),
@@ -169,7 +172,9 @@ class _BlockedUsersState extends State<BlockedUsers> {
                             },
                           )
                         : Center(
-                            child: Text("There is no blocked user",
+                            child: Text(
+                                AppLocalizations.of(context)!
+                                    .thereisnoblockeduser,
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
                           ))

@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ImageMessage extends StatelessWidget {
   const ImageMessage(
@@ -63,7 +64,8 @@ class ImageMessage extends StatelessWidget {
                         .update({"isAccepted": true});
                   },
                   child: Center(
-                    child: Text("Click to see the picture !"),
+                    child: Text(
+                        AppLocalizations.of(context)!.clicktoseethepicture),
                   )),
     ));
   }

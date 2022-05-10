@@ -1,6 +1,9 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/managers/call_manager.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:anonmy/theme.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,23 +48,6 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
 
   _ConversationCallScreenState(this._callSession, this._isIncoming)
       : _enableScreenSharing = !_callSession.startScreenSharing;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _callSession.onLocalStreamReceived = _addLocalMediaStream;
-    _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
-    _callSession.onSessionClosed = _onSessionClosed;
-
-    _callSession.setSessionCallbacksListener(this);
-
-    if (_isIncoming) {
-      _callSession.acceptCall();
-    } else {
-      _callSession.startCall();
-    }
-  }
 
   @override
   Future<void> dispose() async {
@@ -236,6 +222,35 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
     return streamsExpanded;
   }
 
+  User callingUser = emptyUser;
+  Future getCallingUser() async {
+    print(widget._callSession.opponentsIds.toString());
+    await FirestoreHelper.getSpecificUserInfoByCubeId(
+            widget._callSession.opponentsIds.first)
+        .then((value) {
+      setState(() {
+        callingUser = value;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCallingUser().then((value) => null);
+    _callSession.onLocalStreamReceived = _addLocalMediaStream;
+    _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
+    _callSession.onSessionClosed = _onSessionClosed;
+
+    _callSession.setSessionCallbacksListener(this);
+
+    if (_isIncoming) {
+      _callSession.acceptCall();
+    } else {
+      _callSession.startCall();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -274,13 +289,13 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                       Padding(
                         padding: EdgeInsets.only(bottom: 12),
                         child: Text(
-                          "Members:",
+                          "Calling:",
                           style: TextStyle(
                               fontSize: 20, fontStyle: FontStyle.italic),
                         ),
                       ),
                       Text(
-                        _callSession.opponentsIds.join(", "),
+                        callingUser.firstName + " " + callingUser.lastName,
                         style: TextStyle(fontSize: 20),
                       ),
                     ],

@@ -3,7 +3,6 @@ import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/seach_Bar/easy_search_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -42,7 +41,7 @@ class _MyHobbiesState extends State<MyHobbies> {
     return Scaffold(
         appBar: EasySearchBar(
           searchBackgroundColor: Colors.grey,
-          title: const Text('Add New Hobbie'),
+          title: Text(AppLocalizations.of(context)!.addnewhobbie),
           onSearch: (value) => setState(() => searchValue = value),
           asyncSuggestions: (value) async {
             return await [
@@ -73,8 +72,9 @@ class _MyHobbiesState extends State<MyHobbies> {
             await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                      title: const Text('CAUTION'),
-                      content: Text(value + " will add your profile."),
+                      title: Text(AppLocalizations.of(context)!.caution),
+                      content: Text(value +
+                          AppLocalizations.of(context)!.willaddyourprofile),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
@@ -89,17 +89,20 @@ class _MyHobbiesState extends State<MyHobbies> {
                                 .then((value) {
                               if (value == true) {
                                 Fluttertoast.showToast(
-                                    msg: "Hobbie added successfully");
+                                    msg: AppLocalizations.of(context)!
+                                        .hobbieaddedsuccessfully);
                                 getAllHobbies()
                                     .then((value) => Navigator.pop(context));
                               } else {
-                                Fluttertoast.showToast(msg: "Error occured!");
+                                Fluttertoast.showToast(
+                                    msg: AppLocalizations.of(context)!
+                                        .erroroccured);
                                 getAllHobbies()
                                     .then((value) => Navigator.pop(context));
                               }
                             });
                           },
-                          child: const Text('Accept'),
+                          child: Text(AppLocalizations.of(context)!.accept),
                         ),
                       ],
                     ));

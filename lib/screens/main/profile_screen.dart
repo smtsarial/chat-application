@@ -69,13 +69,13 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FollowersList()));
+                                //Navigator.push(
+                                //    context,
+                                //    MaterialPageRoute(
+                                //        builder: (context) => FollowersList()));
                               },
-                              icon: FaIcon(FontAwesomeIcons.users)),
-                          Text(AppLocalizations.of(context)!.followers),
+                              icon: FaIcon(FontAwesomeIcons.message)),
+                          Text(AppLocalizations.of(context)!.messages),
                           Text(user.followers.length.toString())
                         ],
                       )),
@@ -148,54 +148,54 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                    child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.rocket_launch,
-                          size: 40,
-                          color: Color.fromARGB(255, 255, 153, 0),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!.getmoremessages,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.getshuffle,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      width: 300.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: PrimaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12), // <-- Radius
-                          ),
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.updatemyaccount,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
-                )),
+                //Container(
+                //    child: Column(
+                //  children: [
+                //    Row(
+                //      mainAxisAlignment: MainAxisAlignment.center,
+                //      children: [
+                //        Icon(
+                //          Icons.rocket_launch,
+                //          size: 40,
+                //          color: Color.fromARGB(255, 255, 153, 0),
+                //        ),
+                //        SizedBox(
+                //          width: 10,
+                //        ),
+                //        Text(
+                //          AppLocalizations.of(context)!.getmoremessages,
+                //          style: TextStyle(
+                //              fontWeight: FontWeight.bold, fontSize: 20),
+                //        ),
+                //      ],
+                //    ),
+                //    SizedBox(
+                //      height: 10,
+                //    ),
+                //    Text(
+                //      AppLocalizations.of(context)!.getshuffle,
+                //      style: TextStyle(fontWeight: FontWeight.bold),
+                //    ),
+                //    Container(
+                //      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                //      width: 300.0,
+                //      child: ElevatedButton(
+                //        style: ElevatedButton.styleFrom(
+                //          primary: PrimaryColor,
+                //          shape: RoundedRectangleBorder(
+                //            borderRadius:
+                //                BorderRadius.circular(12), // <-- Radius
+                //          ),
+                //        ),
+                //        child: Text(
+                //          AppLocalizations.of(context)!.updatemyaccount,
+                //          style: TextStyle(color: Colors.white),
+                //        ),
+                //        onPressed: () {},
+                //      ),
+                //    ),
+                //  ],
+                //)),
               ],
             ),
           ),

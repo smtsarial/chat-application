@@ -122,7 +122,7 @@ class _myMovieListState extends State<myMovieList> {
                                 .then((value) {
                               if (value == true) {
                                 Fluttertoast.showToast(
-                                    msg: "Hobbie added successfully");
+                                    msg: "Added successfully");
                               } else {
                                 Fluttertoast.showToast(msg: "Error occured!");
                               }

@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_gif_picker/modal_gif_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key, required this.messageRoom}) : super(key: key);
@@ -136,15 +137,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             AlertDialog(
-                                              title: const Text('CAUTION'),
-                                              content: const Text(
-                                                  'You can not change chat status after this step. Are you sure ?'),
+                                              title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .caution),
+                                              content: Text(AppLocalizations.of(
+                                                      context)!
+                                                  .youcannotchangechatstatus),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
                                                       Navigator.pop(
                                                           context, 'Cancel'),
-                                                  child: const Text('Cancel'),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .cancel),
                                                 ),
                                                 TextButton(
                                                   onPressed: () {
@@ -164,12 +171,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       print(e);
                                                     }
                                                   },
-                                                  child: const Text('OK'),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .ok),
                                                 ),
                                               ],
                                             ));
                                   },
-                                  child: Text("Get out of anonymity")),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.female)),
                             ],
                           )
                         : Row(

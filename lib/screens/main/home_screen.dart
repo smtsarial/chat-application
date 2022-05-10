@@ -1,4 +1,6 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/connections/local_notification_api.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/chatScreenTab.dart';
@@ -11,13 +13,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static Route get route => MaterialPageRoute(
         builder: (context) => HomeScreen(),
       );
   HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<int> pageIndex = ValueNotifier(0);
+
   final ValueNotifier<String> title = ValueNotifier('Messages');
 
   final pages = [
@@ -28,8 +36,28 @@ class HomeScreen extends StatelessWidget {
     ProfileScreen(),
   ];
 
+  final PremiumPages = [
+    StoryPage(),
+    TabBarChat(),
+    ShufflePage(),
+    ProfileScreen(),
+  ];
+
   void _onNavigationItemSelected(index) {
     pageIndex.value = index;
+  }
+
+  User user = emptyUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirestoreHelper.getUserData().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
   }
 
   @override
@@ -37,20 +65,107 @@ class HomeScreen extends StatelessWidget {
     Provider.of<UserProvider>(context);
     Provider.of<MessageRoomProvider>(context);
     return SafeArea(
-        child: Scaffold(
-      body: ValueListenableBuilder(
-        valueListenable: pageIndex,
-        builder: (BuildContext context, int value, _) {
-          return pages[value];
-        },
+        child: user.userType == "basic"
+            ? Scaffold(
+                body: ValueListenableBuilder(
+                  valueListenable: pageIndex,
+                  builder: (BuildContext context, int value, _) {
+                    return pages[value];
+                  },
+                ),
+                bottomNavigationBar: _BottomNavigationBar(
+                  onItemSelected: _onNavigationItemSelected,
+                ),
+              )
+            : (Scaffold(
+                body: ValueListenableBuilder(
+                  valueListenable: pageIndex,
+                  builder: (BuildContext context, int value, _) {
+                    return PremiumPages[value];
+                  },
+                ),
+                bottomNavigationBar: _PremiumBottomNavigatorBar(
+                  onItemSelected: _onNavigationItemSelected,
+                ),
+              )));
+  }
+}
+
+class _PremiumBottomNavigatorBar extends StatefulWidget {
+  const _PremiumBottomNavigatorBar({
+    Key? key,
+    required this.onItemSelected,
+  }) : super(key: key);
+
+  final ValueChanged<int> onItemSelected;
+  @override
+  State<_PremiumBottomNavigatorBar> createState() =>
+      __PremiumBottomNavigatorBarState();
+}
+
+class __PremiumBottomNavigatorBarState
+    extends State<_PremiumBottomNavigatorBar> {
+  var selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void handleItemSelected(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    widget.onItemSelected(index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    return Card(
+      color: (brightness == Brightness.light) ? Colors.transparent : null,
+      elevation: 0,
+      margin: const EdgeInsets.all(0),
+      child: SafeArea(
+        top: false,
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16, left: 8, right: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _NavigationBarItem(
+                index: 0,
+                label: '',
+                icon: CupertinoIcons.bell_solid,
+                isSelected: (selectedIndex == 0),
+                onTap: handleItemSelected,
+              ),
+              _NavigationBarItem(
+                index: 1,
+                label: '',
+                icon: CupertinoIcons.bubble_left_bubble_right_fill,
+                isSelected: (selectedIndex == 1),
+                onTap: handleItemSelected,
+              ),
+              _NavigationBarItem(
+                index: 2,
+                label: '',
+                icon: CupertinoIcons.shuffle,
+                isSelected: (selectedIndex == 2),
+                onTap: handleItemSelected,
+              ),
+              _NavigationBarItem(
+                index: 3,
+                label: '',
+                icon: CupertinoIcons.person,
+                isSelected: (selectedIndex == 3),
+                onTap: handleItemSelected,
+              ),
+            ],
+          ),
+        ),
       ),
-      //floatingActionButton: FloatingActionButton(onPressed: () {
-      //  FirestoreHelper.addNewMessageRoom();
-      //}),
-      bottomNavigationBar: _BottomNavigationBar(
-        onItemSelected: _onNavigationItemSelected,
-      ),
-    ));
+    );
   }
 }
 

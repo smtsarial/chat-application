@@ -52,6 +52,23 @@ class FirestoreHelper {
     return details.length != 0 ? details[0] : emptyUser;
   }
 
+  static Future<User> getSpecificUserInfoByCubeId(int cubeId) async {
+    //this method for taking user data
+    List<User> details = [];
+    var data =
+        await db.collection('users').where("cubeid", isEqualTo: cubeId).get();
+    if (data != null) {
+      details = data.docs.map((document) => User.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+      i++;
+    });
+
+    return details.length != 0 ? details[0] : emptyUser;
+  }
+
   static Future<bool> changeToOfflineStatus() async {
     //change to user status
     try {

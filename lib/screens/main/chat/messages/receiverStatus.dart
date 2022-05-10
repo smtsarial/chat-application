@@ -3,6 +3,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReceiverStatus extends StatefulWidget {
   const ReceiverStatus({Key? key, required this.receiverMail})
@@ -33,7 +34,8 @@ class _ReceiverStatusState extends State<ReceiverStatus> {
     return Container(
       child: user.showStatus
           ? user.isActive
-              ? Text("Online", style: TextStyle(fontSize: 11))
+              ? Text(AppLocalizations.of(context)!.online,
+                  style: TextStyle(fontSize: 11))
               : Text(timeago.format(user.lastActiveTime),
                   style: TextStyle(fontSize: 11))
           : SizedBox(),

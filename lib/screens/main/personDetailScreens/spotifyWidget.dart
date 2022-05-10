@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:spotify_metadata/spotify_metadata.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SpotifyCard extends StatefulWidget {
   const SpotifyCard({Key? key, required this.userData}) : super(key: key);
@@ -69,7 +70,7 @@ class _SpotifyCardState extends State<SpotifyCard> {
               Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  "Spotify List",
+                  AppLocalizations.of(context)!.spotifylist,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -112,7 +113,7 @@ class _SpotifyCardState extends State<SpotifyCard> {
                         ))
                       : (Center(
                           child: Text(
-                            "There is no added music.",
+                            AppLocalizations.of(context)!.thereisnomusic,
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 15,

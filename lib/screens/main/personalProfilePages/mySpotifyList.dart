@@ -7,6 +7,7 @@ import 'package:spotify/spotify.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:spotify_metadata/spotify_metadata.dart' as apii;
 import 'package:flutter/src/widgets/image.dart' as imagess;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class mySpotifyList extends StatefulWidget {
   const mySpotifyList({Key? key}) : super(key: key);
@@ -103,9 +104,11 @@ class _mySpotifyListState extends State<mySpotifyList> {
       await FirestoreHelper.addSpotifyListItem(url).then(
         (value) {
           if (value == true) {
-            Fluttertoast.showToast(msg: "Music added!");
+            Fluttertoast.showToast(
+                msg: AppLocalizations.of(context)!.addedsuccessfully);
           } else {
-            Fluttertoast.showToast(msg: "Music not added!");
+            Fluttertoast.showToast(
+                msg: AppLocalizations.of(context)!.erroroccured);
           }
         },
       );
@@ -133,15 +136,16 @@ class _mySpotifyListState extends State<mySpotifyList> {
             await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                      title: const Text('CAUTION'),
-                      content: Text(value + " will add your profile."),
+                      title: Text(AppLocalizations.of(context)!.caution),
+                      content: Text(value +
+                          AppLocalizations.of(context)!.willaddyourprofile),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             value = "";
                           },
-                          child: const Text('Decline'),
+                          child: Text(AppLocalizations.of(context)!.decline),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -162,7 +166,7 @@ class _mySpotifyListState extends State<mySpotifyList> {
                               }
                             });
                           },
-                          child: const Text('Accept'),
+                          child: Text(AppLocalizations.of(context)!.accept),
                         ),
                       ],
                     ));

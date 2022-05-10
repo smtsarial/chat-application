@@ -3,6 +3,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HobbiesWidget extends StatefulWidget {
   const HobbiesWidget({Key? key, required this.userData}) : super(key: key);
@@ -39,7 +40,7 @@ class _HobbiesWidgetState extends State<HobbiesWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  "Hobbies List",
+                  AppLocalizations.of(context)!.hobbielist,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -71,8 +72,7 @@ class _HobbiesWidgetState extends State<HobbiesWidget> {
                                       onTap: () {},
                                       child: Container(
                                         padding: EdgeInsets.all(10),
-                                        margin:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                         decoration: BoxDecoration(
                                             color: PrimaryColor,
                                             borderRadius:
@@ -89,7 +89,7 @@ class _HobbiesWidgetState extends State<HobbiesWidget> {
                       : (Container(
                           child: Center(
                             child: Text(
-                              "There is no hobbies.",
+                              AppLocalizations.of(context)!.thereisnohobbie,
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 15,

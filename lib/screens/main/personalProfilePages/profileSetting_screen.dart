@@ -57,7 +57,7 @@ class _EditPageState extends State<EditPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Edit Profile"),
+        title: Text(AppLocalizations.of(context)!.editprofile),
         backgroundColor: PrimaryColor,
       ),
       body: Container(
@@ -279,7 +279,7 @@ class _EditPageState extends State<EditPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Show my online status?",
+                        AppLocalizations.of(context)!.showmyonlinestatus,
                         style: TextStyle(fontSize: 15),
                       ),
                       CupertinoSwitch(
