@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:anonmy/connections/firestore.dart';
-import 'package:ffmpeg_kit_flutter_min_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/directory_path.dart';
