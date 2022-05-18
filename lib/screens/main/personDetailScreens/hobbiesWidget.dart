@@ -1,4 +1,3 @@
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';

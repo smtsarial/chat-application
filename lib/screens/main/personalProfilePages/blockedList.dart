@@ -1,9 +1,7 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
-import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,11 +32,7 @@ class _BlockedUsersState extends State<BlockedUsers> {
     await FirestoreHelper.getUserData().then((value) {
       List<User> list1 = [];
       value.blockedUsers.forEach((element) async {
-        var data = await FirestoreHelper.db
-            .collection('users')
-            .where("email", isEqualTo: element)
-            .get()
-            .then((value) {
+        await FirestoreHelper.db.collection('users').where("email", isEqualTo: element).get().then((value) {
           value.docs.forEach((element) {
             list1.add(User.fromMap(element));
           });
@@ -86,16 +80,10 @@ class _BlockedUsersState extends State<BlockedUsers> {
                                 children: [
                                   ListTile(
                                       onTap: () => {},
-                                      leading: Container(
-                                          height: double.infinity,
-                                          child: Avatar.medium(
-                                              url: item.profilePictureUrl)),
+                                      leading: Container(height: double.infinity, child: Avatar.medium(url: item.profilePictureUrl)),
                                       title: Text(
-                                        item.firstName.toString() +
-                                            " " +
-                                            item.lastName.toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        item.firstName.toString() + " " + item.lastName.toString(),
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                       ),
                                       trailing: Wrap(
                                         spacing: 12,
@@ -105,25 +93,17 @@ class _BlockedUsersState extends State<BlockedUsers> {
                                               children: [
                                                 GestureDetector(
                                                   child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 12,
-                                                            vertical: 8),
+                                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                                     decoration: BoxDecoration(
                                                       color: null,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24),
+                                                      borderRadius: BorderRadius.circular(24),
                                                       border: Border.all(
-                                                        color:
-                                                            Colors.grey[300]!,
+                                                        color: Colors.grey[300]!,
                                                         width: 2,
                                                       ),
                                                     ),
                                                     child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .remove,
+                                                      AppLocalizations.of(context)!.remove,
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                       ),
@@ -131,26 +111,13 @@ class _BlockedUsersState extends State<BlockedUsers> {
                                                   ),
                                                   onTap: () async {
                                                     try {
-                                                      var data =
-                                                          await FirestoreHelper
-                                                                  .getUserData()
-                                                              .then(
-                                                                  (value) async {
-                                                        await FirebaseFirestore
-                                                            .instance
-                                                            .collection('users')
-                                                            .doc(value.id)
-                                                            .update({
-                                                          "blockedUsers":
-                                                              FieldValue
-                                                                  .arrayRemove([
-                                                            item.email
-                                                          ])
+                                                      await FirestoreHelper.getUserData().then((value) async {
+                                                        await FirebaseFirestore.instance.collection('users').doc(value.id).update({
+                                                          "blockedUsers": FieldValue.arrayRemove([item.email])
                                                         });
                                                       }).then((value) {
                                                         list.remove(item);
-                                                        getAllBlockedUsers()
-                                                            .then((value) {
+                                                        getAllBlockedUsers().then((value) {
                                                           setState(() {
                                                             isLoaded = true;
                                                           });
@@ -172,11 +139,8 @@ class _BlockedUsersState extends State<BlockedUsers> {
                             },
                           )
                         : Center(
-                            child: Text(
-                                AppLocalizations.of(context)!
-                                    .thereisnoblockeduser,
-                                style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold)),
+                            child: Text(AppLocalizations.of(context)!.thereisnoblockeduser,
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                           ))
           ],
         )),

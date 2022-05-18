@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -7,7 +6,6 @@ import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;

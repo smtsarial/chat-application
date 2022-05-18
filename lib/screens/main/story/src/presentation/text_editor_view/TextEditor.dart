@@ -7,7 +7,6 @@ import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/control
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/text_editing_notifier.dart';
 import 'package:anonmy/screens/main/story/src/presentation/text_editor_view/widgets/animation_selector.dart';
-import 'package:anonmy/screens/main/story/src/presentation/text_editor_view/widgets/font_selector.dart';
 import 'package:anonmy/screens/main/story/src/presentation/text_editor_view/widgets/text_field_widget.dart';
 import 'package:anonmy/screens/main/story/src/presentation/text_editor_view/widgets/top_text_tools.dart';
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/item_type.dart';

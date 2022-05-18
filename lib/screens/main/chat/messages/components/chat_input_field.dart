@@ -1,9 +1,9 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 
 import 'package:anonmy/connections/firestore.dart';
-import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
-import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

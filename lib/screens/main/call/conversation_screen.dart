@@ -5,10 +5,7 @@ import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:universal_io/io.dart';
 
 class ConversationCallScreen extends StatefulWidget {
   final P2PSession _callSession;

@@ -1,6 +1,5 @@
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/providers/userProvider.dart';
-import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

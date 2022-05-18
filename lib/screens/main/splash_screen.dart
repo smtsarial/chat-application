@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:async';
 import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/connections/firestore.dart';

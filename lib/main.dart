@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/l10n/l10n.dart';
-import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/managers/push_notifications_manager.dart';
 import 'package:anonmy/providers/platform_utils.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/auth/login.dart';
-import 'package:anonmy/screens/main/consumable_store.dart';
 import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
@@ -51,8 +47,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool isBackground = false;
 
   _loginToCC(BuildContext context, CubeUser user) {
-    if (CubeSessionManager.instance.isActiveSessionValid() &&
-        CubeSessionManager.instance.activeSession!.user != null) {
+    if (CubeSessionManager.instance.isActiveSessionValid() && CubeSessionManager.instance.activeSession!.user != null) {
       if (CubeChatConnection.instance.isAuthenticated()) {
         //_goSelectOpponentsScreen(context, user);
       } else {
@@ -122,15 +117,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // add listener for foreground push notifications
     FirebaseMessaging.onMessage.listen((remoteMessage) {
       log('[onMessage] message: ' + remoteMessage.data.toString());
-      NotificationApi.showNotification(
-          body: "Someone calling you!", title: "CALL");
+      NotificationApi.showNotification(body: "Someone calling you!", title: "CALL");
     });
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
     initForegroundService();
     FirestoreHelper.getUserData().then((value) {
-      SharedPrefs.updateUser(
-          CubeUser(id: value.cubeid, password: value.videoServicePassword));
+      SharedPrefs.updateUser(CubeUser(id: value.cubeid, password: value.videoServicePassword));
     });
     initConnectycube();
     initForegroundService();
@@ -156,20 +149,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   .get()
                   .then((value1) {
                 //print(value1.docChanges.first.doc.id);
-                if (value1.docs.first['messageOwnerUsername'] !=
-                    value.username) {
+                if (value1.docs.first['messageOwnerUsername'] != value.username) {
                   if (appOpened == false) {
                     NotificationApi.showNotification(
                       title: event.docChanges.first.doc['anonim'] == false
-                          ? event.docChanges.first.doc['senderUsername'] ==
-                                  value.email
-                              ? event.docChanges.first.doc['senderUsername'] +
-                                  " sent message."
-                              : event.docChanges.first.doc['receiverUsername'] +
-                                  " sent message."
+                          ? event.docChanges.first.doc['senderUsername'] == value.email
+                              ? event.docChanges.first.doc['senderUsername'] + " sent message."
+                              : event.docChanges.first.doc['receiverUsername'] + " sent message."
                           : "Anon-" + event.docChanges.first.doc.id,
-                      body: "Message: " +
-                          event.docChanges.first.doc['lastMessage'],
+                      body: "Message: " + event.docChanges.first.doc['lastMessage'],
                       payload: event.docChanges.first.doc.id,
                     );
                   }

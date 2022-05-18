@@ -1,12 +1,9 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
-import 'package:anonmy/models/user.dart';
-import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'chat_input_field.dart';
 import 'message.dart';

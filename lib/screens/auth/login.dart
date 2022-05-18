@@ -1,13 +1,11 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/providers/pref_util.dart';
-import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/screens/auth/register.dart';
 import 'package:connectycube_sdk/connectycube_calls.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -73,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final loginButton = Padding(
       padding: EdgeInsets.fromLTRB(16, 5, 16, 0),
+      // ignore: deprecated_member_use
       child: RaisedButton(
         onPressed: () {
           setState(() {
@@ -98,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final registerButton = Padding(
       padding: EdgeInsets.fromLTRB(16, 2, 16, 16),
+      // ignore: deprecated_member_use
       child: RaisedButton(
         onPressed: () {
           Navigator.push(context,
@@ -110,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
+    // ignore: deprecated_member_use
     final forgotLabel = FlatButton(
       child: Text(
         AppLocalizations.of(context)!.forgotpass,

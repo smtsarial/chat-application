@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 class MessageRoom {
   late String id;
   late String senderMail;

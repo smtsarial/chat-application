@@ -1,5 +1,4 @@
 import 'package:anonmy/connections/firestore.dart';
-import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
 import 'package:anonmy/providers/userProvider.dart';

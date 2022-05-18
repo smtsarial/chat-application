@@ -1,10 +1,8 @@
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:spotify_metadata/spotify_metadata.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_metadata/youtube.dart';
 

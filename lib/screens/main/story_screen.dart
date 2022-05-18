@@ -1,4 +1,3 @@
-import 'package:anonmy/connections/adhelper.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/story/stories_editor.dart';
@@ -6,7 +5,6 @@ import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -112,12 +110,8 @@ class _StoryPageState extends State<StoryPage> {
             Expanded(
                 child: stories.length != 0
                     ? GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 9 / 16,
-                                mainAxisSpacing: 2,
-                                crossAxisSpacing: 2),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, childAspectRatio: 9 / 16, mainAxisSpacing: 2, crossAxisSpacing: 2),
                         itemCount: stories.length +
                             (stories.length >= 2
                                 ? _isAdLoaded
@@ -139,11 +133,7 @@ class _StoryPageState extends State<StoryPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => StoryViewer(
-                                              imageList: [
-                                                stories[
-                                                    _getDestinationItemIndex(
-                                                        index)]
-                                              ],
+                                              imageList: [stories[_getDestinationItemIndex(index)]],
                                             )));
                               },
                               child: Stack(
@@ -153,10 +143,7 @@ class _StoryPageState extends State<StoryPage> {
                                       decoration: BoxDecoration(
                                         color: PrimaryColor,
                                         image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                              stories[_getDestinationItemIndex(
-                                                      index)]
-                                                  .imageUrl),
+                                          image: CachedNetworkImageProvider(stories[_getDestinationItemIndex(index)].imageUrl),
                                           fit: BoxFit.cover,
                                         ),
                                       )),
@@ -177,27 +164,15 @@ class _StoryPageState extends State<StoryPage> {
                                               radius: 11,
                                               backgroundImage: Image(
                                                 image: CachedNetworkImageProvider(
-                                                    stories[_getDestinationItemIndex(
-                                                            index)]
-                                                        .ownerProfilePicture),
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
+                                                    stories[_getDestinationItemIndex(index)].ownerProfilePicture),
+                                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                                   if (loadingProgress == null) {
                                                     return child;
                                                   }
                                                   return Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      value: loadingProgress
-                                                                  .expectedTotalBytes !=
-                                                              null
-                                                          ? loadingProgress
-                                                                  .cumulativeBytesLoaded /
-                                                              loadingProgress
-                                                                  .expectedTotalBytes!
+                                                    child: CircularProgressIndicator(
+                                                      value: loadingProgress.expectedTotalBytes != null
+                                                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                                                           : null,
                                                     ),
                                                   );
@@ -208,9 +183,7 @@ class _StoryPageState extends State<StoryPage> {
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Text(stories[_getDestinationItemIndex(
-                                                  index)]
-                                              .ownerUsername)
+                                          Text(stories[_getDestinationItemIndex(index)].ownerUsername)
                                         ],
                                       )),
                                 ],
@@ -219,8 +192,7 @@ class _StoryPageState extends State<StoryPage> {
                           }
                         })
                     : Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.thereisnostories),
+                        child: Text(AppLocalizations.of(context)!.thereisnostories),
                       ))
           ],
         ));
@@ -230,8 +202,7 @@ class _StoryPageState extends State<StoryPage> {
     showModalBottomSheet(
         context: context1,
         builder: (BuildContext bc) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
             return Container(
               child: Column(
                 children: [
@@ -277,9 +248,7 @@ class _StoryPageState extends State<StoryPage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              filterAge[0].round().toString() +
-                                  " - " +
-                                  filterAge[1].round().toString(),
+                              filterAge[0].round().toString() + " - " + filterAge[1].round().toString(),
                             ),
                           ],
                         ),
@@ -292,10 +261,7 @@ class _StoryPageState extends State<StoryPage> {
                         min: 18,
                         onChanged: (values) {
                           setState(() {
-                            filterAge = [
-                              values.start.round(),
-                              values.end.round()
-                            ];
+                            filterAge = [values.start.round(), values.end.round()];
                             _currentRangeValues = values;
                           });
                         },
@@ -319,8 +285,7 @@ class _StoryPageState extends State<StoryPage> {
                             decoration: InputDecoration(
                               hintStyle: TextStyle(color: TextColor),
                               enabledBorder: InputBorder.none,
-                              contentPadding:
-                                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                             ),
                             dropdownColor: PrimaryColor,
                             icon: const Icon(Icons.arrow_drop_down),
@@ -501,12 +466,9 @@ class _StoryPageState extends State<StoryPage> {
                         //print(filterGender);
                         FirestoreHelper.getUserData().then((value) {
                           if (value.userType.contains("shuffle")) {
-                            updateFilterUserData()
-                                .then((value) => Navigator.pop(context));
+                            updateFilterUserData().then((value) => Navigator.pop(context));
                           } else {
-                            Fluttertoast.showToast(
-                                msg:
-                                    "Please update your account to use filter");
+                            Fluttertoast.showToast(msg: "Please update your account to use filter");
                           }
                         });
                       },
@@ -531,14 +493,10 @@ class _StoryPageState extends State<StoryPage> {
     //print(userList.length);
 
     List<Story> data = list
-        .where((element) =>
-            element.ownerAge >= filterAge[0] &&
-            element.ownerAge <= filterAge[1] &&
-            element.ownerCity == filterCity)
+        .where((element) => element.ownerAge >= filterAge[0] && element.ownerAge <= filterAge[1] && element.ownerCity == filterCity)
         .toList();
     if (filterGender != "All") {
-      data =
-          data.where((element) => element.ownerGender == filterGender).toList();
+      data = data.where((element) => element.ownerGender == filterGender).toList();
     }
     setState(() {
       stories = data;

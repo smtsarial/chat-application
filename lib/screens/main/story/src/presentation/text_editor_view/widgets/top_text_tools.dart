@@ -2,7 +2,6 @@ import 'package:anonmy/screens/main/story/src/presentation/widgets/tool_button.d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/text_editing_notifier.dart';
-import 'package:anonmy/screens/main/story/src/presentation/widgets/tool_button.dart';
 
 class TopTextTools extends StatelessWidget {
   final void Function() onDone;

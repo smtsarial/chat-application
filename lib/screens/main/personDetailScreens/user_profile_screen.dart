@@ -4,7 +4,6 @@ import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/movieWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
-import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/firestore.dart';

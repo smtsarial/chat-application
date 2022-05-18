@@ -303,6 +303,7 @@ class _EditPageState extends State<EditPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // ignore: deprecated_member_use
                   RaisedButton(
                     onPressed: () {
                       FocusManager.instance.primaryFocus?.unfocus();

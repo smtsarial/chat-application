@@ -4,9 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:youtube_api/youtube_api.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:youtube_metadata/youtube_metadata.dart';
 import 'package:flutter/src/widgets/image.dart' as imagess;
 import 'package:tmdb_api/tmdb_api.dart';
 

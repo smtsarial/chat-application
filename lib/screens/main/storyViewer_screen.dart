@@ -2,7 +2,6 @@ import 'package:anonmy/models/story.dart';
 import 'package:anonmy/screens/main/story/story_view.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/controller/story_controller.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class StoryViewer extends StatefulWidget {
   const StoryViewer({Key? key, required this.imageList}) : super(key: key);

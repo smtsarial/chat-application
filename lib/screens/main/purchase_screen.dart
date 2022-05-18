@@ -1,6 +1,8 @@
+// ignore_for_file: unused_import
+
 import 'dart:async';
 import 'dart:io';
-
+import "package:flutter/src/widgets/binding.dart";
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/consumable_store.dart';
 import 'package:anonmy/theme.dart';
@@ -11,7 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
@@ -59,8 +60,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   ),
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage: CachedNetworkImageProvider(
-                        context.watch<UserProvider>().user.profilePictureUrl),
+                    backgroundImage: CachedNetworkImageProvider(context.watch<UserProvider>().user.profilePictureUrl),
                   ),
                 ),
               )
@@ -105,19 +105,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         width: 200,
                         height: 90,
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Color.fromARGB(255, 53, 167, 0),
-                                width: 3),
-                            borderRadius: BorderRadius.circular(10)),
+                            border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 3), borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                child: Icon(FontAwesomeIcons.crown,
-                                    color: Colors.yellow),
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                child: Icon(FontAwesomeIcons.crown, color: Colors.yellow),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -125,8 +120,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                   Text(AppLocalizations.of(context)!.vip),
                                   Text(
                                     AppLocalizations.of(context)!.sixty,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text("₺89,99")
                                 ],
@@ -150,9 +144,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 3),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 3), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -175,9 +167,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 5),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 5), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -200,9 +190,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 3),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 3), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -263,9 +251,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 3),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 3), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -288,9 +274,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 5),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 5), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -313,9 +297,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     margin: const EdgeInsets.all(10.0),
                     padding: const EdgeInsets.fromLTRB(10, 40, 10, 40),
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 53, 167, 0), width: 3),
-                        borderRadius: BorderRadius.circular(10)),
+                        border: Border.all(color: Color.fromARGB(255, 53, 167, 0), width: 3), borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

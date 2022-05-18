@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:anonmy/connections/adhelper.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +11,6 @@ import 'package:anonmy/widgets/filter_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'personDetailScreens/user_profile_screen.dart';

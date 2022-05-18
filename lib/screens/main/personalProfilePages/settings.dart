@@ -1,10 +1,7 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
-import 'package:anonmy/providers/MessageRoomProvider.dart';
-import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/auth/login.dart';
-import 'package:anonmy/screens/main/personalProfilePages/YoutubeVideoList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/blockedList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myHobbies.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myMovieList.dart';
@@ -18,7 +15,6 @@ import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

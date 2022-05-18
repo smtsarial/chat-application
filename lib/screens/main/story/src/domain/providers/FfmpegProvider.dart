@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:anonmy/connections/firestore.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,7 +23,7 @@ class FfmpegProvider with ChangeNotifier {
       String gifCommand =
           '-r 25 -i ${FfmpegPaths.imagesPath} -vf "scale=iw/2:ih/2" -y ${FfmpegPaths.gifOutputPath}';
 
-      var response = await FFmpegKit.execute(
+      var response = await FFmpegKit.executeAsync(
               renderType == RenderType.gif ? gifCommand : mp4Command)
           .then((rc) async {
         loading = false;

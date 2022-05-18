@@ -130,7 +130,7 @@ class _BottomToolsState extends State<BottomTools> {
                     builder: (_, setState) {
                       return AnimatedOnTapButton(
                           onTap: () async {
-                            String pngUri;
+                            
                             if (paintingNotifier.lines.isNotEmpty ||
                                 itemNotifier.draggableWidget.isNotEmpty) {
                               setState(() {

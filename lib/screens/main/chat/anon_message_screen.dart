@@ -6,7 +6,6 @@ import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/widgets/avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;

@@ -1,10 +1,10 @@
+// ignore_for_file: unused_local_variable, body_might_complete_normally_nullable
+
 import 'dart:io';
-import 'dart:math';
 import 'package:anonmy/main.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/personalProfilePages/privacypolicy.dart';
 import 'package:anonmy/screens/main/personalProfilePages/termofuse.dart';
-import 'package:anonmy/screens/main/personalProfilePages/turkishprivacypolicy.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/auth.dart';
@@ -299,6 +299,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final registerButton = Padding(
       padding: EdgeInsets.fromLTRB(16, 5, 16, 0),
+      // ignore: deprecated_member_use
       child: RaisedButton(
         padding: EdgeInsets.symmetric(horizontal: 140),
         onPressed: () {

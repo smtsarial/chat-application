@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/widgets/seach_Bar/easy_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,7 +9,6 @@ import 'package:spotify/spotify.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:spotify_metadata/spotify_metadata.dart' as apii;
 import 'package:flutter/src/widgets/image.dart' as imagess;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class mySpotifyList extends StatefulWidget {
   const mySpotifyList({Key? key}) : super(key: key);

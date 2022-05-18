@@ -1,4 +1,3 @@
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';

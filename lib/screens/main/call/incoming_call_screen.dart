@@ -2,7 +2,6 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';

@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/editable_items.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/painting_model.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/control_provider.dart';

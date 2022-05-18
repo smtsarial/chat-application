@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:anonmy/managers/call_manager.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
@@ -5,14 +7,11 @@ import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chatDetail_screen.dart';
 import 'package:anonmy/screens/main/chat/messages/components/body.dart';
 import 'package:anonmy/screens/main/chat/messages/receiverStatus.dart';
-import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_gif_picker/modal_gif_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

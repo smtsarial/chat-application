@@ -1,5 +1,4 @@
 import 'package:anonmy/models/ChatMessage.dart';
-import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
 
 class GifMessage extends StatelessWidget {

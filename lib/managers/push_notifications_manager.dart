@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/theme.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';

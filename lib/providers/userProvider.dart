@@ -1,7 +1,5 @@
 import 'package:anonmy/theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:anonmy/connections/firestore.dart';
-import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:flutter/material.dart';
 
