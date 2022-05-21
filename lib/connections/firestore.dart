@@ -17,19 +17,21 @@ class FirestoreHelper {
   static Future<User> getUserData() async {
     //this method for taking user data
     List<User> details = [];
+
     await Authentication().getUser().then((value) async {
-      var data = await db
-          .collection('users')
-          .where("email", isEqualTo: value.toString())
-          .get();
-      if (data != null) {
-        details = data.docs.map((document) => User.fromMap(document)).toList();
+      if (value != null) {
+        if (value.isNotEmpty) {
+          var data = await db.collection('users').where("email", isEqualTo: value.toString()).get();
+          if (data != null) {
+            details = data.docs.map((document) => User.fromMap(document)).toList();
+          }
+          int i = 0;
+          details.forEach((detail) {
+            detail.id = data.docs[i].id;
+            i++;
+          });
+        }
       }
-      int i = 0;
-      details.forEach((detail) {
-        detail.id = data.docs[i].id;
-        i++;
-      });
     });
 
     return details.length != 0 ? details[0] : emptyUser;
@@ -38,10 +40,7 @@ class FirestoreHelper {
   static Future<User> getSpecificUserInfo(String mail) async {
     //this method for taking user data
     List<User> details = [];
-    var data = await db
-        .collection('users')
-        .where("email", isEqualTo: mail.toString())
-        .get();
+    var data = await db.collection('users').where("email", isEqualTo: mail.toString()).get();
     if (data != null) {
       details = data.docs.map((document) => User.fromMap(document)).toList();
     }
@@ -57,8 +56,7 @@ class FirestoreHelper {
   static Future<User> getSpecificUserInfoByCubeId(int cubeId) async {
     //this method for taking user data
     List<User> details = [];
-    var data =
-        await db.collection('users').where("cubeid", isEqualTo: cubeId).get();
+    var data = await db.collection('users').where("cubeid", isEqualTo: cubeId).get();
     if (data != null) {
       details = data.docs.map((document) => User.fromMap(document)).toList();
     }
@@ -75,10 +73,7 @@ class FirestoreHelper {
     //change to user status
     try {
       FirestoreHelper.getUserData().then((value) async {
-        await db
-            .collection('users')
-            .doc(value.id)
-            .update({'isActive': false, 'lastActiveTime': DateTime.now()});
+        await db.collection('users').doc(value.id).update({'isActive': false, 'lastActiveTime': DateTime.now()});
       });
       return true;
     } catch (e) {
@@ -134,10 +129,7 @@ class FirestoreHelper {
   static Future<int> checkUsername(username) async {
     //this function checks usernames from users collection
     try {
-      var data = await db
-          .collection('users')
-          .where("username", isEqualTo: username)
-          .get();
+      var data = await db.collection('users').where("username", isEqualTo: username).get();
       print(data.size);
       return data.size;
     } catch (e) {
@@ -150,9 +142,8 @@ class FirestoreHelper {
     //upload profile picture
     try {
       String? pictureUrl;
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('chatPhotos/${Path.basename(path.toString())}');
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.ref().child('chatPhotos/${Path.basename(path.toString())}');
 
       await ref.putFile(path).whenComplete(() async {
         await ref.getDownloadURL().then((value) {
@@ -172,9 +163,8 @@ class FirestoreHelper {
     //upload profile picture
     try {
       String? pictureUrl;
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('profileImages/${Path.basename(path.toString())}');
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.ref().child('profileImages/${Path.basename(path.toString())}');
 
       await ref.putFile(path).whenComplete(() async {
         await ref.getDownloadURL().then((value) {
@@ -193,18 +183,8 @@ class FirestoreHelper {
   static Future<bool> saveNewStories(String storyUrl) async {
     try {
       await FirestoreHelper.getUserData().then((value) async {
-        Story story = Story(
-            "",
-            value.email,
-            value.username,
-            value.profilePictureUrl,
-            DateTime.now(),
-            storyUrl,
-            [],
-            value.age,
-            value.city,
-            value.country,
-            value.gender);
+        Story story = Story("", value.email, value.username, value.profilePictureUrl, DateTime.now(), storyUrl, [], value.age, value.city,
+            value.country, value.gender);
         await db.collection('stories').add(story.toMap()).then((value1) {
           print(value1.id);
           db.collection('users').doc(value.id).update({
@@ -223,9 +203,7 @@ class FirestoreHelper {
     //upload story picture
     try {
       String? pictureUrl;
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('stories/${Path.basename(path.toString())}');
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('stories/${Path.basename(path.toString())}');
 
       await ref.putFile(path).whenComplete(() async {
         await ref.getDownloadURL().then((value) {
@@ -272,8 +250,7 @@ class FirestoreHelper {
     return stories;
   }
 
-  static Future<bool> sendMessageNormally(receiverMail, receiverUsername,
-      receiverCubeId, receiverProfilePictureUrl, anon) async {
+  static Future<bool> sendMessageNormally(receiverMail, receiverUsername, receiverCubeId, receiverProfilePictureUrl, anon) async {
     try {
       await FirestoreHelper.getUserData().then((value) async {
         await db.collection('messages').add({
@@ -299,8 +276,7 @@ class FirestoreHelper {
   }
 
   static Future<MessageRoom> getSpecificChatRoomInfo(id) async {
-    MessageRoom message = MessageRoom(
-        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
+    MessageRoom message = MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
     try {
       await db.collection('messages').doc(id).get().then((data) {
         message = MessageRoom(
@@ -325,8 +301,7 @@ class FirestoreHelper {
     }
   }
 
-  static Future<String> addNewMessageRoom(
-      bool anonOrNot, User sender, User receiver) async {
+  static Future<String> addNewMessageRoom(bool anonOrNot, User sender, User receiver) async {
     //send message to specific user
     String id = "";
     try {
@@ -355,20 +330,13 @@ class FirestoreHelper {
     }
   }
 
-  static Future<MessageRoom> checkAvaliableMessageRoom(
-      String receiverMail, String senderMail, bool anon) async {
+  static Future<MessageRoom> checkAvaliableMessageRoom(String receiverMail, String senderMail, bool anon) async {
     //THIS FUNCTION CHECKS IF THERE IS A CURRENT MESSAGEROOM
-    MessageRoom message = MessageRoom(
-        "", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
-    await db
-        .collection('messages')
-        .where("MessageRoomPeople", arrayContains: senderMail)
-        .get()
-        .then((value) {
+    MessageRoom message = MessageRoom("", [], "", "", "", "", "", "", DateTime.now(), "", true, false, 0, 0);
+    await db.collection('messages').where("MessageRoomPeople", arrayContains: senderMail).get().then((value) {
       value.docs.forEach((element) {
         if (element.get('anonim') == anon) {
-          if (element.get('senderMail') == receiverMail ||
-              element.get('receiverMail') == receiverMail) {
+          if (element.get('senderMail') == receiverMail || element.get('receiverMail') == receiverMail) {
             //print("LLLLL" + element.id);
             message = MessageRoom(
                 element.id,
@@ -395,10 +363,7 @@ class FirestoreHelper {
   static Stream<QuerySnapshot> ALLMESSAGES(userMail) {
     // Normal message stream
     List<String> myMessageIdList = [];
-    var data = FirebaseFirestore.instance
-        .collection('messages')
-        .where("MessageRoomPeople", arrayContains: userMail)
-        .snapshots();
+    var data = FirebaseFirestore.instance.collection('messages').where("MessageRoomPeople", arrayContains: userMail).snapshots();
     return data;
   }
 
@@ -424,26 +389,8 @@ class FirestoreHelper {
     return data;
   }
 
-  static Future<bool> addNewUser(
-      id,
-      email,
-      age,
-      chatCount,
-      profilePictureUrl,
-      followers,
-      followed,
-      gender,
-      isActive,
-      lastActiveTime,
-      firstName,
-      lastName,
-      likes,
-      userBio,
-      userTags,
-      userType,
-      username,
-      videoServicePassword,
-      cubeid) async {
+  static Future<bool> addNewUser(id, email, age, chatCount, profilePictureUrl, followers, followed, gender, isActive, lastActiveTime,
+      firstName, lastName, likes, userBio, userTags, userType, username, videoServicePassword, cubeid) async {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(
@@ -589,16 +536,21 @@ class FirestoreHelper {
 
   static Future<bool> changeUserActiveStatusAndTime(bool isActive) async {
     try {
-      await FirestoreHelper.getUserData().then((value) {
-        if (isActive == true) {
-          db.collection('users').doc(value.id).update({"isActive": isActive});
-        } else {
-          db
-              .collection('users')
-              .doc(value.id)
-              .update({"isActive": isActive, "lastActiveTime": DateTime.now()});
-        }
-      });
+      await FirestoreHelper.getUserData().then(
+        (value) {
+          if (value.id.isNotEmpty) {
+            if (isActive == true) {
+              if (value != null) {
+                if (value.id.isNotEmpty) {
+                  db.collection('users').doc(value.id).update({"isActive": isActive});
+                }
+              }
+            } else {
+              db.collection('users').doc(value.id).update({"isActive": isActive, "lastActiveTime": DateTime.now()});
+            }
+          }
+        },
+      );
       return true;
     } catch (e) {
       print(e);

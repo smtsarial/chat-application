@@ -420,14 +420,19 @@ class _MainViewState extends State<MainView> {
                               ? const NeverScrollableScrollPhysics()
                               : const ScrollPhysics(),
                           pathList: (path) {
-                            controlNotifier.mediaPath = path[0]['path'];
-                            if (controlNotifier.mediaPath.isNotEmpty) {
+                           try{
+ if (controlNotifier.mediaPath.isNotEmpty) {
+                               controlNotifier.mediaPath = path[0]['path'];
+
                               itemProvider.draggableWidget.insert(
                                   0,
                                   EditableItem()
                                     ..type = ItemType.image
                                     ..position = const Offset(0.0, 0));
                             }
+                           }catch(e) {
+
+                           }
                             scrollProvider.pageController.animateToPage(0,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeIn);
