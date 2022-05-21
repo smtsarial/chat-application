@@ -6,9 +6,17 @@ import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_gif_picker/modal_gif_picker.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record_mp3/record_mp3.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatInputField extends StatefulWidget {
   const ChatInputField({Key? key, required this.messageRoom}) : super(key: key);
@@ -25,10 +33,25 @@ class _ChatInputFieldState extends State<ChatInputField> {
   bool sentorNot = false;
   bool _gifloaded = false;
   late String _giflink;
+  bool isPlayingMsg = false,
+      isRecording = false,
+      isSending = false,
+      isAudioMessage = false;
+
+  Future<bool> checkPermission() async {
+    if (!await Permission.microphone.isGranted) {
+      PermissionStatus status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   @override
   void initState() {
     super.initState();
+    checkPermission();
     picker = new ImagePicker();
   }
 
@@ -37,7 +60,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
     TextEditingController messageController = new TextEditingController();
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: kDefaultPadding,
+        horizontal: 2,
         vertical: kDefaultPadding / 2,
       ),
       decoration: BoxDecoration(
@@ -56,11 +79,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: kDefaultPadding * 0.75,
+                  horizontal: 2,
                 ),
                 decoration: BoxDecoration(
                   color: kPrimaryColor.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
                   children: [
@@ -107,7 +130,6 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           childAspectRatio: 1.2,
                           topDragColor: Colors.white.withOpacity(0.2),
                         );
-                        print(gif);
                         if (gif != null) {
                           setState(() {
                             _gifloaded = true;
@@ -161,46 +183,115 @@ class _ChatInputFieldState extends State<ChatInputField> {
                             .withOpacity(0.64),
                       ),
                     ),
-                    SizedBox(width: kDefaultPadding / 3),
-                    sentorNot == false
-                        ? IconButton(
-                            onPressed: () {
-                              setState(() {
-                                sentorNot = true;
-                              });
-                              sendMessage(messageController.text).then((value) {
-                                messageController.text = "";
-                                if (value != true) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                        "Connection lost please refresh this page! and try again!"),
-                                  ));
-                                } else {
-                                  setState(() {
-                                    sentorNot = false;
-                                    _image = File("path");
-                                    _imageload = false;
-                                  });
-                                }
-                              });
-                            },
-                            icon: Icon(Icons.send),
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .color!
-                                .withOpacity(0.64),
-                          )
-                        : Container(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              color: Colors.blueGrey,
-                              strokeWidth: 3,
+                    Container(
+                        height: 40,
+                        margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: isRecording
+                                      ? Colors.white
+                                      : Colors.black12,
+                                  spreadRadius: 4)
+                            ],
+                            color: PrimaryColor.withOpacity(1),
+                            shape: BoxShape.circle),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            startRecord();
+                            setState(() {
+                              isRecording = true;
+                              isAudioMessage = true;
+                            });
+                          },
+                          onLongPressEnd: (details) {
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      title: Text(AppLocalizations.of(context)!
+                                          .caution),
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .doyouwanttosendvoicemessage),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .cancel),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await stopRecord().whenComplete(
+                                              () => Navigator.pop(context),
+                                            );
+                                            setState(() {
+                                              isRecording = false;
+                                            });
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)!.ok),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.mic,
+                                color: Colors.white,
+                                size: 20,
+                              )),
+                        )),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: PrimaryColor,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: sentorNot == false
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  sentorNot = true;
+                                });
+                                sendMessage(messageController.text)
+                                    .then((value) {
+                                  messageController.text = "";
+                                  if (value != true) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                          "Connection lost please refresh this page! and try again!"),
+                                    ));
+                                  } else {
+                                    setState(() {
+                                      sentorNot = false;
+                                      _image = File("path");
+                                      _imageload = false;
+                                    });
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .color!
+                                  .withOpacity(0.64),
+                            )
+                          : Container(
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.white,
+                                color: Colors.blueGrey,
+                                strokeWidth: 3,
+                              ),
+                              height: 20,
+                              width: 20,
                             ),
-                            height: 20,
-                            width: 20,
-                          )
+                    )
                   ],
                 ),
               ),
@@ -209,6 +300,83 @@ class _ChatInputFieldState extends State<ChatInputField> {
         ),
       ),
     );
+  }
+
+  //Audio record part
+  String recordFilePath = "";
+
+  Future stopRecord() async {
+    bool s = RecordMp3.instance.stop();
+    if (s) {
+      setState(() {
+        isSending = true;
+      });
+      await uploadAudio();
+
+      setState(() {
+        isPlayingMsg = false;
+      });
+    }
+  }
+
+  void startRecord() async {
+    // bool hasPermission = await checkPermission();
+    //if (hasPermission) {
+    recordFilePath = await getFilePath();
+
+    RecordMp3.instance.start(recordFilePath, (type) {
+      setState(() {});
+    });
+    //} else {}
+    //setState(() {});
+  }
+
+  Future<String> getFilePath() async {
+    int i = 0;
+    Directory storageDirectory = await getApplicationDocumentsDirectory();
+    String sdPath = storageDirectory.path + "/Audio_Records";
+    var d = Directory(sdPath);
+    if (!d.existsSync()) {
+      d.createSync(recursive: true);
+    }
+    return sdPath + "/anonmyChat_${i++}.mp3";
+  }
+
+  uploadAudio() {
+    firebase_storage.Reference ref = FirebaseStorage.instance.ref().child(
+        'Audio_Records/audio${DateTime.now().millisecondsSinceEpoch.toString()}');
+
+    ref.putFile(File(recordFilePath)).then((value) async {
+      print('##############done#########');
+      var audioURL = await value.ref.getDownloadURL();
+      String strVal = audioURL.toString();
+      await sendAudioMsg(strVal);
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  sendAudioMsg(String audioMsg) async {
+    if (audioMsg.isNotEmpty) {
+      print(audioMsg);
+      await FirestoreHelper.getUserData().then((value) async {
+        await FirestoreHelper.db
+            .collection('messages')
+            .doc(widget.messageRoom.id)
+            .collection('chatMessages')
+            .add({
+          "messageOwnerMail": value.email,
+          "messageOwnerUsername": value.username,
+          "timeToSent": DateTime.now(),
+          "messageType": 1,
+          "status": 0,
+          "message": audioMsg,
+          "isAccepted": false,
+        });
+      });
+    } else {
+      print("Hello");
+    }
   }
 
   Future SelectImageFromGallery() async {

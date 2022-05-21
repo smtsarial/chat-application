@@ -14,11 +14,9 @@ class TextMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-        child: Column(
-      children: [
-        Container(
+      child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             color: MediaQuery.of(context).platformBrightness == Brightness.dark
                 ? Colors.white
                 : PrimaryColor,
@@ -27,13 +25,19 @@ class TextMessage extends StatelessWidget {
             horizontal: kDefaultPadding * 0.75,
             vertical: kDefaultPadding / 2,
           ),
-          child: Text(message!.message,
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 20),
-        ),
-        Text(timeago.format(message!.timeToSent)),
-      ],
-    ));
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(message!.message,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 10),
+                Text(
+                  timeago.format(message!.timeToSent),
+                  style: TextStyle(fontSize: 10),
+                  textAlign: TextAlign.right,
+                ),
+              ])),
+    );
   }
 }

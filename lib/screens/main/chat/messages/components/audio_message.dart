@@ -1,11 +1,33 @@
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/theme.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class AudioMessage extends StatelessWidget {
+class AudioMessage extends StatefulWidget {
   final ChatMessage? message;
 
   const AudioMessage({Key? key, this.message}) : super(key: key);
+
+  @override
+  State<AudioMessage> createState() => _AudioMessageState();
+}
+
+class _AudioMessageState extends State<AudioMessage> {
+  bool isPlaying = false;
+  String duration = "";
+  String maxDuration = "";
+  AudioPlayer audioPlayer = AudioPlayer();
+  @override
+  void initState() {
+    print("object");
+    audioPlayer.setUrl(widget.message!.message);
+    audioPlayer.onDurationChanged.listen((Duration d) {
+      print('Max duration: $d');
+      setState(() => duration = d.toString().split('.').first.padLeft(8, "0"));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,14 +38,31 @@ class AudioMessage extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        //color: kPrimaryColor.withOpacity(message!.isSender ? 1 : 0.1),
+        color: kPrimaryColor,
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.play_arrow,
-            //color: message!.isSender ? Colors.white : kPrimaryColor,
-          ),
+          isPlaying
+              ? GestureDetector(
+                  child: Icon(Icons.pause),
+                  onTap: () async {
+                    setState(() {
+                      isPlaying = false;
+                    });
+                    await stop(widget.message);
+                  },
+                  //color: message!.isSender ? Colors.white : kPrimaryColor,
+                )
+              : GestureDetector(
+                  child: Icon(Icons.play_arrow),
+                  onTap: () async {
+                    setState(() {
+                      isPlaying = true;
+                    });
+                    await play(widget.message);
+                  },
+                  //color: message!.isSender ? Colors.white : kPrimaryColor,
+                ),
           Expanded(
             child: Padding(
               padding:
@@ -33,12 +72,7 @@ class AudioMessage extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    width: double.infinity,
-                    height: 2,
-                    //color: message!.isSender
-                    //    ? Colors.white
-                    //    : kPrimaryColor.withOpacity(0.4),
-                  ),
+                      width: double.infinity, height: 2, color: Colors.white),
                   Positioned(
                     left: 0,
                     child: Container(
@@ -54,12 +88,29 @@ class AudioMessage extends StatelessWidget {
               ),
             ),
           ),
-          Text("0.37",
+          Text(duration,
               style: TextStyle(
                   //fontSize: 12, color: message!.isSender ? Colors.white : null),
                   )),
         ],
       ),
     );
+  }
+
+  Future<void> play(ChatMessage? message) async {
+    await audioPlayer.play(
+      message!.message,
+      isLocal: false,
+    );
+    audioPlayer.onAudioPositionChanged.listen((Duration d) {
+      setState(() {
+        duration = d.toString().split('.').first.padLeft(8, "0");
+      });
+    });
+    
+  }
+
+  Future<void> stop(ChatMessage? message) async {
+    await audioPlayer.pause();
   }
 }

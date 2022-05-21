@@ -111,5 +111,6 @@
     "hobbielist":"Hobbie List",
     "movielist":"Movie List",
     "thereisnomovie":"There is no movie",
-    "thereisnomusic":"There is no Spotify music."
+    "thereisnomusic":"There is no Spotify music.",
+    "doyouwanttosendvoicemessage":"Do you want to send voice message?"
 }
