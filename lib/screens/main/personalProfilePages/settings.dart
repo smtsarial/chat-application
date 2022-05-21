@@ -9,6 +9,7 @@ import 'package:anonmy/screens/main/personalProfilePages/blockedList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myHobbies.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myMovieList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/mySpotifyList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/myVoices.dart';
 import 'package:anonmy/screens/main/personalProfilePages/privacypolicy.dart';
 import 'package:anonmy/screens/main/personalProfilePages/termofuse.dart';
 import 'package:anonmy/screens/main/personalProfilePages/turkishprivacypolicy.dart';
@@ -103,6 +104,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             //    );
             //  },
             //),
+            SettingsTile(
+              title: Text(AppLocalizations.of(context)!.myvoices),
+              leading: Icon(Icons.record_voice_over_rounded),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyVoices()),
+                );
+              },
+            ),
             SettingsTile(
               title: Text(AppLocalizations.of(context)!.mymovies),
               leading: Icon(Icons.movie_creation),

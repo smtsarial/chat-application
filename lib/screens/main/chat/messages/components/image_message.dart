@@ -20,11 +20,11 @@ class ImageMessage extends StatelessWidget {
     return Flexible(
         child: Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: MediaQuery.of(context).platformBrightness == Brightness.dark
-            ? Colors.white
-            : PrimaryColor,
-      ),
+          borderRadius: BorderRadius.circular(10),
+          //color: MediaQuery.of(context).platformBrightness == Brightness.dark
+          //    ? Colors.white
+          //    : PrimaryColor,
+          color: PrimaryColor),
       padding: EdgeInsets.symmetric(
         horizontal: kDefaultPadding / 2,
         vertical: kDefaultPadding / 2,

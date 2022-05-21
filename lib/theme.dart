@@ -19,7 +19,7 @@ final String SIGNAL_TYPE_END_CALL = "endCall";
 final String SIGNAL_TYPE_REJECT_CALL = "rejectCall";
 
 User emptyUser = User("", "", 0, 0, "", [], [], "", true, DateTime.now(), "",
-    "", [], "", [], "", "", "", "", [], [], [], [], [], true, [], "", 0);
+    "", [], "", [], "", "", "", "", [], [], [], [], [], true, [], "", 0, []);
 const String MOVIE_API = "394fa7228e1dfa390c0d581873d61b1b";
 const String YOUTUBE_API_KEY = "AIzaSyDnfTj8E3A0vTUral0taQhiYP4nvfQacpA";
 

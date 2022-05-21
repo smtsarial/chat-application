@@ -5,6 +5,7 @@ import 'package:anonmy/models/story.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/movieWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/myVoiceWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/personalProfilePages/followedList.dart';
@@ -140,6 +141,9 @@ class ProfileScreen extends StatelessWidget {
                 //  userData: user,
                 //),
                 MovieWidget(
+                  userData: user,
+                ),
+                myVoiceWidget(
                   userData: user,
                 ),
                 HobbiesWidget(

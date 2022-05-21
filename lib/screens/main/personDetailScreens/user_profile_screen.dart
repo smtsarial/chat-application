@@ -3,6 +3,7 @@ import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
 import 'package:anonmy/screens/main/personDetailScreens/hobbiesWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/movieWidget.dart';
+import 'package:anonmy/screens/main/personDetailScreens/myVoiceWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
@@ -320,6 +321,9 @@ class _ProfileState extends State<Profile> {
           //  userData: widget.userData,
           //),
           MovieWidget(userData: widget.userData),
+          myVoiceWidget(
+            userData: widget.userData,
+          ),
           HobbiesWidget(
             userData: widget.userData,
           ),

@@ -1,4 +1,6 @@
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/message_data.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/components/gif_message.dart';
 import 'package:anonmy/screens/main/chat/messages/components/image_message.dart';
@@ -25,6 +27,17 @@ class Message extends StatefulWidget {
 }
 
 class _MessageState extends State<Message> {
+  User myUserData = emptyUser;
+  @override
+  void initState() {
+    FirestoreHelper.getUserData().then((value) {
+      setState(() {
+        myUserData = value;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget messageContaint(ChatMessage message) {
@@ -32,7 +45,10 @@ class _MessageState extends State<Message> {
         case ChatMessageType.text:
           return TextMessage(message: message);
         case ChatMessageType.audio:
-          return AudioMessage(message: message);
+          return AudioMessage(
+            message: message,
+            userData: myUserData,
+          );
         case ChatMessageType.image:
           return ImageMessage(
             message: message,
