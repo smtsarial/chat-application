@@ -216,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
 
-    String gendervalue = AppLocalizations.of(context)!.gender;
+    String gendervalue = "Gender";
     final gender = Padding(
         padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
         child: DropdownButtonFormField<String>(
@@ -435,7 +435,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         signUp(user).then((cubeUser) async {
           SharedPrefs.saveNewUser(cubeUser);
           print(cubeUser);
-          Fluttertoast.showToast(msg: "cube ser signed up ");
+          Fluttertoast.showToast(msg: "cube signed up ");
           await Authentication()
               .signUp(emailController.text, passwordController.text)
               .then((value) => {
@@ -552,7 +552,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _visibleCircular = false;
           });
         });
-        ;
+        
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter the same password!')),

@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       createSession(user).then((cubeSession) {
         _loginToCubeChat(context, user);
       }).catchError((exception) {
-        _processLoginError(exception);
+        _processLoginError(exception, context);
       });
     }
   }
@@ -80,12 +80,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         print(cubeUser);
         SharedPrefs.saveNewUser(user);
       }).catchError((exception) {
-        _processLoginError(exception);
+        _processLoginError(exception, context);
       });
     });
   }
 
-  void _processLoginError(exception) {
+  void _processLoginError(exception,BuildContext context) {
     log("Login error $exception");
 
     showDialog(

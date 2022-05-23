@@ -75,12 +75,13 @@ dependencies:
   giphy_picker: ^2.0.0
   google_mobile_ads: ^0.13.0
   search_choices: ^2.0.19
-  connectycube_sdk: ^2.0.14
+  connectycube_sdk: ^2.1.1
   connectycube_flutter_call_kit: ^2.0.2
   flutter_background: ^1.1.0
   firebase_messaging: ^11.3.0
   in_app_purchase: ^3.0.2
   shimmer: ^2.0.0
+  google_sign_in: ^5.3.1
   youtube_api: ^1.0.4
   easy_search_bar: ^2.3.1
   just_audio: ^0.9.21
@@ -106,6 +107,7 @@ flutter:
   
   assets:
     - assets/images/welcome_image.png
+    - assets/images/google_logo.png
     - assets/images/seffaf_renkli.png
     - assets/images/seffaf_renklix512.png
     - assets/images/renkli_mor.png

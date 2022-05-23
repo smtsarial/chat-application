@@ -2,11 +2,13 @@ import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/auth/google_sign.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/screens/auth/register.dart';
 import 'package:connectycube_sdk/connectycube_calls.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,11 +26,12 @@ class _LoginPageState extends State<LoginPage> {
   late Authentication auth;
   TextEditingController newTaskController = TextEditingController();
   final _formKey1 = GlobalKey<FormState>();
-
   bool _visibleCircular = false;
+
   @override
   void initState() {
     auth = Authentication();
+
     super.initState();
   }
 
@@ -146,7 +149,8 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 24.0),
             loginButton,
             registerButton,
-            forgotLabel
+            GoogleSignInButton(),
+            forgotLabel,
           ],
         ),
       ),
