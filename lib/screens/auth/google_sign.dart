@@ -1,17 +1,13 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
-import 'package:anonmy/main.dart';
-import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
-import 'package:anonmy/theme.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GoogleSignInButton extends StatefulWidget {
   @override
@@ -55,68 +51,59 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
 
           if (user != null) {
             final String uuid = Uuid().v4();
-            print("objecttttttttttttttttttt");
-            print(user);
             await FirestoreHelper.getSpecificUserInfo(user.email.toString())
                 .then((value) async {
-              print("object");
-              print(value.email);
+              //This part value is User coming from the firebase
               if (value.email == "") {
-                //initConnectycube();
-                await signUp(CubeUser(
-                  login: user.uid,
-                  email: user.email,
-                  fullName: user.displayName,
-                  password: uuid,
-                )).then((cubeUser) async {
-                  await SharedPrefs.saveNewUser(cubeUser);
-                  print(cubeUser);
-                  Fluttertoast.showToast(msg: "cube signed up ");
-                  await FirestoreHelper.addNewUser(
-                          "",
-                          user.email.toString(),
-                          "18",
-                          0,
-                          user.photoURL.toString(),
-                          [],
-                          [],
-                          "Male",
-                          true,
-                          DateTime.now(),
-                          user.displayName.toString(),
-                          "",
-                          [],
-                          "",
-                          [],
-                          "basic",
-                          user.uid.toString(),
-                          uuid.toString(),
-                          cubeUser.id)
-                      .then((value) async {
-                    if (value == true) {
+                //FirestoreHelper.addNewUser(id, email, age, chatCount, profilePictureUrl, followers, followed, gender, isActive, lastActiveTime, firstName, lastName, likes, userBio, userTags, userType, username, videoServicePassword, cubeid)
+                await FirestoreHelper.addNewUser(
+                        "",
+                        user.email.toString(),
+                        23,
+                        0,
+                        user.photoURL.toString(),
+                        [],
+                        [],
+                        "Male",
+                        true,
+                        DateTime.now(),
+                        user.displayName.toString(),
+                        "",
+                        [],
+                        "",
+                        [],
+                        "basic",
+                        user.uid,
+                        uuid,
+                        0)
+                    .then((value) async {
+                  if (value == true) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Başarılı Şekilde Kayıt Olundu')),
+                    );
+
+                    Fluttertoast.showToast(msg: "Please update your profile!");
+                    await saveData(user.uid);
+                    FocusManager.instance.primaryFocus!.unfocus();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SplashScreen()));
+                  } else {
+                    Authentication().deleteAccount().whenComplete(() {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Başarılı Şekilde Kayıt Olundu')),
+                            content: Text('Error occured please try again!')),
                       );
-
-                      Fluttertoast.showToast(
-                          msg: "Please update your profile!");
-                      await saveData(user.uid);
-                      FocusManager.instance.primaryFocus!.unfocus();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SplashScreen()));
-                    } else {
-                      Authentication().deleteAccount().whenComplete(() {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Error occured please try again!')),
-                        );
-                      });
-                    }
-                  });
+                    });
+                  }
                 });
+              } else {
+                await saveData(value.id);
+                FocusManager.instance.primaryFocus!.unfocus();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => SplashScreen()));
               }
             });
           }
@@ -147,9 +134,9 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                        'Sign in with Google',
+                        AppLocalizations.of(context)!.signwithgoogle,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           color: Colors.black54,
                           fontWeight: FontWeight.w600,
                         ),

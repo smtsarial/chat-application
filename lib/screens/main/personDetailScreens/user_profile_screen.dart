@@ -445,6 +445,11 @@ class _StoriesState extends State<_Stories> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => StoryViewer(
+                                                  ownerProfilepicture: widget
+                                                      .userData
+                                                      .profilePictureUrl,
+                                                  ownerUsername:
+                                                      widget.userData.username,
                                                   imageList: stories,
                                                 )));
                                   },

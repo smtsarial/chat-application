@@ -52,6 +52,25 @@ class FirestoreHelper {
     return details.length != 0 ? details[0] : emptyUser;
   }
 
+  static Future<User> getSpecificUserInfoWithUsername(String username) async {
+    //this method for taking user data
+    List<User> details = [];
+    var data = await db
+        .collection('users')
+        .where("username", isEqualTo: username.toString())
+        .get();
+    if (data != null) {
+      details = data.docs.map((document) => User.fromMap(document)).toList();
+    }
+    int i = 0;
+    details.forEach((detail) {
+      detail.id = data.docs[i].id;
+      i++;
+    });
+
+    return details.length != 0 ? details[0] : emptyUser;
+  }
+
   static Future<User> getSpecificUserInfoByCubeId(int cubeId) async {
     //this method for taking user data
     List<User> details = [];
@@ -423,25 +442,25 @@ class FirestoreHelper {
   }
 
   static Future<bool> addNewUser(
-      id,
-      email,
-      age,
-      chatCount,
-      profilePictureUrl,
-      followers,
-      followed,
-      gender,
-      isActive,
-      lastActiveTime,
-      firstName,
-      lastName,
-      likes,
-      userBio,
-      userTags,
-      userType,
-      username,
-      videoServicePassword,
-      cubeid) async {
+      String id,
+      String email,
+      int age,
+      int chatCount,
+      String profilePictureUrl,
+      List followers,
+      List followed,
+      String gender,
+      bool isActive,
+      DateTime lastActiveTime,
+      String firstName,
+      String lastName,
+      List likes,
+      String userBio,
+      List userTags,
+      String userType,
+      String username,
+      String videoServicePassword,
+      int cubeid) async {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(

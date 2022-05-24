@@ -144,6 +144,18 @@ class _StoryPageState extends State<StoryPage> {
                                                     _getDestinationItemIndex(
                                                         index)]
                                               ],
+                                              ownerProfilepicture: stories[
+                                                      _getDestinationItemIndex(
+                                                          index)]
+                                                  .ownerProfilePicture,
+                                              ownerUsername: stories[
+                                                      _getDestinationItemIndex(
+                                                          index)]
+                                                  .ownerUsername,
+                                              //storyDate: stories[
+                                              //        _getDestinationItemIndex(
+                                              //            index)]
+                                              //    .createdTime,
                                             )));
                               },
                               child: Stack(

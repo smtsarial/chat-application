@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:anonmy/screens/main/personDetailScreens/user_profile_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -198,40 +200,6 @@ class StoryItem {
                   controller: controller,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
-                ),
-                Positioned(
-                  top: 50,
-                  left: 20,
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: PureColor,
-                        radius: 12,
-                        child: CircleAvatar(
-                          radius: 11,
-                          backgroundImage: Image(
-                                  image: CachedNetworkImageProvider(
-                                      ownerProfilepicture))
-                              .image,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Row(
-                        children: [
-                          DefaultTextStyle(
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            child: Text(ownerUsername),
-                          ),
-                          DefaultTextStyle(
-                            style: TextStyle(),
-                            child: Text(" - " + timeago.format(storyDate)),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -433,6 +401,10 @@ class StoryView extends StatefulWidget {
   // Controls the playback of the stories
   final StoryController controller;
 
+  final String ownerUsername;
+  //final DateTime storyDate;
+  final String ownerProfilepicture;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -442,6 +414,9 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
+    required this.ownerUsername,
+    //required this.storyDate,
+    required this.ownerProfilepicture,
   });
 
   @override
@@ -455,6 +430,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   Animation<double>? _currentAnimation;
   Timer? _nextDebouncer;
 
+  User sender = emptyUser;
+  User receiver = emptyUser;
   StreamSubscription<PlaybackState>? _playbackSubscription;
 
   VerticalDragInfo? verticalDragInfo;
@@ -472,9 +449,19 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    FirestoreHelper.getUserData().then((me) async {
+      await FirestoreHelper.getSpecificUserInfoWithUsername(
+              widget.ownerUsername)
+          .then((value) async {
+        setState(() {
+          sender = me;
+          receiver = value;
+        });
+      });
+    });
     // All pages after the first unshown page should have their shown value as
     // false
+
     final firstPage = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     if (firstPage == null) {
       widget.storyItems.forEach((it2) {
@@ -641,99 +628,147 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Stack(
-        children: <Widget>[
-          _currentView,
-          Align(
-            alignment: widget.progressPosition == ProgressPosition.top
-                ? Alignment.topCenter
-                : Alignment.bottomCenter,
-            child: SafeArea(
-              bottom: widget.inline ? false : true,
-              // we use SafeArea here for notched and bezeles phones
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: PageBar(
-                  widget.storyItems
-                      .map((it) => PageData(it!.duration, it.shown))
-                      .toList(),
-                  this._currentAnimation,
-                  key: UniqueKey(),
-                  indicatorHeight: widget.inline
-                      ? IndicatorHeight.small
-                      : IndicatorHeight.large,
-                ),
+    return GestureDetector(
+      onTap: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Profile(senderData: sender, userData: receiver)));
+      },
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: <Widget>[
+            _currentView,
+            Align(
+                alignment: Alignment.centerRight,
+                heightFactor: 1,
+                child: GestureDetector(
+                  onTapDown: (details) {
+                    widget.controller.pause();
+                  },
+                  onTapCancel: () {
+                    widget.controller.play();
+                  },
+                  onTapUp: (details) {
+                    // if debounce timed out (not active) then continue anim
+                    if (_nextDebouncer?.isActive == false) {
+                      widget.controller.play();
+                    } else {
+                      widget.controller.next();
+                    }
+                  },
+                  onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          widget.controller.pause();
+                        },
+                  onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : () {
+                          widget.controller.play();
+                        },
+                  onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          if (verticalDragInfo == null) {
+                            verticalDragInfo = VerticalDragInfo();
+                          }
+
+                          verticalDragInfo!.update(details.primaryDelta!);
+
+                          // TODO: provide callback interface for animation purposes
+                        },
+                  onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          widget.controller.play();
+                          // finish up drag cycle
+                          if (!verticalDragInfo!.cancel &&
+                              widget.onVerticalSwipeComplete != null) {
+                            widget.onVerticalSwipeComplete!(
+                                verticalDragInfo!.direction);
+                          }
+
+                          verticalDragInfo = null;
+                        },
+                )),
+            Align(
+              alignment: Alignment.centerLeft,
+              heightFactor: 1,
+              child: SizedBox(
+                  child: GestureDetector(onTap: () {
+                    widget.controller.previous();
+                  }),
+                  width: 70),
+            ),
+            Align(
+              alignment: widget.progressPosition == ProgressPosition.top
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
+              child: SafeArea(
+                bottom: widget.inline ? false : true,
+                // we use SafeArea here for notched and bezeles phones
+                child: Column(children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: PageBar(
+                      widget.storyItems
+                          .map((it) => PageData(it!.duration, it.shown))
+                          .toList(),
+                      this._currentAnimation,
+                      key: UniqueKey(),
+                      indicatorHeight: widget.inline
+                          ? IndicatorHeight.small
+                          : IndicatorHeight.large,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: PureColor,
+                          radius: 12,
+                          child: CircleAvatar(
+                            radius: 11,
+                            backgroundImage: Image(
+                                    image: CachedNetworkImageProvider(
+                                        widget.ownerProfilepicture))
+                                .image,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Row(
+                          children: [
+                            DefaultTextStyle(
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              child: Text(widget.ownerUsername),
+                            ),
+
+                            //DefaultTextStyle(
+                            //  style: TextStyle(fontWeight: FontWeight.bold),
+                            //  child: Text(timeago.format(widget.storyDate)),
+                            //),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
               ),
             ),
-          ),
-          Align(
-              alignment: Alignment.centerRight,
-              heightFactor: 1,
-              child: GestureDetector(
-                onTapDown: (details) {
-                  widget.controller.pause();
-                },
-                onTapCancel: () {
-                  widget.controller.play();
-                },
-                onTapUp: (details) {
-                  // if debounce timed out (not active) then continue anim
-                  if (_nextDebouncer?.isActive == false) {
-                    widget.controller.play();
-                  } else {
-                    widget.controller.next();
-                  }
-                },
-                onVerticalDragStart: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.pause();
-                      },
-                onVerticalDragCancel: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : () {
-                        widget.controller.play();
-                      },
-                onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
-
-                        verticalDragInfo!.update(details.primaryDelta!);
-
-                        // TODO: provide callback interface for animation purposes
-                      },
-                onVerticalDragEnd: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.play();
-                        // finish up drag cycle
-                        if (!verticalDragInfo!.cancel &&
-                            widget.onVerticalSwipeComplete != null) {
-                          widget.onVerticalSwipeComplete!(
-                              verticalDragInfo!.direction);
-                        }
-
-                        verticalDragInfo = null;
-                      },
-              )),
-          Align(
-            alignment: Alignment.centerLeft,
-            heightFactor: 1,
-            child: SizedBox(
-                child: GestureDetector(onTap: () {
-                  widget.controller.previous();
-                }),
-                width: 70),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -41,7 +41,7 @@ class _myVoiceWidgetState extends State<myVoiceWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  "My Voices",
+                  AppLocalizations.of(context)!.myvoices,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -86,7 +86,7 @@ class _myVoiceWidgetState extends State<myVoiceWidget> {
                       : (Container(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)!.thereisnohobbie,
+                              AppLocalizations.of(context)!.thereisnovoice,
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 15,

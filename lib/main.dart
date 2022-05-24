@@ -119,27 +119,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // request permissions for showing notification in iOS
     firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
 
-    // add listener for foreground push notifications
-    FirebaseMessaging.onMessage.listen((remoteMessage) {
-      log('[onMessage] message: ' + remoteMessage.data.toString());
-      NotificationApi.showNotification(
-          body: "Someone calling you!", title: "CALL");
-    });
-    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+    //// add listener for foreground push notifications
+    //FirebaseMessaging.onMessage.listen((remoteMessage) {
+    //  log('[onMessage] message: ' + remoteMessage.data.toString());
+    //  NotificationApi.showNotification(
+    //      body: "Someone calling you!", title: "CALL");
+    //});
+    //FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
-    initForegroundService();
-    FirestoreHelper.getUserData().then((value) {
-      SharedPrefs.updateUser(
-          CubeUser(id: value.cubeid, password: value.videoServicePassword));
-    });
-    initConnectycube();
-    initForegroundService();
-    PushNotificationsManager.instance.init();
-    SharedPrefs.getUser().then((loggedUser) {
-      if (loggedUser != null) {
-        _loginToCC(context, loggedUser);
-      }
-    });
+    //initConnectycube();
+    //initForegroundService();
+    //FirestoreHelper.getUserData().then((value) {
+    //  SharedPrefs.updateUser(
+    //      CubeUser(id: value.cubeid, password: value.videoServicePassword));
+    //});
+    //PushNotificationsManager.instance.init();
+    //SharedPrefs.getUser().then((loggedUser) {
+    //  if (loggedUser != null) {
+    //    _loginToCC(context, loggedUser);
+    //  }
+    //});
 
     //Authentication ---------------------------------------------
     _handleAuthenticatedState().then((value) {

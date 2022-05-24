@@ -323,7 +323,9 @@ class _ShufflePageState extends State<ShufflePage> {
                         height: 10,
                       ),
                       Text(
-                        "@" + userData.username,
+                        userData.username.length > 15
+                            ? "@" + userData.username.substring(0, 15)
+                            : "@" + userData.username,
                       ),
                       SizedBox(
                         height: 10,

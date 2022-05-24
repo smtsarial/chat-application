@@ -84,7 +84,9 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           Center(
                             child: Text(
-                              "@" + user.username,
+                              user.username.length > 15
+                                  ? "@" + user.username.substring(0, 15)
+                                  : "@" + user.username,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -280,6 +282,12 @@ class _StoriesState extends State<_Stories> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => StoryViewer(
+                                                  ownerProfilepicture: widget
+                                                      .userData
+                                                      .profilePictureUrl,
+                                                  ownerUsername:
+                                                      widget.userData.username,
+                                                  //storyDate: ,
                                                   imageList: stories,
                                                 )));
                                   },

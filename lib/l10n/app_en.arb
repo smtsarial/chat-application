@@ -113,5 +113,7 @@
     "thereisnomovie":"There is no movie",
     "thereisnomusic":"There is no Spotify music.",
     "doyouwanttosendvoicemessage":"Do you want to send voice message?",
-    "myvoices":"My Voices"
+    "myvoices":"My Voices",
+    "thereisnovoice":"There is no recorded voice",
+    "signwithgoogle":"Sign in with Google"
 }
