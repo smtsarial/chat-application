@@ -1,5 +1,10 @@
-import 'package:anonmy/connections/firestore.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:anonmy/connections/firestore.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/control_provider.dart';
@@ -33,7 +38,16 @@ class BottomTools extends StatefulWidget {
 }
 
 class _BottomToolsState extends State<BottomTools> {
+  Future<File?> saveImagePermanently(String? imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = basename(imagePath!);
+    final image = File('${directory.path}/$name');
+    print("kaydedildi");
+    return File(imagePath).copy(image.path);
+  }
+
   bool isShared = false;
+  final ImagePicker _picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     var _size = MediaQuery.of(context).size;
@@ -63,19 +77,97 @@ class _BottomToolsState extends State<BottomTools> {
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: GestureDetector(
-                              onTap: () {
-                                /// scroll to gridView page
+                              onTap: () async {
+                                // scroll to gridView page
                                 if (controlNotifier.mediaPath.isEmpty) {
                                   scrollNotifier.pageController.animateToPage(1,
                                       duration:
                                           const Duration(milliseconds: 300),
                                       curve: Curves.ease);
                                 }
+                                //final XFile? image = await _picker
+                                //    .pickImage(source: ImageSource.gallery)
+                                //    .then((value) async {
+                                //  final Directory? directory =
+                                //      await getExternalStorageDirectory();
+                                //  print(directory.toString());
+                                //  print(basename(value!.path).toString());
+                                //  controlNotifier.mediaPath =
+                                //      directory.toString() +
+                                //          "/Pictures" +
+                                //          basename(value.path).toString();
+                                //});
                               },
                               child: const CoverThumbnail(
                                 thumbnailQuality: 150,
                               ),
                             ))
+
+                        /// return clear [imagePath] provider
+                        : GestureDetector(
+                            onTap: () {
+                              /// clear image url variable
+                              controlNotifier.mediaPath = '';
+                              itemNotifier.draggableWidget.removeAt(0);
+                            },
+                            child: Container(
+                              height: 45,
+                              width: 45,
+                              color: Colors.transparent,
+                              child: Transform.scale(
+                                scale: 0.7,
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+
+              //CAMERA IMAGE TAKE
+              Container(
+                width: _size.width / 3,
+                height: _size.width / 3,
+                padding: const EdgeInsets.only(left: 15),
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  child: _preViewContainer(
+                    /// if [model.imagePath] is null/empty return preview image
+                    child: controlNotifier.mediaPath.isEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: GestureDetector(
+                                onTap: () async {
+                                  final XFile? image = await _picker
+                                      .pickImage(source: ImageSource.camera)
+                                      .then((value) async {
+                                    print(value!.path.toString());
+                                    if (value != null && value.path != null) {
+                                      print('saving in progress...');
+                                      await GallerySaver.saveImage(value.path)
+                                          .then((path) {
+                                        print("+++++++++++++++++++++++++");
+                                        print('image saved!');
+                                      });
+                                    }
+                                    //await saveImagePermanently(value.path);
+                                    //controlNotifier.mediaPath =
+                                    //    File(value.path).toString();
+                                  });
+
+                                  /// scroll to gridView page
+                                  //if (controlNotifier.mediaPath.isEmpty) {
+                                  //  scrollNotifier.pageController.animateToPage(
+                                  //      1,
+                                  //      duration:
+                                  //          const Duration(milliseconds: 300),
+                                  //      curve: Curves.ease);
+                                  //}
+                                },
+                                child: Icon(Icons.camera_alt)))
 
                         /// return clear [imagePath] provider
                         : GestureDetector(
@@ -148,7 +240,6 @@ class _BottomToolsState extends State<BottomTools> {
                               }
                               if (_createVideo) {
                                 debugPrint('creating video');
-                                print("hello ben vide");
                                 await widget.renderWidget();
                                 await takePicture(
                                         contentKey: widget.contentKey,

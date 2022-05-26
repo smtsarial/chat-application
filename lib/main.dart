@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  void _processLoginError(exception,BuildContext context) {
+  void _processLoginError(exception, BuildContext context) {
     log("Login error $exception");
 
     showDialog(

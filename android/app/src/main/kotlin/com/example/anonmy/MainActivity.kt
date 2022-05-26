@@ -1,4 +1,4 @@
-package com.example.anonmy
+package com.anonmy.anonmy
 
 import io.flutter.embedding.android.FlutterActivity
 

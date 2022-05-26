@@ -421,6 +421,7 @@ class _MainViewState extends State<MainView> {
                               ? const NeverScrollableScrollPhysics()
                               : const ScrollPhysics(),
                           pathList: (path) {
+                            print("KAKKAKAKAKAKAK" + path[0]['path']);
                             controlNotifier.mediaPath = path[0]['path'];
                             if (controlNotifier.mediaPath.isNotEmpty) {
                               itemProvider.draggableWidget.insert(
