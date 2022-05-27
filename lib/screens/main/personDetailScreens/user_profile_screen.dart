@@ -32,6 +32,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   bool follower = false;
 
+  final _formKey1 = GlobalKey<FormState>();
+  TextEditingController reportUserController = TextEditingController();
+
   @override
   void initState() {
     print(widget.userData.firstName);
@@ -46,6 +49,92 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: buildAppBar(),
       body: body(context),
+    );
+  }
+
+  Future<void> _showMyDialog(context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: PrimaryColor,
+          title: Text(
+            widget.userData.username.length > 15
+                ? "Report @" + widget.userData.username.substring(0, 15)
+                : "Report @" + widget.userData.username,
+            style: TextStyle(color: TextColor),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Form(
+                    key: _formKey1,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          child: TextFormField(
+                            style: TextStyle(color: TextColor),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill the area!';
+                              }
+                              return null;
+                            },
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              hintText: "Please explain your reason ?",
+                              hintStyle: TextStyle(color: TextColor),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(2.0, 10.0, 2.0, 10.0),
+                            ),
+                            controller: reportUserController,
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: PureColor,
+              ),
+              onPressed: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                if (_formKey1.currentState!.validate()) {
+                  try {
+                    FirestoreHelper.db.collection('reports').add({
+                      "reportCreator": widget.senderData.email,
+                      "reportedUser": widget.userData.email,
+                      "reason": reportUserController.text,
+                      "time": DateTime.now()
+                    }).then((value) {
+                      Navigator.pop(context);
+
+                      Fluttertoast.showToast(
+                          msg: widget.userData.username + " report sent!");
+                    });
+                  } catch (e) {
+                    print(e);
+                    Fluttertoast.showToast(msg: 'Error');
+                  }
+                }
+              },
+              child: Text(
+                "Send Report",
+                style: TextStyle(color: PrimaryColor),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -66,6 +155,9 @@ class _ProfileState extends State<Profile> {
         print(e);
         Fluttertoast.showToast(msg: 'Error');
       }
+    } else if (value == "Report this user") {
+      print("reported");
+      _showMyDialog(context);
     }
   }
 
@@ -151,7 +243,7 @@ class _ProfileState extends State<Profile> {
         PopupMenuButton<String>(
           onSelected: handleClick,
           itemBuilder: (BuildContext context) {
-            return {'Block this user'}.map((String choice) {
+            return {'Block this user', 'Report this user'}.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
                 child: Text(choice),
