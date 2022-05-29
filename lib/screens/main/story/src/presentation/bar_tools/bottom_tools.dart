@@ -128,70 +128,70 @@ class _BottomToolsState extends State<BottomTools> {
               ),
 
               //CAMERA IMAGE TAKE
-              Container(
-                width: _size.width / 3,
-                height: _size.width / 3,
-                padding: const EdgeInsets.only(left: 15),
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  child: _preViewContainer(
-                    /// if [model.imagePath] is null/empty return preview image
-                    child: controlNotifier.mediaPath.isEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: GestureDetector(
-                                onTap: () async {
-                                  final XFile? image = await _picker
-                                      .pickImage(source: ImageSource.camera)
-                                      .then((value) async {
-                                    print(value!.path.toString());
-                                    if (value != null && value.path != null) {
-                                      print('saving in progress...');
-                                      await GallerySaver.saveImage(value.path)
-                                          .then((path) {
-                                        print("+++++++++++++++++++++++++");
-                                        print('image saved!');
-                                      });
-                                    }
-                                    //await saveImagePermanently(value.path);
-                                    //controlNotifier.mediaPath =
-                                    //    File(value.path).toString();
-                                  });
-
-                                  /// scroll to gridView page
-                                  //if (controlNotifier.mediaPath.isEmpty) {
-                                  //  scrollNotifier.pageController.animateToPage(
-                                  //      1,
-                                  //      duration:
-                                  //          const Duration(milliseconds: 300),
-                                  //      curve: Curves.ease);
-                                  //}
-                                },
-                                child: Icon(Icons.camera_alt)))
-
-                        /// return clear [imagePath] provider
-                        : GestureDetector(
-                            onTap: () {
-                              /// clear image url variable
-                              controlNotifier.mediaPath = '';
-                              itemNotifier.draggableWidget.removeAt(0);
-                            },
-                            child: Container(
-                              height: 45,
-                              width: 45,
-                              color: Colors.transparent,
-                              child: Transform.scale(
-                                scale: 0.7,
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-              ),
+              //Container(
+              //  width: _size.width / 3,
+              //  height: _size.width / 3,
+              //  padding: const EdgeInsets.only(left: 15),
+              //  alignment: Alignment.centerLeft,
+              //  child: SizedBox(
+              //    child: _preViewContainer(
+              //      /// if [model.imagePath] is null/empty return preview image
+              //      child: controlNotifier.mediaPath.isEmpty
+              //          ? ClipRRect(
+              //              borderRadius: BorderRadius.circular(8),
+              //              child: GestureDetector(
+              //                  onTap: () async {
+              //                    final XFile? image = await _picker
+              //                        .pickImage(source: ImageSource.camera)
+              //                        .then((value) async {
+              //                      print(value!.path.toString());
+              //                      if (value != null && value.path != null) {
+              //                        print('saving in progress...');
+              //                        await GallerySaver.saveImage(value.path)
+              //                            .then((path) {
+              //                          print("+++++++++++++++++++++++++");
+              //                          print('image saved!');
+              //                        });
+              //                      }
+              //                      //await saveImagePermanently(value.path);
+              //                      //controlNotifier.mediaPath =
+              //                      //    File(value.path).toString();
+              //                    });
+//
+              //                    /// scroll to gridView page
+              //                    //if (controlNotifier.mediaPath.isEmpty) {
+              //                    //  scrollNotifier.pageController.animateToPage(
+              //                    //      1,
+              //                    //      duration:
+              //                    //          const Duration(milliseconds: 300),
+              //                    //      curve: Curves.ease);
+              //                    //}
+              //                  },
+              //                  child: Icon(Icons.camera_alt)))
+//
+              //          /// return clear [imagePath] provider
+              //          : GestureDetector(
+              //              onTap: () {
+              //                /// clear image url variable
+              //                controlNotifier.mediaPath = '';
+              //                itemNotifier.draggableWidget.removeAt(0);
+              //              },
+              //              child: Container(
+              //                height: 45,
+              //                width: 45,
+              //                color: Colors.transparent,
+              //                child: Transform.scale(
+              //                  scale: 0.7,
+              //                  child: const Icon(
+              //                    Icons.delete,
+              //                    color: Colors.white,
+              //                  ),
+              //                ),
+              //              ),
+              //            ),
+              //    ),
+              //  ),
+            //  ),
 
               /// center logo
               controlNotifier.middleBottomWidget != null

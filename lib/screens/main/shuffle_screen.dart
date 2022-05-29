@@ -100,6 +100,8 @@ class _ShufflePageState extends State<ShufflePage> {
         for (int i = 0; i < list.length; i++) {
           if (value.blockedUsers.toList().contains(list[i].email)) {
             list.removeAt(i);
+          } else if (value.email.contains(list[i].email)) {
+            list.removeAt(i);
           }
         }
       });

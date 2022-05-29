@@ -435,7 +435,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         //signUp(user).then((cubeUser) async {
         //SharedPrefs.saveNewUser(cubeUser);
         //print(cubeUser);
-        Fluttertoast.showToast(msg: "cube signed up ");
+        //Fluttertoast.showToast(msg: "cube signed up ");
         await Authentication()
             .signUp(emailController.text, passwordController.text)
             .then((value) => {
@@ -478,7 +478,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       [],
                                       "basic",
                                       usernameController.text,
-                                      uuid.toString(),
+                                      passwordController.text,
                                       0)
                                   .then((value) async {
                                 if (value == true) {

@@ -5,11 +5,15 @@ import 'dart:ui';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/personDetailScreens/user_profile_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:story_view/story_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -626,16 +630,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
   }
 
+  final _formKey1 = GlobalKey<FormState>();
+  TextEditingController reportUserController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Profile(senderData: sender, userData: receiver)));
-      },
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -727,43 +727,78 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           : IndicatorHeight.large,
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16, 2, 16, 2),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: PureColor,
-                          radius: 12,
-                          child: CircleAvatar(
-                            radius: 11,
-                            backgroundImage: Image(
-                                    image: CachedNetworkImageProvider(
-                                        widget.ownerProfilepicture))
-                                .image,
+                        GestureDetector(
+                          onTap: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Profile(
+                                        senderData: sender,
+                                        userData: receiver)));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: PureColor,
+                                  radius: 12,
+                                  child: CircleAvatar(
+                                    radius: 11,
+                                    backgroundImage: Image(
+                                            image: CachedNetworkImageProvider(
+                                                widget.ownerProfilepicture))
+                                        .image,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    DefaultTextStyle(
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                      child: Text(widget.ownerUsername),
+                                    ),
+
+                                    //DefaultTextStyle(
+                                    //  style: TextStyle(fontWeight: FontWeight.bold),
+                                    //  child: Text(timeago.format(widget.storyDate)),
+                                    //),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Row(
-                          children: [
-                            DefaultTextStyle(
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              child: Text(widget.ownerUsername),
-                            ),
-
-                            //DefaultTextStyle(
-                            //  style: TextStyle(fontWeight: FontWeight.bold),
-                            //  child: Text(timeago.format(widget.storyDate)),
-                            //),
-                          ],
+                        Material(
+                          color: Colors.transparent,
+                          child: PopupMenuButton<String>(
+                            color: Colors.black,
+                            onSelected: handleClick,
+                            itemBuilder: (BuildContext context) {
+                              return {'Block this user', 'Report this content'}
+                                  .map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(choice),
+                                );
+                              }).toList();
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                  )
                 ]),
               ),
             ),
@@ -771,6 +806,118 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> _showMyDialog(context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: PrimaryColor,
+          title: Text(
+            widget.ownerUsername.length > 15
+                ? "Report @" + widget.ownerUsername.substring(0, 15)
+                : "Report @" + widget.ownerUsername,
+            style: TextStyle(color: TextColor),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Form(
+                    key: _formKey1,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          child: TextFormField(
+                            style: TextStyle(color: TextColor),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill the area!';
+                              }
+                              return null;
+                            },
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              hintText: "Please explain your reason ?",
+                              hintStyle: TextStyle(color: TextColor),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(2.0, 10.0, 2.0, 10.0),
+                            ),
+                            controller: reportUserController,
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: PureColor,
+              ),
+              onPressed: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                if (_formKey1.currentState!.validate()) {
+                  try {
+                    FirestoreHelper.db.collection('reports').add({
+                      "reportCreator":
+                          Provider.of<UserProvider>(context, listen: false)
+                              .user
+                              .email,
+                      "reportedUser": widget.ownerUsername,
+                      "reason": reportUserController.text,
+                      "time": DateTime.now()
+                    }).then((value) {
+                      Navigator.pop(context);
+
+                      Fluttertoast.showToast(
+                          msg: widget.ownerUsername + " report sent!");
+                    });
+                  } catch (e) {
+                    print(e);
+                    Fluttertoast.showToast(msg: 'Error');
+                  }
+                }
+              },
+              child: Text(
+                "Send Report",
+                style: TextStyle(color: PrimaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void handleClick(String value) {
+    if (value == "Block this user") {
+      try {
+        FirestoreHelper.db
+            .collection('users')
+            .doc(Provider.of<UserProvider>(context, listen: false).user.id)
+            .update({
+          "blockedUsers": FieldValue.arrayUnion([widget.ownerUsername])
+        }).then((value) {
+          Navigator.pop(context);
+
+          Fluttertoast.showToast(msg: widget.ownerUsername + " Blocked!");
+        });
+      } catch (e) {
+        print(e);
+        Fluttertoast.showToast(msg: 'Error');
+      }
+    } else if (value == "Report this content") {
+      print("reported");
+      _showMyDialog(context);
+    }
   }
 }
 
