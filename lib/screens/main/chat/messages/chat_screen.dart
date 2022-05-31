@@ -95,7 +95,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   context.watch<UserProvider>().user.email
                               ? Column(
                                   children: [
-                                    Text(messageRoom.receiverUsername,
+                                    Text(
+                                        messageRoom.receiverUsername.length > 10
+                                            ? messageRoom.receiverUsername
+                                                .substring(0, 10)
+                                            : messageRoom.receiverUsername,
                                         style: TextStyle(fontSize: 16)),
                                     ReceiverStatus(
                                         receiverMail: messageRoom.receiverMail)
@@ -179,8 +183,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                               ],
                                             ));
                                   },
-                                  child: Text(
-                                      AppLocalizations.of(context)!.female)),
+                                  child: Text(AppLocalizations.of(context)!
+                                      .anonmessages)),
                             ],
                           )
                         : Row(

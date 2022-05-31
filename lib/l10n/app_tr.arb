@@ -111,6 +111,11 @@
     "hobbielist":"Hobi Listesi",
     "movielist":"Film Listesi",
     "thereisnomovie":"Film eklenmemiş.",
-    "thereisnomusic":"Spotify müzik eklenmemiş."
+    "thereisnomusic":"Spotify müzik eklenmemiş.",
+    "thereisnomusic":"There is no Spotify music.",
+    "doyouwanttosendvoicemessage":"Do you want to send voice message?",
+    "myvoices":"Seslerim",
+    "thereisnovoice":"There is no recorded voice",
+    "signwithgoogle":"Google ile giriş yap"
 
 }

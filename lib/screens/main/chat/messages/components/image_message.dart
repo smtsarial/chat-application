@@ -1,10 +1,12 @@
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
+import 'package:anonmy/screens/main/chat/messages/components/show_image.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -31,19 +33,18 @@ class ImageMessage extends StatelessWidget {
       ),
       child: message.messageOwnerMail ==
               context.watch<UserProvider>().user.email
-          ? Container(
-              width: 130,
-              height: 130,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 2,
-                      color: Theme.of(context).scaffoldBackgroundColor),
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: CachedNetworkImageProvider(message.message))))
-          : message.isAccepted
-              ? Container(
+          ? GestureDetector(
+              onTap: () {
+                print("object");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        showImagePage(image: [message.message]),
+                  ),
+                );
+              },
+              child: Container(
                   width: 130,
                   height: 130,
                   decoration: BoxDecoration(
@@ -53,7 +54,33 @@ class ImageMessage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(message.message))))
+                          image: CachedNetworkImageProvider(message.message)))),
+            )
+          : message.isAccepted
+              ? GestureDetector(
+                  onTap: () {
+                    print("object");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            showImagePage(image: [message.message]),
+                      ),
+                    );
+                  },
+                  child: Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2,
+                              color: Theme.of(context).scaffoldBackgroundColor),
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: CachedNetworkImageProvider(
+                                  message.message)))),
+                )
               : GestureDetector(
                   onTap: () {
                     FirebaseFirestore.instance

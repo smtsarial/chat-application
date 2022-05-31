@@ -7,6 +7,7 @@ import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as Path;
+import 'package:timeago/timeago.dart' as timeago;
 
 class FirestoreHelper {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -212,6 +213,7 @@ class FirestoreHelper {
       await FirestoreHelper.getUserData().then((value) async {
         Story story = Story(
             "",
+            value.id,
             value.email,
             value.username,
             value.profilePictureUrl,
@@ -621,5 +623,189 @@ class FirestoreHelper {
       print(e);
       return false;
     }
+  }
+
+  /** PURCHASE PART FOR UPDATING EVERY USER */
+
+  static Future setUserPurchaseActiveStatus() async {
+    await FirestoreHelper.getUserPurchases().then((value) async {
+      if (value.isNotEmpty) {
+        value.forEach((element) async {
+          if (element.productId == "shuffle_15") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                15) {
+              //print("15 dk geçti ");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "shuffle_30") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                30) {
+              //print("30 dk geçti");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "shuffle_45") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                45) {
+              //print("45 dk geçti");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "shuffle_60") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                60) {
+              //print("60 dk geçti");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "story_15") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                15) {
+              //print("15 dk geçti");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "story_45") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                45) {
+              //print("45 dk geçti" + element.id.toString());
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+          if (element.productId == "story_60") {
+            if (DateTime.now().difference(element.date!.toDate()).inMinutes >
+                60) {
+              //print("60 dk geçti aq storyASFASFASF");
+              await FirestoreHelper.db
+                  .collection("purchases")
+                  .doc(element.id)
+                  .update({"active": false});
+            }
+          }
+        });
+      }
+    });
+  }
+
+  static Future<List<Purchases>> getUserPurchases() async {
+    List<Purchases> purchases = [];
+    await FirestoreHelper.getUserData().then((value) async {
+      await db
+          .collection('purchases')
+          .where("owner", isEqualTo: value.email)
+          .get()
+          .then((data) {
+        //print(data.docs.length);
+
+        if (data != null) {
+          purchases = data.docs
+              .map((document) => Purchases.fromJson(document.data()))
+              .toList();
+        }
+        int i = 0;
+        purchases.forEach((detail) {
+          detail.id = data.docs[i].id;
+          i++;
+        });
+      });
+    });
+    //print(purchases.length);
+    //(purchases.first.id);
+    return purchases;
+  }
+
+  static Future updateMyPurchaseStatus() async {
+    List<Purchases> purchases = [];
+    await FirestoreHelper.getUserData().then((user) async {
+      await db
+          .collection('purchases')
+          .where("owner", isEqualTo: user.email)
+          .where("active", isEqualTo: true)
+          .get()
+          .then((data) {
+        //print(data.docs.length);
+
+        if (data != null) {
+          purchases = data.docs
+              .map((document) => Purchases.fromJson(document.data()))
+              .toList();
+        }
+        int i = 0;
+        purchases.forEach((detail) {
+          detail.id = data.docs[i].id;
+          i++;
+        });
+      });
+      if (purchases.isNotEmpty) {
+        purchases.forEach((element) async {
+          if (element.active == true) {
+            await FirestoreHelper.db
+                .collection('users')
+                .doc(user.id)
+                .update({"userType": element.productId});
+          }
+        });
+      } else {
+        await FirestoreHelper.db
+            .collection('users')
+            .doc(user.id)
+            .update({"userType": "basic"});
+      }
+    });
+    print("User purchase data updated");
+  }
+}
+
+class Purchases {
+  String? id;
+  String? owner;
+  Timestamp? date;
+  String? productId;
+  bool? active;
+  String? detail;
+
+  Purchases(
+      {this.id,
+      this.owner,
+      this.date,
+      this.productId,
+      this.active,
+      this.detail});
+
+  Purchases.fromJson(Map<String, dynamic> json) {
+    owner = json['owner'];
+    date = json['date'];
+    productId = json['productId'];
+    active = json['active'];
+    detail = json['detail'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['owner'] = this.owner;
+    data['date'] = this.date;
+    data['productId'] = this.productId;
+    data['active'] = this.active;
+    data['detail'] = this.detail;
+    return data;
   }
 }

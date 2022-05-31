@@ -79,7 +79,6 @@ dependencies:
   connectycube_flutter_call_kit: ^2.0.2
   flutter_background: ^1.1.0
   firebase_messaging: ^11.3.0
-  in_app_purchase: ^3.0.4
   shimmer: ^2.0.0
   google_sign_in: ^5.3.1
   youtube_api: ^1.0.4
@@ -90,6 +89,8 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.1.52-beta
   voice_message_package: ^0.0.74
   gallery_saver: ^2.3.2
+  image_viewer: ^1.5.0
+  flutter_inapp_purchase: ^5.2.0
 
 
 dev_dependencies:
@@ -143,79 +144,79 @@ flutter:
     - assets/pdfs/Privacy Policy.pdf
     - assets/pdfs/Terms Of Use.pdf
 
-  fonts:
-    - family: Alegreya
-      fonts:
-        - asset: assets/fonts/Alegreya-VariableFont_wght.ttf
-
-    - family: B612
-      fonts:
-        - asset: assets/fonts/B612-Regular.ttf
-
-    - family: TitilliumWeb
-      fonts:
-        - asset: assets/fonts/TitilliumWeb-Regular.ttf
-
-    - family: Varela
-      fonts:
-        - asset: assets/fonts/Varela-Regular.ttf
-
-    - family: Vollkorn
-      fonts:
-        - asset: assets/fonts/Vollkorn-Regular.ttf
-
-    - family: Rakkas
-      fonts:
-        - asset: assets/fonts/Rakkas-Regular.ttf
-
-    - family: ConcertOne
-      fonts:
-        - asset: assets/fonts/ConcertOne-Regular.ttf
-
-    - family: YatraOne
-      fonts:
-        - asset: assets/fonts/YatraOne-Regular.ttf
-
-    - family: OldStandardTT
-      fonts:
-        - asset: assets/fonts/OldStandardTT-Italic.ttf
-
-    - family: Neonderthaw
-      fonts:
-        - asset: assets/fonts/Neonderthaw-Regular.ttf
-
-    - family: DancingScript
-      fonts:
-        - asset: assets/fonts/DancingScript-VariableFont_wght.ttf
-
-    - family: SedgwickAve
-      fonts:
-        - asset: assets/fonts/SedgwickAve-Regular.ttf
-
-    - family: IndieFlower
-      fonts:
-        - asset: assets/fonts/IndieFlower-Regular.ttf
-
-    - family: Sacramento
-      fonts:
-        - asset: assets/fonts/Sacramento-Regular.ttf
-
-    - family: PressStart2P
-      fonts:
-        - asset: assets/fonts/PressStart2P-Regular.ttf
-
-    - family: FrederickatheGreat
-      fonts:
-        - asset: assets/fonts/FrederickatheGreat-Regular.ttf
-
-    - family: ReenieBeanie
-      fonts:
-        - asset: assets/fonts/ReenieBeanie-Regular.ttf
-
-    - family: BungeeShade
-      fonts:
-        - asset: assets/fonts/BungeeShade-Regular.ttf
-
-    - family: UnifrakturMaguntia
-      fonts:
-        - asset: assets/fonts/UnifrakturMaguntia-Regular.ttf
+#  fonts:
+#    - family: Alegreya
+#      fonts:
+#        - asset: assets/fonts/Alegreya-VariableFont_wght.ttf
+#
+#    - family: B612
+#      fonts:
+#        - asset: assets/fonts/B612-Regular.ttf
+#
+#    - family: TitilliumWeb
+#      fonts:
+#        - asset: assets/fonts/TitilliumWeb-Regular.ttf
+#
+#    - family: Varela
+#      fonts:
+#        - asset: assets/fonts/Varela-Regular.ttf
+#
+#    - family: Vollkorn
+#      fonts:
+#        - asset: assets/fonts/Vollkorn-Regular.ttf
+#
+#    - family: Rakkas
+#      fonts:
+#        - asset: assets/fonts/Rakkas-Regular.ttf
+#
+#    - family: ConcertOne
+#      fonts:
+#        - asset: assets/fonts/ConcertOne-Regular.ttf
+#
+#    - family: YatraOne
+#      fonts:
+#        - asset: assets/fonts/YatraOne-Regular.ttf
+#
+#    - family: OldStandardTT
+#      fonts:
+#        - asset: assets/fonts/OldStandardTT-Italic.ttf
+#
+#    - family: Neonderthaw
+#      fonts:
+#        - asset: assets/fonts/Neonderthaw-Regular.ttf
+#
+#    - family: DancingScript
+#      fonts:
+#        - asset: assets/fonts/DancingScript-VariableFont_wght.ttf
+#
+#    - family: SedgwickAve
+#      fonts:
+#        - asset: assets/fonts/SedgwickAve-Regular.ttf
+#
+#    - family: IndieFlower
+#      fonts:
+#        - asset: assets/fonts/IndieFlower-Regular.ttf
+#
+#    - family: Sacramento
+#      fonts:
+#        - asset: assets/fonts/Sacramento-Regular.ttf
+#
+#    - family: PressStart2P
+#      fonts:
+#        - asset: assets/fonts/PressStart2P-Regular.ttf
+#
+#    - family: FrederickatheGreat
+#      fonts:
+#        - asset: assets/fonts/FrederickatheGreat-Regular.ttf
+#
+#    - family: ReenieBeanie
+#      fonts:
+#        - asset: assets/fonts/ReenieBeanie-Regular.ttf
+#
+#    - family: BungeeShade
+#      fonts:
+#        - asset: assets/fonts/BungeeShade-Regular.ttf
+#
+#    - family: UnifrakturMaguntia
+#      fonts:
+#        - asset: assets/fonts/UnifrakturMaguntia-Regular.ttf

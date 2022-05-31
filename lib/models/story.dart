@@ -1,5 +1,6 @@
 class Story {
   late String id;
+  late String ownerId;
   late String ownerMail;
   late String ownerUsername;
   late DateTime createdTime;
@@ -13,6 +14,7 @@ class Story {
 
   Story(
       this.id,
+      this.ownerId,
       this.ownerMail,
       this.ownerUsername,
       this.ownerProfilePicture,
@@ -24,6 +26,7 @@ class Story {
       this.ownerCountry,
       this.ownerGender);
   Story.fromMap(dynamic obj) {
+    ownerId = obj['ownerId'];
     ownerMail = obj['ownerMail'];
     ownerUsername = obj['ownerUsername'];
     ownerProfilePicture = obj['ownerProfilePicture'];
@@ -39,6 +42,7 @@ class Story {
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     if (id != null) {
+      map['ownerId'] = this.ownerId;
       map['ownerMail'] = this.ownerMail;
       map['ownerUsername'] = this.ownerUsername;
       map['ownerProfilePicture'] = this.ownerProfilePicture;

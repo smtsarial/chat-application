@@ -58,6 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
         user = value;
       });
     });
+    FirestoreHelper.setUserPurchaseActiveStatus().then((value) async {
+      await FirestoreHelper.updateMyPurchaseStatus();
+    });
   }
 
   @override

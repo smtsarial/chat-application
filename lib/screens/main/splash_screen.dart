@@ -31,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return MobileAds.instance.initialize();
   }
 
-
   @override
   void initState() {
     try {
@@ -54,6 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
         isErrorOccured = true;
       });
     }
+    FirestoreHelper.setUserPurchaseActiveStatus().then((value) async {
+      await FirestoreHelper.updateMyPurchaseStatus();
+    });
     super.initState();
   }
 

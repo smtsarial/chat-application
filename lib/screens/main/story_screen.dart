@@ -1,6 +1,7 @@
 import 'package:anonmy/connections/adhelper.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
+import 'package:anonmy/models/user.dart';
 import 'package:anonmy/screens/main/story/stories_editor.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
 import 'package:anonmy/theme.dart';
@@ -21,12 +22,13 @@ class StoryPage extends StatefulWidget {
 
 class _StoryPageState extends State<StoryPage> {
   late List<Story> stories = [];
+  late List<User> users = [];
   late RangeValues _currentRangeValues = RangeValues(18, 65);
   late int _filterGenderValue = 1;
   late String filterCity = "İstanbul";
   late String filterGender = "All";
   late List filterAge = [18, 65];
-
+  int premiumStoryCount = 0;
   static final _kAdIndex = 2;
   late BannerAd _ad;
   bool _isAdLoaded = false;
@@ -38,44 +40,45 @@ class _StoryPageState extends State<StoryPage> {
     return rawIndex;
   }
 
-  @override
-  void initState() {
-    if (mounted) {
-      FirestoreHelper.getStoriesForStoryScreen().then((value) {
-        late List<Story> stor1es = [];
-        value.forEach((element) {
-          if (DateTime.now().difference(element.createdTime).inHours < 24) {
-            stor1es.add(element);
-          }
-        });
-        if (mounted) {
-          setState(() {
-            stories = stor1es;
+  Future getStories() async {
+    await FirestoreHelper.getStoriesForStoryScreen().then((value) {
+      value.forEach((element) async {
+        List<Story> stor1es = [];
+        List<Story> premiumstor1es = [];
+        if (DateTime.now().difference(element.createdTime).inHours < 24) {
+          await FirestoreHelper.db
+              .collection('users')
+              .doc(element.ownerId)
+              .get()
+              .then((value) async {
+            User userinfo = await User.fromMap(value.data());
+            if (userinfo.userType.contains("story")) {
+              //print("premium");
+              premiumstor1es.add(element);
+              setState(() {
+                premiumStoryCount = premiumStoryCount + 1;
+              });
+            } else {
+              //print("notpremium");
+              stor1es.add(element);
+            }
           });
         }
+        setState(() {
+          stories.addAll(premiumstor1es);
+          stories.addAll(stor1es);
+        });
+        //print(
+        //    "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
+        //print("2222" + stories.length.toString());
       });
-      //_ad = BannerAd(
-      //  adUnitId: AdHelper.bannerAdUnitId,
-      //  size: AdSize.mediumRectangle,
-      //  request: AdRequest(),
-      //  listener: BannerAdListener(
-      //    onAdLoaded: (_) {
-      //      setState(() {
-      //        _isAdLoaded = true;
-      //      });
-      //    },
-      //    onAdFailedToLoad: (ad, error) {
-      //      // Releases an ad resource when it fails to load
-      //      ad.dispose();
-//
-      //      print(
-      //          'Ad load failed (code=${error.code} message=${error.message})');
-      //    },
-      //  ),
-      //);
-      //_ad.load();
-    }
+    });
+  }
+
+  @override
+  void initState() {
     super.initState();
+    getStories();
   }
 
   @override
@@ -175,7 +178,13 @@ class _StoryPageState extends State<StoryPage> {
                                   Container(
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color: Color.fromARGB(137, 0, 0, 0),
+                                        border: index < premiumStoryCount
+                                            ? Border.all(
+                                                width: 2.0, color: PrimaryColor)
+                                            : Border(),
+                                        color: index < premiumStoryCount
+                                            ? Color.fromARGB(88, 251, 255, 0)
+                                            : Color.fromARGB(137, 0, 0, 0),
                                       )),
                                   Positioned(
                                       left: 4,
@@ -221,8 +230,19 @@ class _StoryPageState extends State<StoryPage> {
                                             width: 5,
                                           ),
                                           Text(stories[_getDestinationItemIndex(
-                                                  index)]
-                                              .ownerUsername)
+                                                          index)]
+                                                      .ownerUsername
+                                                      .length >
+                                                  8
+                                              ? stories[
+                                                      _getDestinationItemIndex(
+                                                          index)]
+                                                  .ownerUsername
+                                                  .substring(0, 8)
+                                              : stories[
+                                                      _getDestinationItemIndex(
+                                                          index)]
+                                                  .ownerUsername)
                                         ],
                                       )),
                                 ],
