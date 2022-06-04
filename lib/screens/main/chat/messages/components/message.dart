@@ -31,9 +31,11 @@ class _MessageState extends State<Message> {
   @override
   void initState() {
     FirestoreHelper.getUserData().then((value) {
-      setState(() {
-        myUserData = value;
-      });
+      if (mounted) {
+        setState(() {
+          myUserData = value;
+        });
+      }
     });
     super.initState();
   }
@@ -43,7 +45,10 @@ class _MessageState extends State<Message> {
     Widget messageContaint(ChatMessage message) {
       switch (message.messageType) {
         case ChatMessageType.text:
-          return TextMessage(message: message);
+          return TextMessage(
+            message: message,
+            messageRoomID: widget.messageRoomID,
+          );
         case ChatMessageType.audio:
           return AudioMessage(
             message: message,

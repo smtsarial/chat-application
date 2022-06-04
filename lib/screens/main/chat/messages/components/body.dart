@@ -7,18 +7,32 @@ import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:swipe_to/swipe_to.dart';
 import 'chat_input_field.dart';
 import 'message.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key, required this.messageRoomData}) : super(key: key);
   final MessageRoom messageRoomData;
+
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
+  ChatMessage replyMessage = ChatMessage(
+      "",
+      "",
+      "",
+      "",
+      DateTime.now(),
+      ChatMessageType.values[0],
+      MessageStatus.values[1],
+      true,
+      false,
+      ChatMessageType.values[0],
+      "",
+      MessageReaction.values[0]);
   Future<bool> updateStatusOfMessages() async {
     try {
       FirestoreHelper.getUserData().then((value) async {
@@ -71,25 +85,76 @@ class _BodyState extends State<Body> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot doc = snapshot.data!.docs[index];
 
-                          return Message(
-                              messageRoomID: widget.messageRoomData.id,
-                              message: ChatMessage(
-                                doc.id,
-                                doc['message'],
-                                doc["messageOwnerMail"],
-                                doc["messageOwnerUsername"],
-                                doc["timeToSent"].toDate(),
-                                ChatMessageType.values[doc["messageType"]],
-                                MessageStatus.values[doc["status"]],
-                                doc["isAccepted"],
-                              ));
+                          return SwipeTo(
+                            onRightSwipe: () {
+                              print("changed");
+                              setState(() {
+                                replyMessage = ChatMessage(
+                                  doc.id,
+                                  doc['message'],
+                                  doc["messageOwnerMail"],
+                                  doc["messageOwnerUsername"],
+                                  doc["timeToSent"].toDate(),
+                                  ChatMessageType.values[doc["messageType"]],
+                                  MessageStatus.values[doc["status"]],
+                                  doc["isAccepted"],
+                                  doc["isReplied"],
+                                 ChatMessageType.values[doc['repliedMessageType']],
+                                  doc["repliedMessageId"],
+                                  MessageReaction
+                                      .values[doc["messageReaction"]],
+                                );
+                              });
+                              chat_input();
+                            },
+                            child: Message(
+                                messageRoomID: widget.messageRoomData.id,
+                                message: ChatMessage(
+                                    doc.id,
+                                    doc['message'],
+                                    doc["messageOwnerMail"],
+                                    doc["messageOwnerUsername"],
+                                    doc["timeToSent"].toDate(),
+                                    ChatMessageType.values[doc["messageType"]],
+                                    MessageStatus.values[doc["status"]],
+                                    doc["isAccepted"],
+                                    doc["isReplied"],
+                                    ChatMessageType.values[doc['repliedMessageType']],
+                                    doc["repliedMessageId"],
+                                    MessageReaction
+                                        .values[doc["messageReaction"]])),
+                          );
                         });
                   })),
         ),
-        ChatInputField(
-          messageRoom: widget.messageRoomData,
-        ),
+        chat_input(),
       ],
     );
+  }
+
+  Widget chat_input() {
+    return ChatInputField(
+        messageRoom: widget.messageRoomData,
+        replyMessage: replyMessage,
+        notifyParent: refresh);
+  }
+
+  refresh() {
+    //print("silindiii");
+    setState(() {
+      replyMessage = ChatMessage(
+          "",
+          "",
+          "",
+          "",
+          DateTime.now(),
+          ChatMessageType.values[0],
+          MessageStatus.values[1],
+          true,
+          false,
+          ChatMessageType.values[0],
+          "",
+          MessageReaction.values[0]);
+    });
   }
 }

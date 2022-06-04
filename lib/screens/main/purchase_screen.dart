@@ -69,8 +69,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     try {
       platformVersion = await FlutterInappPurchase.instance.platformVersion;
     } catch (e) {
-      print(
-          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
       print(e);
     }
 
@@ -139,17 +137,23 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   }
 
   Future _getProduct() async {
-    List<IAPItem> items =
-        await FlutterInappPurchase.instance.getProducts(_productLists);
-    for (var item in items) {
-      //print('${item.toString()}');
-      this._items.add(item);
-    }
+    try {
+      List<IAPItem> items =
+          await FlutterInappPurchase.instance.getProducts(_productLists);
+      for (var item in items) {
+        //print('${item.toString()}');
+        this._items.add(item);
+      }
 
-    setState(() {
-      this._items = items;
-      this._purchases = [];
-    });
+      setState(() {
+        this._items = items;
+        this._purchases = [];
+      });
+    } catch (e) {
+      print(
+          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
+      print(e);
+    }
   }
 
   Future _getPurchases() async {

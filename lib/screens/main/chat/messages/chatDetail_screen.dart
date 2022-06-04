@@ -66,6 +66,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             ChatMessageType.values[element["messageType"]],
             MessageStatus.values[element["status"]],
             element["isAccepted"],
+            element["isReplied"],
+            ChatMessageType.values[element["repliedMessageType"]],
+            element["repliedMessageId"],
+            element["messageReaction"],
           );
           chatmessages.add(message);
         });

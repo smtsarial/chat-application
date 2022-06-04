@@ -141,7 +141,9 @@ class _MessageTitle extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        messageData.receiverUsername,
+                        messageData.receiverUsername.length > 10
+                            ? messageData.receiverUsername.substring(0, 10)
+                            : messageData.receiverUsername,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           letterSpacing: 0.2,

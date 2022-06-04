@@ -4,6 +4,7 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
+import 'package:anonmy/screens/main/chat/messages/components/reply/reply_message_widget.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,9 +20,15 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatInputField extends StatefulWidget {
-  const ChatInputField({Key? key, required this.messageRoom}) : super(key: key);
+  const ChatInputField(
+      {Key? key,
+      required this.messageRoom,
+      required this.replyMessage,
+      required this.notifyParent})
+      : super(key: key);
   final MessageRoom messageRoom;
-
+  final ChatMessage replyMessage;
+  final Function() notifyParent;
   @override
   State<ChatInputField> createState() => _ChatInputFieldState();
 }
@@ -33,6 +40,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
   bool sentorNot = false;
   bool _gifloaded = false;
   late String _giflink;
+  bool isReplaying = false;
+
   bool isPlayingMsg = false,
       isRecording = false,
       isSending = false,
@@ -51,254 +60,278 @@ class _ChatInputFieldState extends State<ChatInputField> {
   @override
   void initState() {
     super.initState();
+    print(widget.replyMessage);
     checkPermission();
     picker = new ImagePicker();
+  }
+
+  refresh() {
+    //print("silinmesi lazım");
+    widget.notifyParent();
   }
 
   @override
   Widget build(BuildContext context) {
     TextEditingController messageController = new TextEditingController();
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 2,
-        vertical: kDefaultPadding / 2,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 4),
-            blurRadius: 32,
-            color: Color(0xFF087949).withOpacity(0.08),
+    return Column(
+      children: [
+        widget.replyMessage.id != ""
+            ? Container(
+                child: SafeArea(
+                  child: ReplyTextMessage(
+                      message: widget.replyMessage, notifyCancel: refresh),
+                ),
+              )
+            : Container(),
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 2,
+            vertical: kDefaultPadding / 2,
           ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: kPrimaryColor.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(width: kDefaultPadding / 4),
-                    _imageload == true
-                        ? Expanded(
-                            child: Stack(
-                            children: [
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage: Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                ).image,
-                                child: IconButton(
-                                  icon: Icon(Icons.remove_circle),
-                                  onPressed: () {
-                                    setState(() {
-                                      _imageload = false;
-                                    });
-                                  },
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 4),
+                blurRadius: 32,
+                color: Color(0xFF087949).withOpacity(0.08),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: kDefaultPadding / 4),
+                        _imageload == true
+                            ? Expanded(
+                                child: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: Image.file(
+                                      _image,
+                                      fit: BoxFit.cover,
+                                    ).image,
+                                    child: IconButton(
+                                      icon: Icon(Icons.remove_circle),
+                                      onPressed: () {
+                                        setState(() {
+                                          _imageload = false;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ))
+                            : Expanded(
+                                child: TextField(
+                                  controller: messageController,
+                                  decoration: InputDecoration(
+                                    hintText: "Type Message",
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
-                            ],
-                          ))
-                        : Expanded(
-                            child: TextField(
-                              controller: messageController,
-                              decoration: InputDecoration(
-                                hintText: "Type message",
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                    IconButton(
-                      onPressed: () async {
-                        final gif = await ModalGifPicker.pickModalSheetGif(
-                          context: context,
-                          apiKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
-                          rating: GiphyRating.r,
-                          sticker: true,
-                          backDropColor: Colors.black,
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.2,
-                          topDragColor: Colors.white.withOpacity(0.2),
-                        );
-                        if (gif != null) {
-                          setState(() {
-                            _gifloaded = true;
-                            _giflink = gif.embedUrl.toString();
-                          });
-                          await updateLastMessageInfo("GIF")
-                              .then((value) async {
-                            if (value == true) {
-                              await FirestoreHelper.getUserData()
-                                  .then((value) async {
-                                await FirestoreHelper.db
-                                    .collection('messages')
-                                    .doc(widget.messageRoom.id)
-                                    .collection('chatMessages')
-                                    .add({
-                                  "messageOwnerMail": value.email,
-                                  "messageOwnerUsername": value.username,
-                                  "timeToSent": DateTime.now(),
-                                  "messageType": 4,
-                                  "status": 0,
-                                  "message": gif.id,
-                                  "isAccepted": false
-                                });
+                        IconButton(
+                          onPressed: () async {
+                            final gif = await ModalGifPicker.pickModalSheetGif(
+                              context: context,
+                              apiKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
+                              rating: GiphyRating.r,
+                              sticker: true,
+                              backDropColor: Colors.black,
+                              crossAxisCount: 3,
+                              childAspectRatio: 1.2,
+                              topDragColor: Colors.white.withOpacity(0.2),
+                            );
+                            if (gif != null) {
+                              setState(() {
+                                _gifloaded = true;
+                                _giflink = gif.embedUrl.toString();
                               });
-                              return true;
-                            } else {
-                              return false;
-                            }
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.gif_rounded,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .color!
-                            .withOpacity(0.64),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        SelectImageFromGallery();
-                      },
-                      icon: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .color!
-                            .withOpacity(0.64),
-                      ),
-                    ),
-                    Container(
-                        height: 40,
-                        margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  color: isRecording
-                                      ? Colors.white
-                                      : Colors.black12,
-                                  spreadRadius: 4)
-                            ],
-                            color: PrimaryColor.withOpacity(1),
-                            shape: BoxShape.circle),
-                        child: GestureDetector(
-                          onLongPress: () {
-                            startRecord();
-                            setState(() {
-                              isRecording = true;
-                              isAudioMessage = true;
-                            });
-                          },
-                          onLongPressEnd: (details) {
-                            showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                      title: Text(AppLocalizations.of(context)!
-                                          .caution),
-                                      content: Text(
-                                          AppLocalizations.of(context)!
-                                              .doyouwanttosendvoicemessage),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'Cancel'),
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .cancel),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            await stopRecord().whenComplete(
-                                              () => Navigator.pop(context),
-                                            );
-                                            setState(() {
-                                              isRecording = false;
-                                            });
-                                          },
-                                          child: Text(
-                                              AppLocalizations.of(context)!.ok),
-                                        ),
-                                      ],
-                                    ));
-                          },
-                          child: Container(
-                              padding: EdgeInsets.all(10),
-                              child: Icon(
-                                Icons.mic,
-                                color: Colors.white,
-                                size: 20,
-                              )),
-                        )),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: PrimaryColor,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: sentorNot == false
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  sentorNot = true;
-                                });
-                                sendMessage(messageController.text)
-                                    .then((value) {
-                                  messageController.text = "";
-                                  if (value != true) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          "Connection lost please refresh this page! and try again!"),
-                                    ));
-                                  } else {
-                                    setState(() {
-                                      sentorNot = false;
-                                      _image = File("path");
-                                      _imageload = false;
+                              await updateLastMessageInfo("GIF")
+                                  .then((value) async {
+                                if (value == true) {
+                                  await FirestoreHelper.getUserData()
+                                      .then((value) async {
+                                    await FirestoreHelper.db
+                                        .collection('messages')
+                                        .doc(widget.messageRoom.id)
+                                        .collection('chatMessages')
+                                        .add({
+                                      "messageOwnerMail": value.email,
+                                      "messageOwnerUsername": value.username,
+                                      "timeToSent": DateTime.now(),
+                                      "messageType": 4,
+                                      "status": 0,
+                                      "message": gif.id,
+                                      "isAccepted": false,
+                                      "isReplied": false,
+                                      "repliedMessageId": "",
+                                      "messageReaction": 0
                                     });
-                                  }
+                                  });
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              });
+                            }
+                          },
+                          icon: Icon(
+                            Icons.gif_rounded,
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .color!
+                                .withOpacity(0.64),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            SelectImageFromGallery();
+                          },
+                          icon: Icon(
+                            Icons.camera_alt_outlined,
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .color!
+                                .withOpacity(0.64),
+                          ),
+                        ),
+                        Container(
+                            height: 40,
+                            margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: isRecording
+                                          ? Colors.white
+                                          : Colors.black12,
+                                      spreadRadius: 4)
+                                ],
+                                color: PrimaryColor.withOpacity(1),
+                                shape: BoxShape.circle),
+                            child: GestureDetector(
+                              onLongPress: () {
+                                startRecord();
+                                setState(() {
+                                  isRecording = true;
+                                  isAudioMessage = true;
                                 });
                               },
-                              icon: Icon(
-                                Icons.send,
-                                color: Colors.white,
-                              ),
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .color!
-                                  .withOpacity(0.64),
-                            )
-                          : Container(
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.white,
-                                color: Colors.blueGrey,
-                                strokeWidth: 3,
-                              ),
-                              height: 20,
-                              width: 20,
-                            ),
-                    )
-                  ],
+                              onLongPressEnd: (details) {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: Text(
+                                              AppLocalizations.of(context)!
+                                                  .caution),
+                                          content: Text(
+                                              AppLocalizations.of(context)!
+                                                  .doyouwanttosendvoicemessage),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'Cancel'),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .cancel),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                await stopRecord().whenComplete(
+                                                  () => Navigator.pop(context),
+                                                );
+                                                setState(() {
+                                                  isRecording = false;
+                                                });
+                                              },
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .ok),
+                                            ),
+                                          ],
+                                        ));
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Icon(
+                                    Icons.mic,
+                                    color: Colors.white,
+                                    size: 20,
+                                  )),
+                            )),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: PrimaryColor,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: sentorNot == false
+                              ? IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      sentorNot = true;
+                                    });
+                                    sendMessage(messageController.text)
+                                        .then((value) {
+                                      messageController.text = "";
+                                      if (value != true) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                              "Connection lost please refresh this page! and try again!"),
+                                        ));
+                                      } else {
+                                        setState(() {
+                                          sentorNot = false;
+                                          _image = File("path");
+                                          _imageload = false;
+                                        });
+                                      }
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .color!
+                                      .withOpacity(0.64),
+                                )
+                              : Container(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.white,
+                                    color: Colors.blueGrey,
+                                    strokeWidth: 3,
+                                  ),
+                                  height: 20,
+                                  width: 20,
+                                ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -372,6 +405,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
           "status": 0,
           "message": audioMsg,
           "isAccepted": false,
+          "isReplied": false,
+          "repliedMessageId": "",
+          "messageReaction": 0
         });
       });
     } else {
@@ -392,14 +428,14 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   Future<bool> sendMessage(String message) async {
     try {
-      print("asfasfasfasfa");
-      print(_image);
+      //print(_image);
       if (_imageload == true) {
         await FirestoreHelper.uploadChatImagesToStorage(_image)
             .then((imageURL) async {
           await updateLastMessageInfo("Photo").then((value1) async {
             if (value1 == true) {
               await FirestoreHelper.getUserData().then((value) async {
+                print(widget.replyMessage.id);
                 await FirestoreHelper.db
                     .collection('messages')
                     .doc(widget.messageRoom.id)
@@ -412,6 +448,14 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   "status": 0,
                   "message": imageURL,
                   "isAccepted": false,
+                  "isReplied": widget.replyMessage.id != "" ? true : false,
+                  "repliedMessageType": widget.replyMessage.id != ""
+                      ? widget.replyMessage.messageType.index
+                      : 5,
+                  "repliedMessageId": widget.replyMessage.id != ""
+                      ? widget.replyMessage.id
+                      : "",
+                  "messageReaction": 0
                 });
               });
               return true;
@@ -425,6 +469,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
           await updateLastMessageInfo(message).then((value) async {
             if (value == true) {
               await FirestoreHelper.getUserData().then((value) async {
+                print(widget.replyMessage.id);
                 await FirestoreHelper.db
                     .collection('messages')
                     .doc(widget.messageRoom.id)
@@ -437,7 +482,16 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   "status": 0,
                   "message": message,
                   "isAccepted": false,
+                  "isReplied": widget.replyMessage.id != "" ? true : false,
+                  "repliedMessageType": widget.replyMessage.id != ""
+                      ? widget.replyMessage.messageType.index
+                      : 5,
+                  "repliedMessageId": widget.replyMessage.id != ""
+                      ? widget.replyMessage.id
+                      : "",
+                  "messageReaction": 0
                 });
+                refresh();
               });
               return true;
             } else {

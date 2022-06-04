@@ -1,5 +1,15 @@
-enum ChatMessageType { text, audio, image, video, gif }
+import 'package:anonmy/screens/main/chat/messages/components/message.dart';
+
+enum ChatMessageType {
+  text,
+  audio,
+  image,
+  video,
+  gif,
+  empty
+}
 enum MessageStatus { not_view, viewed }
+enum MessageReaction { heart, like, angry, fire }
 
 class ChatMessage {
   final String id;
@@ -10,6 +20,10 @@ class ChatMessage {
   final ChatMessageType messageType;
   final MessageStatus status;
   final bool isAccepted;
+  final bool isReplied;
+  final ChatMessageType repliedMessageType;
+  final String repliedMessageId;
+  final MessageReaction messageReaction;
 
   ChatMessage(
       this.id,
@@ -19,7 +33,11 @@ class ChatMessage {
       this.timeToSent,
       this.messageType,
       this.status,
-      this.isAccepted);
+      this.isAccepted,
+      this.isReplied,
+      this.repliedMessageType,
+      this.repliedMessageId,
+      this.messageReaction);
 }
 
 List demeChatMessages = [];

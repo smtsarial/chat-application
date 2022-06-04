@@ -47,7 +47,6 @@ class _MyVoicesState extends State<MyVoices> {
           title: Text("Record Your Voice "),
         ),
         floatingActionButton: Container(
-            height: 40,
             margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
@@ -115,7 +114,7 @@ class _MyVoicesState extends State<MyVoices> {
                                   meBgColor: PrimaryColor,
                                   played: false,
                                   contactBgColor: PrimaryColor,
-                                  contactFgColor: PrimaryColor,
+                                  contactFgColor: Colors.white,
                                 ),
                                 IconButton(
                                     onPressed: () async {

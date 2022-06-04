@@ -1,18 +1,20 @@
+import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/main.dart';
 import 'package:anonmy/managers/call_manager.dart';
+import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/providers/MessageRoomProvider.dart';
+import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/chatDetail_screen.dart';
 import 'package:anonmy/screens/main/chat/messages/components/body.dart';
 import 'package:anonmy/screens/main/chat/messages/receiverStatus.dart';
-import 'package:anonmy/screens/main/story/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_gif_picker/modal_gif_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -25,7 +27,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late MessageRoom messageRoom;
-
+  final focusNode = FocusNode();
+  late ChatMessage replyMessage;
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     bool isAnonim = widget.messageRoom.anonim;
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<MessageRoomProvider>(
@@ -114,13 +118,21 @@ class _ChatScreenState extends State<ChatScreen> {
                           : messageRoom.senderMail ==
                                   context.watch<UserProvider>().user.email
                               ? Column(children: [
-                                  Text(messageRoom.receiverUsername,
+                                  Text(
+                                      messageRoom.receiverUsername.length > 10
+                                          ? messageRoom.receiverUsername
+                                              .substring(0, 10)
+                                          : messageRoom.receiverUsername,
                                       style: TextStyle(fontSize: 16)),
                                   ReceiverStatus(
                                       receiverMail: messageRoom.receiverMail)
                                 ])
                               : Column(children: [
-                                  Text(messageRoom.senderUsername,
+                                  Text(
+                                      messageRoom.senderUsername.length > 10
+                                          ? messageRoom.senderUsername
+                                              .substring(0, 10)
+                                          : messageRoom.senderUsername,
                                       style: TextStyle(fontSize: 16)),
                                   ReceiverStatus(
                                       receiverMail: messageRoom.senderMail)

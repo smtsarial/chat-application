@@ -50,59 +50,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool appOpened = false;
   bool isBackground = false;
 
-  _loginToCC(BuildContext context, CubeUser user) {
-    if (CubeSessionManager.instance.isActiveSessionValid() &&
-        CubeSessionManager.instance.activeSession!.user != null) {
-      if (CubeChatConnection.instance.isAuthenticated()) {
-        //_goSelectOpponentsScreen(context, user);
-      } else {
-        _loginToCubeChat(context, user);
-      }
-    } else {
-      createSession(user).then((cubeSession) {
-        _loginToCubeChat(context, user);
-      }).catchError((exception) {
-        _processLoginError(exception, context);
-      });
-    }
-  }
+  
 
-  void _loginToCubeChat(BuildContext context, CubeUser user) {
-    FirestoreHelper.getUserData().then((value) {
-      print("********************/***************************" + value.email);
-      CubeChatConnection.instance
-          .login(CubeUser(
-              id: value.cubeid,
-              login: value.username,
-              fullName: value.firstName + " " + value.lastName,
-              password: value.videoServicePassword))
-          .then((cubeUser) {
-        print(cubeUser);
-        SharedPrefs.saveNewUser(user);
-      }).catchError((exception) {
-        _processLoginError(exception, context);
-      });
-    });
-  }
-
-  void _processLoginError(exception, BuildContext context) {
-    log("Login error $exception");
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Login Error"),
-            content: Text("Something went wrong during login to video service"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        });
-  }
+  
 
   Future<void> onBackgroundMessage(RemoteMessage message) {
     log('[onBackgroundMessage] message: $message');
