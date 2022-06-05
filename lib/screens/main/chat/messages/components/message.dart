@@ -53,6 +53,7 @@ class _MessageState extends State<Message> {
           return AudioMessage(
             message: message,
             userData: myUserData,
+            messageRoomID: widget.messageRoomID,
           );
         case ChatMessageType.image:
           return ImageMessage(
@@ -62,7 +63,10 @@ class _MessageState extends State<Message> {
         case ChatMessageType.video:
           return VideoMessage(message: message);
         case ChatMessageType.gif:
-          return GifMessage(message: message);
+          return GifMessage(
+            message: message,
+            messageRoomID: widget.messageRoomID,
+          );
         default:
           return SizedBox();
       }

@@ -32,7 +32,7 @@ class _BodyState extends State<Body> {
       false,
       ChatMessageType.values[0],
       "",
-      MessageReaction.values[0]);
+      "");
   Future<bool> updateStatusOfMessages() async {
     try {
       FirestoreHelper.getUserData().then((value) async {
@@ -68,7 +68,7 @@ class _BodyState extends State<Body> {
       children: [
         Expanded(
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('messages')
@@ -99,10 +99,10 @@ class _BodyState extends State<Body> {
                                   MessageStatus.values[doc["status"]],
                                   doc["isAccepted"],
                                   doc["isReplied"],
-                                 ChatMessageType.values[doc['repliedMessageType']],
+                                  ChatMessageType
+                                      .values[doc['repliedMessageType']],
                                   doc["repliedMessageId"],
-                                  MessageReaction
-                                      .values[doc["messageReaction"]],
+                                  doc["messageReaction"],
                                 );
                               });
                               chat_input();
@@ -119,10 +119,10 @@ class _BodyState extends State<Body> {
                                     MessageStatus.values[doc["status"]],
                                     doc["isAccepted"],
                                     doc["isReplied"],
-                                    ChatMessageType.values[doc['repliedMessageType']],
+                                    ChatMessageType
+                                        .values[doc['repliedMessageType']],
                                     doc["repliedMessageId"],
-                                    MessageReaction
-                                        .values[doc["messageReaction"]])),
+                                    doc["messageReaction"])),
                           );
                         });
                   })),
@@ -154,7 +154,7 @@ class _BodyState extends State<Body> {
           false,
           ChatMessageType.values[0],
           "",
-          MessageReaction.values[0]);
+          "");
     });
   }
 }

@@ -1,16 +1,25 @@
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/chat/messages/components/reply/ifRepliedWidget.dart';
+import 'package:anonmy/screens/main/chat/messages/components/reply/repliedMessageOnNormalMessage.dart';
 import 'package:anonmy/theme.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_message_package/voice_message_package.dart';
+import 'package:anonmy/connections/firestore.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class AudioMessage extends StatefulWidget {
   final ChatMessage message;
   final User userData;
+  final String messageRoomID;
 
-  const AudioMessage({Key? key, required this.message, required this.userData})
+  const AudioMessage(
+      {Key? key,
+      required this.message,
+      required this.userData,
+      required this.messageRoomID})
       : super(key: key);
 
   @override
@@ -39,100 +48,43 @@ class _AudioMessageState extends State<AudioMessage> {
 
   @override
   Widget build(BuildContext context) {
-    return VoiceMessage(
-      audioSrc: widget.message.message,
-      me: widget.message.messageOwnerMail == widget.userData.email
-          ? true
-          : false,
-      mePlayIconColor: Colors.black,
-      meBgColor: PrimaryColor,
-      played: false,
-      contactBgColor: PrimaryColor,
-      contactFgColor: PrimaryColor,
+    return Column(
+      children: [
+        widget.message.isReplied == true
+            ? IntrinsicHeight(
+                child: Container(
+                  color: Color.fromARGB(80, 80, 80, 80),
+                  child: Row(
+                    children: [
+                      Container(
+                        color: Colors.green,
+                        width: 4,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                          child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: RepliedWidget(
+                                chatID: widget.messageRoomID,
+                                message: widget.message,
+                              ))),
+                    ],
+                  ),
+                ),
+              )
+            : Container(),
+        VoiceMessage(
+          audioSrc: widget.message.message,
+          me: widget.message.messageOwnerMail == widget.userData.email
+              ? true
+              : false,
+          mePlayIconColor: Colors.black,
+          meBgColor: PrimaryColor,
+          played: false,
+          contactBgColor: PrimaryColor,
+          contactFgColor: PrimaryColor,
+        ),
+      ],
     );
-
-    //Container(
-    //width: MediaQuery.of(context).size.width * 0.55,
-    //padding: EdgeInsets.symmetric(
-    //  horizontal: kDefaultPadding * 0.75,
-    //  vertical: kDefaultPadding / 2.5,
-    //),
-    //decoration: BoxDecoration(
-    //  borderRadius: BorderRadius.circular(30),
-    //  color: kPrimaryColor,
-    //),
-    //
-    //child: Row(
-    //  children: [
-    //    isPlaying
-    //        ? GestureDetector(
-    //            child: Icon(Icons.pause),
-    //            onTap: () async {
-    //              setState(() {
-    //                isPlaying = false;
-    //              });
-    //              await stop(widget.message);
-    //            },
-    //            //color: message!.isSender ? Colors.white : kPrimaryColor,
-    //          )
-    //        : GestureDetector(
-    //            child: Icon(Icons.play_arrow),
-    //            onTap: () async {
-    //              setState(() {
-    //                isPlaying = true;
-    //              });
-    //              await play(widget.message);
-    //            },
-    //            //color: message!.isSender ? Colors.white : kPrimaryColor,
-    //          ),
-    //    Expanded(
-    //      child: Padding(
-    //        padding:
-    //            const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
-    //        child: Stack(
-    //          clipBehavior: Clip.none,
-    //          alignment: Alignment.center,
-    //          children: [
-    //            Container(
-    //                width: double.infinity, height: 2, color: Colors.white),
-    //            Positioned(
-    //              left: 0,
-    //              child: Container(
-    //                height: 8,
-    //                width: 8,
-    //                decoration: BoxDecoration(
-    //                  //color: message!.isSender ? Colors.white : kPrimaryColor,
-    //                  shape: BoxShape.circle,
-    //                ),
-    //              ),
-    //            )
-    //          ],
-    //        ),
-    //      ),
-    //    ),
-    //    Text(duration,
-    //        style: TextStyle(
-    //            //fontSize: 12, color: message!.isSender ? Colors.white : null),
-    //            )),
-    //
-    //  ],
-    //),
-    //);
-  }
-
-  Future<void> play(ChatMessage? message) async {
-    await audioPlayer.play(
-      message!.message,
-      isLocal: false,
-    );
-    audioPlayer.onAudioPositionChanged.listen((Duration d) {
-      setState(() {
-        duration = d.toString().split('.').first.padLeft(8, "0");
-      });
-    });
-  }
-
-  Future<void> stop(ChatMessage? message) async {
-    await audioPlayer.pause();
   }
 }

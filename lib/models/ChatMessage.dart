@@ -1,15 +1,8 @@
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 
-enum ChatMessageType {
-  text,
-  audio,
-  image,
-  video,
-  gif,
-  empty
-}
+enum ChatMessageType { text, audio, image, video, gif, empty }
 enum MessageStatus { not_view, viewed }
-enum MessageReaction { heart, like, angry, fire }
+//enum MessageReaction { empty, Happy, Angry, Inlove, Sad, Surprised, Mad }
 
 class ChatMessage {
   final String id;
@@ -23,7 +16,7 @@ class ChatMessage {
   final bool isReplied;
   final ChatMessageType repliedMessageType;
   final String repliedMessageId;
-  final MessageReaction messageReaction;
+  final String messageReaction;
 
   ChatMessage(
       this.id,

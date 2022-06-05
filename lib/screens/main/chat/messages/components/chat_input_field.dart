@@ -178,8 +178,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                                       "message": gif.id,
                                       "isAccepted": false,
                                       "isReplied": false,
+                                      "repliedMessageType": 5,
                                       "repliedMessageId": "",
-                                      "messageReaction": 0
+                                      "messageReaction": "empty"
                                     });
                                   });
                                   return true;
@@ -407,7 +408,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
           "isAccepted": false,
           "isReplied": false,
           "repliedMessageId": "",
-          "messageReaction": 0
+          "repliedMessageType": 4,
+          "messageReaction": "empty",
         });
       });
     } else {
@@ -455,7 +457,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   "repliedMessageId": widget.replyMessage.id != ""
                       ? widget.replyMessage.id
                       : "",
-                  "messageReaction": 0
+                  "messageReaction": "empty"
                 });
               });
               return true;
@@ -489,7 +491,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   "repliedMessageId": widget.replyMessage.id != ""
                       ? widget.replyMessage.id
                       : "",
-                  "messageReaction": 0
+                  "messageReaction": "empty"
                 });
                 refresh();
               });

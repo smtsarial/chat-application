@@ -150,8 +150,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         this._purchases = [];
       });
     } catch (e) {
-      print(
-          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
       print(e);
     }
   }
