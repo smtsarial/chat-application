@@ -1,5 +1,6 @@
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/screens/main/chat/messages/components/show_image.dart';
+import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -68,13 +69,16 @@ Widget buildReplyMessageAudio(ChatMessage message) => Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             VoiceMessage(
-              audioSrc: message.message,
+              audioSrc: message.message == ""
+                  ? "https://firebasestorage.googleapis.com/v0/b/anonmy-22c31.appspot.com/o/Audio_Records%2Faudio1654436445871?alt=media&token=fceffd5e-24ba-4bed-9f43-dc4e2dd23596"
+                  : message.message,
               me: true,
               mePlayIconColor: Colors.black,
-              meBgColor: Colors.grey,
+              contactPlayIconColor: Colors.black,
+              meBgColor: PrimaryColor,
               played: false,
-              contactBgColor: Colors.grey,
-              contactFgColor: Colors.grey,
+              contactBgColor: PrimaryColor,
+              contactFgColor: PrimaryColor,
             ),
           ],
         ),

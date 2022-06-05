@@ -116,6 +116,7 @@ class _ReplyTextMessageState extends State<ReplyTextMessage> {
                 audioSrc: widget.message.message,
                 me: true,
                 mePlayIconColor: Colors.black,
+                contactPlayIconColor: Colors.black,
                 meBgColor: Colors.grey,
                 played: false,
                 contactBgColor: Colors.grey,

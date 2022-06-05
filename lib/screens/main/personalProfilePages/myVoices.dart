@@ -108,13 +108,14 @@ class _MyVoicesState extends State<MyVoices> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 VoiceMessage(
+                                  contactPlayIconColor: Colors.black,
                                   audioSrc: user.myVoices[index],
-                                  me: false,
+                                  me: true,
                                   mePlayIconColor: Colors.black,
                                   meBgColor: PrimaryColor,
                                   played: false,
                                   contactBgColor: PrimaryColor,
-                                  contactFgColor: Colors.white,
+                                  contactFgColor: PrimaryColor,
                                 ),
                                 IconButton(
                                     onPressed: () async {

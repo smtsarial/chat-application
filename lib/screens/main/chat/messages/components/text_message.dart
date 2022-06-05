@@ -66,12 +66,23 @@ class TextMessage extends StatelessWidget {
                     child: Text(message!.message,
                         overflow: TextOverflow.ellipsis, maxLines: 10),
                   ),
-                  Container(
-                    child: Text(
-                      timeago.format(message!.timeToSent),
-                      style: TextStyle(fontSize: 10),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Text(
+                            timeago.format(message!.timeToSent),
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ),
+                        message!.messageOwnerMail ==
+                                context.watch<UserProvider>().user.email
+                            ? showReactionIcon(message)
+                            : Container(),
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -81,25 +92,22 @@ class TextMessage extends StatelessWidget {
             ? SizedBox(
                 width: MediaQuery.of(context).size.width * .1,
                 child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: ReactionButtonToggle<String>(
-                    onReactionChanged: (String? value, bool isChecked) async {
-                      debugPrint(
-                          'Selected value: $value, isChecked: $isChecked');
-                      await FirestoreHelper.db
-                          .collection('messages')
-                          .doc(messageRoomID)
-                          .collection('chatMessages')
-                          .doc(message!.id)
-                          .update({"messageReaction": value});
-                    },
-                    //selectedReaction: defaultInitialReaction,
-                    reactions: reactions,
-                    initialReaction: Reaction(
-                        icon: Icon(Icons.reddit),
-                        value: message!.messageReaction.toString()),
-                  ),
-                ),
+                    fit: BoxFit.scaleDown,
+                    child: ReactionButtonToggle<String>(
+                      onReactionChanged: (String? value, bool isChecked) async {
+                        debugPrint(
+                            'Selected value: $value, isChecked: $isChecked');
+                        await FirestoreHelper.db
+                            .collection('messages')
+                            .doc(messageRoomID)
+                            .collection('chatMessages')
+                            .doc(message!.id)
+                            .update({"messageReaction": value});
+                      },
+                      selectedReaction: initialReaction(message),
+                      reactions: reactions,
+                      initialReaction: initialReaction(message),
+                    )),
               )
             : SizedBox(),
       ],

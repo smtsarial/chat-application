@@ -70,8 +70,9 @@ class _myVoiceWidgetState extends State<myVoiceWidget> {
                                 padding: const EdgeInsets.fromLTRB(2, 1, 8, 8),
                                 child: SizedBox(
                                   child: VoiceMessage(
+                                    contactPlayIconColor: Colors.black,
                                     audioSrc: widget.userData.myVoices[index],
-                                    me: false,
+                                    me: true,
                                     mePlayIconColor: Colors.black,
                                     meBgColor: PrimaryColor,
                                     played: false,
