@@ -165,32 +165,35 @@ class _ShufflePageState extends State<ShufflePage> {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: isLoaded
                 ? userList.length != 0
-                    ? GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 9 / 11,
-                                mainAxisSpacing: 5,
-                                crossAxisSpacing: 5),
-                        itemCount: userList.length +
-                            (userList.length >= 7
-                                ? _isAdLoaded
-                                    ? 1
-                                    : 0
-                                : 0),
-                        itemBuilder: (BuildContext ctx, index) {
-                          if (_isAdLoaded && index == _kAdIndex) {
-                            return Container(
-                              //child: AdWidget(ad: _ad),
-                              //width: _ad.size.width.toDouble(),
-                              //height: _ad.size.height.toDouble(),
-                              alignment: Alignment.center,
-                            );
-                          } else {
-                            return shuffleUserCard(
-                                userList[_getDestinationItemIndex(index)]);
-                          }
-                        })
+                    ? RefreshIndicator(
+                        onRefresh: () => getAllUsers(),
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 9 / 11,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5),
+                            itemCount: userList.length +
+                                (userList.length >= 7
+                                    ? _isAdLoaded
+                                        ? 1
+                                        : 0
+                                    : 0),
+                            itemBuilder: (BuildContext ctx, index) {
+                              if (_isAdLoaded && index == _kAdIndex) {
+                                return Container(
+                                  //child: AdWidget(ad: _ad),
+                                  //width: _ad.size.width.toDouble(),
+                                  //height: _ad.size.height.toDouble(),
+                                  alignment: Alignment.center,
+                                );
+                              } else {
+                                return shuffleUserCard(
+                                    userList[_getDestinationItemIndex(index)]);
+                              }
+                            }),
+                      )
                     : Text(AppLocalizations.of(context)!.nodata)
                 : Center(
                     child: Shimmer.fromColors(

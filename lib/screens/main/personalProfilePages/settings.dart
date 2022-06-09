@@ -6,6 +6,7 @@ import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/auth/login.dart';
 import 'package:anonmy/screens/main/personalProfilePages/YoutubeVideoList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/blockedList.dart';
+import 'package:anonmy/screens/main/personalProfilePages/changeUsername.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myHobbies.dart';
 import 'package:anonmy/screens/main/personalProfilePages/myMovieList.dart';
 import 'package:anonmy/screens/main/personalProfilePages/mySpotifyList.dart';
@@ -74,6 +75,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         SettingsSection(
           title: Text(AppLocalizations.of(context)!.account),
           tiles: [
+            SettingsTile(
+              title: Text("Change Username"),
+              leading: Icon(Icons.verified_user),
+              onPressed: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => changeUsername()),
+                );
+              },
+            ),
             SettingsTile(
               title: Text(AppLocalizations.of(context)!.userinfo),
               leading: Icon(Icons.email),

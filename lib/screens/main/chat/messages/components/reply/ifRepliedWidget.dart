@@ -47,6 +47,8 @@ class _RepliedWidgetState extends State<RepliedWidget> {
         return buildReplyMessage(replyMessage);
       case ChatMessageType.gif:
         return buildReplyMessageGIPH(replyMessage);
+      case ChatMessageType.storyReply:
+        return buildReplyStoryReplyMessage(replyMessage);
       default:
         return SizedBox();
     }
@@ -82,4 +84,5 @@ class _RepliedWidgetState extends State<RepliedWidget> {
       print(e);
     }
   }
+
 }

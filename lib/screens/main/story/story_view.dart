@@ -6,12 +6,15 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
+import 'package:anonmy/screens/main/chat/messages/chat_screen.dart';
+import 'package:anonmy/screens/main/chat/messages/components/reactions/items.dart';
 import 'package:anonmy/screens/main/personDetailScreens/user_profile_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:story_view/story_view.dart';
@@ -42,11 +45,7 @@ class StoryItem {
 
   /// The page content
   final Widget view;
-  StoryItem(
-    this.view, {
-    required this.duration,
-    this.shown = false,
-  });
+  StoryItem(this.view, {required this.duration, this.shown = false});
 
   /// Short hand to create text-only page.
   ///
@@ -110,64 +109,6 @@ class StoryItem {
           ),
         ],
       )),
-      shown: shown,
-      duration: duration ?? Duration(seconds: 3),
-    );
-  }
-
-  /// Factory constructor for page images. [controller] should be same instance as
-  /// one passed to the `StoryView`
-  factory StoryItem.pageImage({
-    required String url,
-    required StoryController controller,
-    Key? key,
-    BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
-    bool shown = false,
-    Map<String, dynamic>? requestHeaders,
-    Duration? duration,
-  }) {
-    return StoryItem(
-      Container(
-        key: key,
-        color: Colors.black,
-        child: Stack(
-          children: <Widget>[
-            StoryImage.url(
-              url,
-              controller: controller,
-              fit: imageFit,
-              requestHeaders: requestHeaders,
-            ),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(
-                    bottom: 24,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption != null
-                      ? Text(
-                          caption,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      : SizedBox(),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -263,112 +204,6 @@ class StoryItem {
         shown: shown,
         duration: duration ?? Duration(seconds: 10));
   }
-
-  /// Shorthand for creating a story item from an image provider such as `AssetImage`
-  /// or `NetworkImage`. However, the story continues to play while the image loads
-  /// up.
-  factory StoryItem.pageProviderImage(
-    ImageProvider image, {
-    Key? key,
-    BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
-    bool shown = false,
-    Duration? duration,
-  }) {
-    return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Image(
-                  image: image,
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: imageFit,
-                ),
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      bottom: 24,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        shown: shown,
-        duration: duration ?? Duration(seconds: 3));
-  }
-
-  /// Shorthand for creating an inline story item from an image provider such as `AssetImage`
-  /// or `NetworkImage`. However, the story continues to play while the image loads
-  /// up.
-  factory StoryItem.inlineProviderImage(
-    ImageProvider image, {
-    Key? key,
-    Text? caption,
-    bool shown = false,
-    bool roundedTop = true,
-    bool roundedBottom = false,
-    Duration? duration,
-  }) {
-    return StoryItem(
-      Container(
-        key: key,
-        decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(roundedTop ? 8 : 0),
-              bottom: Radius.circular(roundedBottom ? 8 : 0),
-            ),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            )),
-        child: Container(
-          margin: EdgeInsets.only(
-            bottom: 16,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 8,
-          ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              child: caption == null ? SizedBox() : caption,
-              width: double.infinity,
-            ),
-          ),
-        ),
-      ),
-      shown: shown,
-      duration: duration ?? Duration(seconds: 3),
-    );
-  }
 }
 
 /// Widget to display stories just like Whatsapp and Instagram. Can also be used
@@ -408,10 +243,12 @@ class StoryView extends StatefulWidget {
   final String ownerUsername;
   //final DateTime storyDate;
   final String ownerProfilepicture;
+  final List<Story> storyList;
 
   StoryView({
     required this.storyItems,
     required this.controller,
+    required this.storyList,
     this.onComplete,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
@@ -632,177 +469,298 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   final _formKey1 = GlobalKey<FormState>();
   TextEditingController reportUserController = TextEditingController();
-
+  TextEditingController _sendMessageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            _currentView,
-            Align(
-                alignment: Alignment.centerRight,
-                heightFactor: 1,
-                child: GestureDetector(
-                  onTapDown: (details) {
-                    widget.controller.pause();
-                  },
-                  onTapCancel: () {
-                    widget.controller.play();
-                  },
-                  onTapUp: (details) {
-                    // if debounce timed out (not active) then continue anim
-                    if (_nextDebouncer?.isActive == false) {
+    return Scaffold(
+      body: GestureDetector(
+        onVerticalDragUpdate: (details) {
+          int sensitivity = 3;
+          if (details.delta.dy > sensitivity) {
+            // Down Swipe
+            print("downSwipe");
+          } else if (details.delta.dy < -sensitivity) {
+            // Up Swipe
+            print("Up swiperrrrrrrrreeeeeeeee");
+          }
+        },
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              _currentView,
+              Align(
+                  alignment: Alignment.centerRight,
+                  heightFactor: 1,
+                  child: GestureDetector(
+                    onTapDown: (details) {
+                      widget.controller.pause();
+                    },
+                    onTapCancel: () {
                       widget.controller.play();
-                    } else {
-                      widget.controller.next();
-                    }
-                  },
-                  onVerticalDragStart: widget.onVerticalSwipeComplete == null
-                      ? null
-                      : (details) {
-                          widget.controller.pause();
-                        },
-                  onVerticalDragCancel: widget.onVerticalSwipeComplete == null
-                      ? null
-                      : () {
-                          widget.controller.play();
-                        },
-                  onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
-                      ? null
-                      : (details) {
-                          if (verticalDragInfo == null) {
-                            verticalDragInfo = VerticalDragInfo();
-                          }
+                    },
+                    onTapUp: (details) {
+                      // if debounce timed out (not active) then continue anim
+                      if (_nextDebouncer?.isActive == false) {
+                        widget.controller.play();
+                      } else {
+                        widget.controller.next();
+                      }
+                    },
+                    onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                        ? null
+                        : (details) {
+                            widget.controller.pause();
+                          },
+                    onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                        ? null
+                        : () {
+                            widget.controller.play();
+                          },
+                    onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                        ? null
+                        : (details) {
+                            if (verticalDragInfo == null) {
+                              verticalDragInfo = VerticalDragInfo();
+                            }
 
-                          verticalDragInfo!.update(details.primaryDelta!);
+                            verticalDragInfo!.update(details.primaryDelta!);
 
-                          // TODO: provide callback interface for animation purposes
-                        },
-                  onVerticalDragEnd: widget.onVerticalSwipeComplete == null
-                      ? null
-                      : (details) {
-                          widget.controller.play();
-                          // finish up drag cycle
-                          if (!verticalDragInfo!.cancel &&
-                              widget.onVerticalSwipeComplete != null) {
-                            widget.onVerticalSwipeComplete!(
-                                verticalDragInfo!.direction);
-                          }
+                            // TODO: provide callback interface for animation purposes
+                          },
+                    onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                        ? null
+                        : (details) {
+                            widget.controller.play();
+                            // finish up drag cycle
+                            if (!verticalDragInfo!.cancel &&
+                                widget.onVerticalSwipeComplete != null) {
+                              widget.onVerticalSwipeComplete!(
+                                  verticalDragInfo!.direction);
+                            }
 
-                          verticalDragInfo = null;
-                        },
-                )),
-            Align(
-              alignment: Alignment.centerLeft,
-              heightFactor: 1,
-              child: SizedBox(
-                  child: GestureDetector(onTap: () {
-                    widget.controller.previous();
-                  }),
-                  width: 70),
-            ),
-            Align(
-              alignment: widget.progressPosition == ProgressPosition.top
-                  ? Alignment.topCenter
-                  : Alignment.bottomCenter,
-              child: SafeArea(
-                bottom: widget.inline ? false : true,
-                // we use SafeArea here for notched and bezeles phones
-                child: Column(children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: PageBar(
-                      widget.storyItems
-                          .map((it) => PageData(it!.duration, it.shown))
-                          .toList(),
-                      this._currentAnimation,
-                      key: UniqueKey(),
-                      indicatorHeight: widget.inline
-                          ? IndicatorHeight.small
-                          : IndicatorHeight.large,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(16, 2, 16, 2),
-                    child: Row(
+                            verticalDragInfo = null;
+                          },
+                  )),
+              Align(
+                alignment: Alignment.centerLeft,
+                heightFactor: 1,
+                child: SizedBox(
+                    child: GestureDetector(onTap: () {
+                      widget.controller.previous();
+                    }),
+                    width: 70),
+              ),
+              Align(
+                alignment: widget.progressPosition == ProgressPosition.top
+                    ? Alignment.topCenter
+                    : Alignment.bottomCenter,
+                child: SafeArea(
+                  bottom: widget.inline ? false : true,
+                  // we use SafeArea here for notched and bezeles phones
+                  child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Profile(
-                                        senderData: sender,
-                                        userData: receiver)));
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              child: PageBar(
+                                widget.storyItems
+                                    .map((it) =>
+                                        PageData(it!.duration, it.shown))
+                                    .toList(),
+                                this._currentAnimation,
+                                key: UniqueKey(),
+                                indicatorHeight: widget.inline
+                                    ? IndicatorHeight.small
+                                    : IndicatorHeight.large,
+                              ),
                             ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: PureColor,
-                                  radius: 12,
-                                  child: CircleAvatar(
-                                    radius: 11,
-                                    backgroundImage: Image(
-                                            image: CachedNetworkImageProvider(
-                                                widget.ownerProfilepicture))
-                                        .image,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    DefaultTextStyle(
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                      child: Text(widget.ownerUsername),
-                                    ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(16, 2, 16, 2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Profile(
+                                                  senderData: sender,
+                                                  userData: receiver)));
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: PureColor,
+                                            radius: 12,
+                                            child: CircleAvatar(
+                                              radius: 11,
+                                              backgroundImage: Image(
+                                                      image: CachedNetworkImageProvider(
+                                                          widget
+                                                              .ownerProfilepicture))
+                                                  .image,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              DefaultTextStyle(
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                child:
+                                                    Text(widget.ownerUsername),
+                                              ),
 
-                                    //DefaultTextStyle(
-                                    //  style: TextStyle(fontWeight: FontWeight.bold),
-                                    //  child: Text(timeago.format(widget.storyDate)),
-                                    //),
-                                  ],
-                                ),
-                              ],
+                                              //DefaultTextStyle(
+                                              //  style: TextStyle(fontWeight: FontWeight.bold),
+                                              //  child: Text(timeago.format(widget.storyDate)),
+                                              //),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: PopupMenuButton<String>(
+                                      color: Colors.black,
+                                      onSelected: handleClick,
+                                      itemBuilder: (BuildContext context) {
+                                        return {
+                                          'Block this user',
+                                          'Report this content'
+                                        }.map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child: Text(choice),
+                                          );
+                                        }).toList();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            //todo: instagram effects
+                            //Align(
+                            //  alignment: Alignment.center,
+                            //  child: Visibility(
+                            //      child: Column(
+                            //    mainAxisAlignment: MainAxisAlignment.center,
+                            //    crossAxisAlignment: CrossAxisAlignment.center,
+                            //    children: [
+                            //      Row(
+                            //        mainAxisAlignment: MainAxisAlignment.center,
+                            //        crossAxisAlignment:
+                            //            CrossAxisAlignment.center,
+                            //        children: [
+                            //          Container(
+                            //              child: FittedBox(
+                            //            child: Image.asset(
+                            //              'assets/images/happy.png',
+                            //              height: 130,
+                            //              width: 130,
+                            //            ),
+                            //          )),
+                            //          Container(
+                            //              child: FittedBox(
+                            //            child: Image.asset(
+                            //              'assets/images/happy.png',
+                            //              height: 130,
+                            //              width: 130,
+                            //            ),
+                            //          ))
+                            //        ],
+                            //      ),
+                            //      Row(
+                            //        mainAxisAlignment: MainAxisAlignment.center,
+                            //        crossAxisAlignment:
+                            //            CrossAxisAlignment.center,
+                            //        children: [
+                            //          Container(
+                            //              child: FittedBox(
+                            //            child: Image.asset(
+                            //              'assets/images/happy.png',
+                            //              height: 130,
+                            //              width: 130,
+                            //            ),
+                            //          )),
+                            //          Container(
+                            //              child: FittedBox(
+                            //            child: Image.asset(
+                            //              'assets/images/happy.png',
+                            //              height: 130,
+                            //              width: 130,
+                            //            ),
+                            //          ))
+                            //        ],
+                            //      )
+                            //    ],
+                            //  )),
+                            //)
+                          ],
                         ),
-                        Material(
-                          color: Colors.transparent,
-                          child: PopupMenuButton<String>(
-                            color: Colors.black,
-                            onSelected: handleClick,
-                            itemBuilder: (BuildContext context) {
-                              return {'Block this user', 'Report this content'}
-                                  .map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(choice),
-                                );
-                              }).toList();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
+                      ]),
+                ),
               ),
-            ),
-          ],
+              widget.ownerUsername !=
+                      Provider.of<UserProvider>(context, listen: false)
+                          .user
+                          .username
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        child: Card(
+                          elevation: 50,
+                          margin: EdgeInsets.all(20),
+                          color: Colors.transparent,
+                          child: TextField(
+                              obscureText: false,
+                              controller: _sendMessageController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Type message',
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.send),
+                                  onPressed: () {
+                                    User senderUser = Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
+                                        .user;
+                                    _sendMessageController.text.length != 0
+                                        ? sendMessageOnStory(
+                                            widget.ownerUsername,
+                                            senderUser,
+                                            _sendMessageController.text,
+                                            widget.storyList[widget.storyItems
+                                                .indexOf(this._currentStory)])
+                                        : print("Please Enter the message");
+                                  },
+                                ),
+                              )),
+                        ),
+                      ),
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );
@@ -918,6 +876,69 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       print("reported");
       _showMyDialog(context);
     }
+  }
+
+  Future sendMessageOnStory(String receiverUsername, User senderUser,
+      String _sendMessageController, Story? story) async {
+    FirestoreHelper.getSpecificUserInfoWithUsername(receiverUsername)
+        .then((receiver) async {
+      await FirestoreHelper.checkAvaliableMessageRoom(
+              senderUser.email, receiver.email, false)
+          .then((value) {
+        value.id == ""
+            ? FirestoreHelper.addNewMessageRoom(false, senderUser, receiver)
+                .then((value) async {
+                if (value != "") {
+                  await FirestoreHelper.getSpecificChatRoomInfo(value)
+                      .then((value) async {
+                    if (value.id != "") {
+                      final storyItem = widget.storyItems.firstWhere((it) {
+                        return !it!.shown;
+                      })!;
+
+                      if (widget.onStoryShow != null) {
+                        widget.onStoryShow!(storyItem);
+                      }
+                      await FirestoreHelper.db
+                          .collection('messages')
+                          .doc(value.id)
+                          .collection('chatMessages')
+                          .add({
+                        "messageOwnerMail": sender.email,
+                        "messageOwnerUsername": sender.username,
+                        "timeToSent": DateTime.now(),
+                        "messageType": 5,
+                        "status": 0,
+                        "message": _sendMessageController,
+                        "isAccepted": false,
+                        "isReplied": true,
+                        "repliedMessageType": 6,
+                        "repliedMessageId": story!.imageUrl,
+                        "messageReaction": "empty"
+                      });
+                    }
+                  });
+                }
+              })
+            : FirestoreHelper.db
+                .collection('messages')
+                .doc(value.id)
+                .collection('chatMessages')
+                .add({
+                "messageOwnerMail": sender.email,
+                "messageOwnerUsername": sender.username,
+                "timeToSent": DateTime.now(),
+                "messageType": 5,
+                "status": 0,
+                "message": _sendMessageController,
+                "isAccepted": false,
+                "isReplied": true,
+                "repliedMessageType": 6,
+                "repliedMessageId": story!.imageUrl,
+                "messageReaction": "empty"
+              });
+      });
+    });
   }
 }
 

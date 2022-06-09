@@ -41,14 +41,16 @@ class _StoryViewerState extends State<StoryViewer> {
   @override
   Widget build(BuildContext context) {
     return StoryView(
-        controller: controller,
-        repeat: true,
-        storyItems: storyItems,
-        ownerProfilepicture: widget.ownerProfilepicture,
-        ownerUsername: widget.ownerUsername,
-        //storyDate: widget.storyDate,
-        onComplete: () {
-          Navigator.pop(context);
-        });
+      controller: controller,
+      repeat: true,
+      storyItems: storyItems,
+      ownerProfilepicture: widget.ownerProfilepicture,
+      ownerUsername: widget.ownerUsername,
+      //storyDate: widget.storyDate,
+      onComplete: () {
+        Navigator.pop(context);
+      },
+      storyList: widget.imageList,
+    );
   }
 }

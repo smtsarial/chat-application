@@ -1,6 +1,6 @@
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 
-enum ChatMessageType { text, audio, image, video, gif, empty }
+enum ChatMessageType { text, audio, image, video, gif, storyReply, empty }
 enum MessageStatus { not_view, viewed }
 //enum MessageReaction { empty, Happy, Angry, Inlove, Sad, Surprised, Mad }
 

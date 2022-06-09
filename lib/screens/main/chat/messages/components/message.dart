@@ -4,6 +4,7 @@ import 'package:anonmy/models/user.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/chat/messages/components/gif_message.dart';
 import 'package:anonmy/screens/main/chat/messages/components/image_message.dart';
+import 'package:anonmy/screens/main/chat/messages/components/storyReply_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/models/ChatMessage.dart';
 import 'package:anonmy/theme.dart';
@@ -57,6 +58,11 @@ class _MessageState extends State<Message> {
           );
         case ChatMessageType.image:
           return ImageMessage(
+            message: message,
+            messageRoomID: widget.messageRoomID,
+          );
+        case ChatMessageType.storyReply:
+          return StoryReplyMessage(
             message: message,
             messageRoomID: widget.messageRoomID,
           );

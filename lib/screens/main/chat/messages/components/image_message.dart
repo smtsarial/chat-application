@@ -27,29 +27,6 @@ class ImageMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        message.isReplied == true
-            ? IntrinsicHeight(
-                child: Container(
-                  color: Color.fromARGB(80, 80, 80, 80),
-                  child: Row(
-                    children: [
-                      Container(
-                        color: Colors.green,
-                        width: 4,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                          child: Container(
-                              padding: EdgeInsets.all(10),
-                              child: RepliedWidget(
-                                chatID: messageRoomID,
-                                message: message,
-                              ))),
-                    ],
-                  ),
-                ),
-              )
-            : Container(),
         Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -61,36 +38,37 @@ class ImageMessage extends StatelessWidget {
               horizontal: kDefaultPadding / 2,
               vertical: kDefaultPadding / 2,
             ),
-            child: Row(
+            child: Column(
               children: [
-                message.messageOwnerMail ==
-                        context.watch<UserProvider>().user.email
-                    ? GestureDetector(
-                        onTap: () {
-                          print("object");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  showImagePage(image: [message.message]),
-                            ),
-                          );
-                        },
+                message.isReplied == true
+                    ? IntrinsicHeight(
                         child: Container(
-                            width: 130,
-                            height: 130,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 2,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor),
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: CachedNetworkImageProvider(
-                                        message.message)))),
+                          color: Color.fromARGB(80, 80, 80, 80),
+                          child: Row(
+                            children: [
+                              Container(
+                                color: Colors.green,
+                                width: 4,
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: RepliedWidget(
+                                    chatID: messageRoomID,
+                                    message: message,
+                                  )),
+                            ],
+                          ),
+                        ),
                       )
-                    : message.isAccepted
+                    : Container(),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    message.messageOwnerMail ==
+                            context.watch<UserProvider>().user.email
                         ? GestureDetector(
                             onTap: () {
                               print("object");
@@ -116,38 +94,69 @@ class ImageMessage extends StatelessWidget {
                                         image: CachedNetworkImageProvider(
                                             message.message)))),
                           )
-                        : GestureDetector(
-                            onTap: () {
-                              FirebaseFirestore.instance
-                                  .collection('messages')
-                                  .doc(messageRoomID)
-                                  .collection('chatMessages')
-                                  .doc(message.id)
-                                  .update({"isAccepted": true});
-                            },
-                            child: Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .clicktoseethepicture),
-                            )),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Text(
-                          timeago.format(message.timeToSent),
-                          style: TextStyle(fontSize: 10),
-                        ),
+                        : message.isAccepted
+                            ? GestureDetector(
+                                onTap: () {
+                                  print("object");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => showImagePage(
+                                          image: [message.message]),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                    width: 130,
+                                    height: 130,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 2,
+                                            color: Theme.of(context)
+                                                .scaffoldBackgroundColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: CachedNetworkImageProvider(
+                                                message.message)))),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  FirebaseFirestore.instance
+                                      .collection('messages')
+                                      .doc(messageRoomID)
+                                      .collection('chatMessages')
+                                      .doc(message.id)
+                                      .update({"isAccepted": true});
+                                },
+                                child: Center(
+                                  child: Text(AppLocalizations.of(context)!
+                                      .clicktoseethepicture),
+                                )),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Text(
+                              timeago.format(message.timeToSent),
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ),
+                          message.messageOwnerMail ==
+                                  context.watch<UserProvider>().user.email
+                              ? showReactionIcon(message)
+                              : Container(),
+                        ],
                       ),
-                      message.messageOwnerMail ==
-                              context.watch<UserProvider>().user.email
-                          ? showReactionIcon(message)
-                          : Container(),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             )),
+        SizedBox(
+          height: 5,
+        ),
         message.messageOwnerMail != context.watch<UserProvider>().user.email
             ? SizedBox(
                 width: MediaQuery.of(context).size.width * .1,

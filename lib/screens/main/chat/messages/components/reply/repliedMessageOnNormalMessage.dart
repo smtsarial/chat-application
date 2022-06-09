@@ -11,11 +11,9 @@ Widget buildReplyMessage(ChatMessage message) => Column(
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text(
-                '${message.message}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            Text(
+              '${message.message}',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -132,5 +130,53 @@ Widget buildReplyMessageGIPH(ChatMessage message) => Column(
         const SizedBox(height: 8),
         Text(timeago.format(message.timeToSent),
             style: TextStyle(color: Colors.grey)),
+      ],
+    );
+
+Widget buildReplyStoryReplyMessage(ChatMessage message) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
+          children: [
+            Container(
+                width: 130,
+                height: 130,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: PrimaryColor,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: CachedNetworkImageProvider(
+                            message.repliedMessageId)))),
+            Positioned(
+                bottom: 5,
+                left: 25,
+                child: Text(timeago.format(message.timeToSent),
+                    overflow: TextOverflow.ellipsis, maxLines: 10)),
+          ],
+        ),
+        Container(
+          width: 140,
+          decoration: BoxDecoration(
+              color: PrimaryColor, borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                      message.message.length >= 25
+                          ? message.message.substring(0, 26)
+                          : message.message,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 20),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );

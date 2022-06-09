@@ -114,142 +114,153 @@ class _StoryPageState extends State<StoryPage> {
             ),
             Expanded(
                 child: stories.length != 0
-                    ? GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 9 / 16,
-                                mainAxisSpacing: 2,
-                                crossAxisSpacing: 2),
-                        itemCount: stories.length +
-                            (stories.length >= 2
-                                ? _isAdLoaded
-                                    ? 1
-                                    : 0
-                                : 0),
-                        itemBuilder: (BuildContext ctx, index) {
-                          if (_isAdLoaded && index == _kAdIndex) {
-                            return Container(
-                              child: AdWidget(ad: _ad),
-                              width: _ad.size.width.toDouble(),
-                              height: _ad.size.height.toDouble(),
-                              alignment: Alignment.center,
-                            );
-                          } else {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => StoryViewer(
-                                              imageList: [
-                                                stories[
-                                                    _getDestinationItemIndex(
-                                                        index)]
-                                              ],
-                                              ownerProfilepicture: stories[
-                                                      _getDestinationItemIndex(
-                                                          index)]
-                                                  .ownerProfilePicture,
-                                              ownerUsername: stories[
-                                                      _getDestinationItemIndex(
-                                                          index)]
-                                                  .ownerUsername,
-                                              //storyDate: stories[
-                                              //        _getDestinationItemIndex(
-                                              //            index)]
-                                              //    .createdTime,
-                                            )));
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: PrimaryColor,
-                                        image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                              stories[_getDestinationItemIndex(
-                                                      index)]
-                                                  .imageUrl),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )),
-                                  Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        border: index < premiumStoryCount
-                                            ? Border.all(
-                                                width: 2.0, color: PrimaryColor)
-                                            : Border(),
-                                        color: index < premiumStoryCount
-                                            ? Color.fromARGB(88, 251, 255, 0)
-                                            : Color.fromARGB(137, 0, 0, 0),
-                                      )),
-                                  Positioned(
-                                      left: 4,
-                                      bottom: 10,
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor: PureColor,
-                                            radius: 12,
-                                            child: CircleAvatar(
-                                              radius: 11,
-                                              backgroundImage: Image(
-                                                image: CachedNetworkImageProvider(
-                                                    stories[_getDestinationItemIndex(
+                    ? RefreshIndicator(
+                        onRefresh: () async {
+                          setState(() {
+                            stories = [];
+                          });
+                          getStories();
+                        },
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    childAspectRatio: 9 / 16,
+                                    mainAxisSpacing: 2,
+                                    crossAxisSpacing: 2),
+                            itemCount: stories.length +
+                                (stories.length >= 2
+                                    ? _isAdLoaded
+                                        ? 1
+                                        : 0
+                                    : 0),
+                            itemBuilder: (BuildContext ctx, index) {
+                              if (_isAdLoaded && index == _kAdIndex) {
+                                return Container(
+                                  child: AdWidget(ad: _ad),
+                                  width: _ad.size.width.toDouble(),
+                                  height: _ad.size.height.toDouble(),
+                                  alignment: Alignment.center,
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StoryViewer(
+                                                  imageList: [
+                                                    stories[
+                                                        _getDestinationItemIndex(
                                                             index)]
-                                                        .ownerProfilePicture),
-                                                loadingBuilder:
-                                                    (BuildContext context,
+                                                  ],
+                                                  ownerProfilepicture: stories[
+                                                          _getDestinationItemIndex(
+                                                              index)]
+                                                      .ownerProfilePicture,
+                                                  ownerUsername: stories[
+                                                          _getDestinationItemIndex(
+                                                              index)]
+                                                      .ownerUsername,
+                                                  //storyDate: stories[
+                                                  //        _getDestinationItemIndex(
+                                                  //            index)]
+                                                  //    .createdTime,
+                                                )));
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: PrimaryColor,
+                                            image: DecorationImage(
+                                              image: CachedNetworkImageProvider(
+                                                  stories[_getDestinationItemIndex(
+                                                          index)]
+                                                      .imageUrl),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )),
+                                      Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            border: index < premiumStoryCount
+                                                ? Border.all(
+                                                    width: 2.0,
+                                                    color: PrimaryColor)
+                                                : Border(),
+                                            color: index < premiumStoryCount
+                                                ? Color.fromARGB(
+                                                    88, 251, 255, 0)
+                                                : Color.fromARGB(137, 0, 0, 0),
+                                          )),
+                                      Positioned(
+                                          left: 4,
+                                          bottom: 10,
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: PureColor,
+                                                radius: 12,
+                                                child: CircleAvatar(
+                                                  radius: 11,
+                                                  backgroundImage: Image(
+                                                    image: CachedNetworkImageProvider(
+                                                        stories[_getDestinationItemIndex(
+                                                                index)]
+                                                            .ownerProfilePicture),
+                                                    loadingBuilder: (BuildContext
+                                                            context,
                                                         Widget child,
                                                         ImageChunkEvent?
                                                             loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  }
-                                                  return Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      value: loadingProgress
-                                                                  .expectedTotalBytes !=
-                                                              null
-                                                          ? loadingProgress
-                                                                  .cumulativeBytesLoaded /
-                                                              loadingProgress
-                                                                  .expectedTotalBytes!
-                                                          : null,
-                                                    ),
-                                                  );
-                                                },
-                                              ).image,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(stories[_getDestinationItemIndex(
-                                                          index)]
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value: loadingProgress
+                                                                      .expectedTotalBytes !=
+                                                                  null
+                                                              ? loadingProgress
+                                                                      .cumulativeBytesLoaded /
+                                                                  loadingProgress
+                                                                      .expectedTotalBytes!
+                                                              : null,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).image,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(stories[_getDestinationItemIndex(
+                                                              index)]
+                                                          .ownerUsername
+                                                          .length >
+                                                      8
+                                                  ? stories[
+                                                          _getDestinationItemIndex(
+                                                              index)]
                                                       .ownerUsername
-                                                      .length >
-                                                  8
-                                              ? stories[
-                                                      _getDestinationItemIndex(
-                                                          index)]
-                                                  .ownerUsername
-                                                  .substring(0, 8)
-                                              : stories[
-                                                      _getDestinationItemIndex(
-                                                          index)]
-                                                  .ownerUsername)
-                                        ],
-                                      )),
-                                ],
-                              ),
-                            );
-                          }
-                        })
+                                                      .substring(0, 8)
+                                                  : stories[
+                                                          _getDestinationItemIndex(
+                                                              index)]
+                                                      .ownerUsername)
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }),
+                      )
                     : Center(
                         child: Text(
                             AppLocalizations.of(context)!.thereisnostories),
