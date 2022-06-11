@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/main.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -361,6 +362,10 @@ class _EditPageState extends State<EditPage> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Profile updated successfully except profile picture!"),
         ));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
       });
       setState(() {
         _visibleCircular = false;
@@ -390,6 +395,10 @@ class _EditPageState extends State<EditPage> {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Profile updated successfully"),
             ));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

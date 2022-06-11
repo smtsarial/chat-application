@@ -165,8 +165,7 @@ class _MyHobbiesState extends State<MyHobbies> {
                           ))
                 : Expanded(
                     child: Center(
-                    child:
-                        Text("There is no hobbie please add from seach bar."),
+                    child: Text(AppLocalizations.of(context)!.thereisnohobbie),
                   )),
           ],
         ));

@@ -56,9 +56,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   @override
   void dispose() {
-    if (_conectionSubscription != null) {
-      _conectionSubscription.cancel();
-    }
+    _conectionSubscription.cancel();
+    _conectionSubscription.pause();
     super.dispose();
   }
 
@@ -66,14 +65,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   Future<void> initPlatformState() async {
     String? platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await FlutterInappPurchase.instance.platformVersion;
-    } catch (e) {
-      print(e);
-    }
 
     // prepare
-    var result = await FlutterInappPurchase.instance.initConnection;
+    var result = await FlutterInappPurchase.instance.initialize();
     print('result: $result');
 
     if (!mounted) return;
@@ -84,7 +78,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
     // refresh items for android
     try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      String msg = await FlutterInappPurchase.instance.consumeAll();
       print('consumeAllItems: $msg');
     } catch (err) {
       print('consumeAllItems error: $err');

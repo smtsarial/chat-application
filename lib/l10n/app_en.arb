@@ -115,5 +115,13 @@
     "doyouwanttosendvoicemessage":"Do you want to send voice message?",
     "myvoices":"My Voices",
     "thereisnovoice":"There is no recorded voice",
-    "signwithgoogle":"Sign in with Google"
+    "signwithgoogle":"Sign in with Google",
+    "discard":"Discard",
+    "discardedits":"Discard Edits?",
+    "discarderror":"If you go back now, you'll lose all the edits you've made.",
+    "saveDraft":"Save Drafts",
+    "share":"Share",
+    "usernamechangedsuccessfully":"Username changed successfully!",
+    "changeusername":"Change Username",
+    "recordyourvoice":"Record your voice."
 }

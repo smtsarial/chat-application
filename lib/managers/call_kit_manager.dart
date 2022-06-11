@@ -1,6 +1,7 @@
+import 'package:anonmy/widgets/connectycube_call_kit/connectycube_flutter_call_kit.dart';
+import 'package:anonmy/widgets/connectycube_call_kit/src/connectycube_flutter_call_kit.dart';
 import 'package:universal_io/io.dart';
 
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 
 class CallKitManager {
   static CallKitManager get instance => _getInstance();

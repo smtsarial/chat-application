@@ -76,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: Text(AppLocalizations.of(context)!.account),
           tiles: [
             SettingsTile(
-              title: Text("Change Username"),
+              title: Text(AppLocalizations.of(context)!.changeusername),
               leading: Icon(Icons.verified_user),
               onPressed: (context) {
                 Navigator.push(

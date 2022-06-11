@@ -15,6 +15,7 @@ import 'package:anonmy/screens/main/story/src/domain/sevices/save_as_image.dart'
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/item_type.dart';
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/text_animation_type.dart';
 import 'package:anonmy/screens/main/story/src/presentation/widgets/animated_onTap_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomTools extends StatefulWidget {
   final GlobalKey contentKey;
@@ -191,7 +192,7 @@ class _BottomToolsState extends State<BottomTools> {
               //            ),
               //    ),
               //  ),
-            //  ),
+              //  ),
 
               /// center logo
               controlNotifier.middleBottomWidget != null
@@ -296,9 +297,9 @@ class _BottomToolsState extends State<BottomTools> {
                                             color: Colors.white, width: 1.5)),
                                     child: Row(
                                         mainAxisSize: MainAxisSize.min,
-                                        children: const [
+                                        children: [
                                           Text(
-                                            'Share',
+                                            AppLocalizations.of(context)!.share,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 letterSpacing: 1.5,

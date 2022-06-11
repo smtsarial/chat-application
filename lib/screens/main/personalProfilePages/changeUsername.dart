@@ -1,8 +1,10 @@
 import 'package:anonmy/connections/auth.dart';
 import 'package:anonmy/connections/firestore.dart';
+import 'package:anonmy/main.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class changeUsername extends StatefulWidget {
   const changeUsername({Key? key}) : super(key: key);
@@ -34,7 +36,7 @@ class _changeUsernameState extends State<changeUsername> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Change Username"),
+        title: Text(AppLocalizations.of(context)!.changeusername),
         backgroundColor: PrimaryColor,
       ),
       body: Container(
@@ -46,7 +48,7 @@ class _changeUsernameState extends State<changeUsername> {
                   child: Container(
                     padding: EdgeInsets.all(20),
                     child: Text(
-                      "Username changed successfully!",
+                      AppLocalizations.of(context)!.usernamechangedsuccessfully,
                       style: TextStyle(
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),
@@ -91,10 +93,16 @@ class _changeUsernameState extends State<changeUsername> {
                             .collection('users')
                             .doc(userData.id)
                             .update({"username": usernameController.text}).then(
-                                (value) => setState(() {
-                                      _visibleCircular = false;
-                                      showMessage = true;
-                                    }));
+                                (value) {
+                          setState(() {
+                            _visibleCircular = false;
+                            showMessage = true;
+                          });
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyApp()),
+                          );
+                        });
                       } catch (e) {
                         setState(() {
                           _visibleCircular = false;
@@ -112,7 +120,7 @@ class _changeUsernameState extends State<changeUsername> {
                           ),
                           visible: _visibleCircular,
                         )
-                      : Text("AppLocalizations.of(context)!.register",
+                      : Text(AppLocalizations.of(context)!.changeusername,
                           style: TextStyle(color: PrimaryColor)),
                 ),
               ),

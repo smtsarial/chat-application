@@ -49,6 +49,8 @@ class _ReplyTextMessageState extends State<ReplyTextMessage> {
         return buildReplyMessage();
       case ChatMessageType.gif:
         return buildReplyMessageGIPH();
+      case ChatMessageType.storyReply:
+        return buildReplyStoryReplyMessage();
       default:
         return SizedBox();
     }
@@ -122,6 +124,10 @@ class _ReplyTextMessageState extends State<ReplyTextMessage> {
                 contactBgColor: Colors.grey,
                 contactFgColor: Colors.grey,
               ),
+              GestureDetector(
+                child: Icon(Icons.close, size: 16),
+                onTap: widget.notifyCancel,
+              )
             ],
           ),
           const SizedBox(height: 8),
@@ -169,6 +175,55 @@ class _ReplyTextMessageState extends State<ReplyTextMessage> {
                     ],
                   ),
                 ),
+              ),
+              GestureDetector(
+                child: Icon(Icons.close, size: 16),
+                onTap: widget.notifyCancel,
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(timeago.format(widget.message.timeToSent),
+              style: TextStyle(color: Colors.grey)),
+        ],
+      );
+
+  Widget buildReplyStoryReplyMessage() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: PrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: CachedNetworkImageProvider(
+                                  widget.message.repliedMessageId)))),
+                  Positioned(
+                      bottom: 5,
+                      left: 25,
+                      child: Text(timeago.format(widget.message.timeToSent),
+                          overflow: TextOverflow.ellipsis, maxLines: 10)),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                    widget.message.message.length >= 25
+                        ? widget.message.message.substring(0, 26)
+                        : widget.message.message,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 20),
               ),
               GestureDetector(
                 child: Icon(Icons.close, size: 16),

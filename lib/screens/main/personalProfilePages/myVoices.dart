@@ -44,7 +44,7 @@ class _MyVoicesState extends State<MyVoices> {
         appBar: AppBar(
           backgroundColor: PrimaryColor,
           centerTitle: true,
-          title: Text("Record Your Voice "),
+          title: Text(AppLocalizations.of(context)!.recordyourvoice),
         ),
         floatingActionButton: Container(
             margin: EdgeInsets.fromLTRB(5, 5, 10, 5),

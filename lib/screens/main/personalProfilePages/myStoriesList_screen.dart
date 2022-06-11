@@ -47,7 +47,9 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
             ),
             isLoaded
                 ? stories.length == 0
-                    ? Center(child: Text("There is no saved story."))
+                    ? Center(
+                        child: Text(
+                            AppLocalizations.of(context)!.thereisnostories))
                     : Expanded(
                         child: stories.isNotEmpty
                             ? ListView.builder(

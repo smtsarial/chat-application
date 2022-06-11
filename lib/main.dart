@@ -50,10 +50,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool appOpened = false;
   bool isBackground = false;
 
-  
-
-  
-
   Future<void> onBackgroundMessage(RemoteMessage message) {
     log('[onBackgroundMessage] message: $message');
     NotificationApi.showNotification(body: message.data.toString());

@@ -12,6 +12,8 @@ import 'package:anonmy/screens/main/story/src/presentation/utils/Extensions/hexC
 import 'package:anonmy/screens/main/story/src/presentation/utils/constants/item_type.dart';
 import 'package:anonmy/screens/main/story/src/presentation/widgets/animated_onTap_button.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 /// create item of type GIF
 Future createGiphyItem(
     {required BuildContext context, required giphyKey}) async {
@@ -68,8 +70,8 @@ Future<bool> exitDialog({required context, required contentKey}) async {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const Text(
-                    'Discard Edits?',
+                  Text(
+                    AppLocalizations.of(context)!.discardedits,
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
@@ -79,8 +81,8 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    "If you go back now, you'll lose all the edits you've made.",
+                  Text(
+                    AppLocalizations.of(context)!.discarderror,
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
@@ -99,7 +101,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                       Navigator.of(context).pop(true);
                     },
                     child: Text(
-                      'Discard',
+                      AppLocalizations.of(context)!.discard,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.redAccent.shade200,
@@ -140,8 +142,8 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                         _dispose(context: context, message: 'Draft Empty');
                       }
                     },
-                    child: const Text(
-                      'Save Draft',
+                    child: Text(
+                      AppLocalizations.of(context)!.saveDraft,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -162,8 +164,8 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                     onTap: () {
                       Navigator.of(context).pop(false);
                     },
-                    child: const Text(
-                      'Cancel',
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,

@@ -76,7 +76,7 @@ dependencies:
   google_mobile_ads: ^0.13.0
   search_choices: ^2.0.19
   connectycube_sdk: ^2.1.1
-  connectycube_flutter_call_kit: ^2.0.2
+  #connectycube_flutter_call_kit: ^2.0.2
   flutter_background: ^1.1.0
   firebase_messaging: ^11.3.0
   shimmer: ^2.0.0
