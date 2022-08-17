@@ -1,17 +1,17 @@
 {
     "files.exclude": {
-        "android": false,
-        "build": false,
-        "ios": false,
-        "assets": false,
-        "windows": false,
-        "web": false,
-        "test": false,
-        ".flutter-plugins": false,
-        ".flutter-plugins-dependencies": false,
-        ".gitignore": false,
-        ".metadata": false,
-        "README.md": false
+        "android": true,
+        "build": true,
+        "ios": true,
+        "assets": true,
+        "windows": true,
+        "web": true,
+        "test": true,
+        ".flutter-plugins": true,
+        ".flutter-plugins-dependencies": true,
+        ".gitignore": true,
+        ".metadata": true,
+        "README.md": true
     },
-    "workspace.isHidden": false
+    "workspace.isHidden": true
 }

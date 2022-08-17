@@ -338,7 +338,8 @@ class _ShufflePageState extends State<ShufflePage> {
                       userData.showStatus
                           ? userData.isActive
                               ? Container()
-                              : Text(timeago.format(userData.lastActiveTime))
+                              : Text(timeago.format(userData.lastActiveTime,
+                                  locale: 'tr'))
                           : Container(),
                       SizedBox(
                         height: 10,

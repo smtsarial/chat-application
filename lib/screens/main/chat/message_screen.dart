@@ -176,7 +176,10 @@ class _MessageTitle extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      timeago.format(messageData.lastMessageTime).toString(),
+                      timeago
+                          .format(messageData.lastMessageTime,
+                              locale: 'en_short')
+                          .toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,
@@ -275,7 +278,10 @@ class _MessageTitleReceiver extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      timeago.format(messageData.lastMessageTime).toString(),
+                      timeago
+                          .format(messageData.lastMessageTime,
+                              locale: 'en_short')
+                          .toString(),
                       style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: -0.2,

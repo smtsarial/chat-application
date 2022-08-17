@@ -29,6 +29,34 @@ class _ChatScreenState extends State<ChatScreen> {
   late MessageRoom messageRoom;
   final focusNode = FocusNode();
   late ChatMessage replyMessage;
+  var myMenuItems = <String>[
+    'Block',
+    'Report',
+  ];
+
+  void onSelect(item) {
+    switch (item) {
+      case 'Block':
+        print('Block clicked');
+        FirestoreHelper.db.collection('reports').add({
+          "reportCreator": widget.messageRoom.senderMail,
+          "reportedUser": widget.messageRoom.receiverMail,
+          "reason": "IN CHAT REPORT",
+          "time": DateTime.now()
+        }).then((value) {});
+        break;
+      case 'Report':
+        print('Profile clicked');
+        FirestoreHelper.db.collection('reports').add({
+          "reportCreator": widget.messageRoom.senderMail,
+          "reportedUser": widget.messageRoom.receiverMail,
+          "reason": "IN CHAT REPORT",
+          "time": DateTime.now()
+        }).then((value) {});
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -261,6 +289,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
               ),
               SizedBox(width: kDefaultPadding / 2),
+              PopupMenuButton<String>(
+                  onSelected: onSelect,
+                  itemBuilder: (BuildContext context) {
+                    return myMenuItems.map((String choice) {
+                      return PopupMenuItem<String>(
+                        child: Text(choice),
+                        value: choice,
+                      );
+                    }).toList();
+                  })
             ],
           ),
           body: Body(

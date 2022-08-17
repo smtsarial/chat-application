@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   const ChatDetailScreen({Key? key, required this.chatRoomInfo})
@@ -214,12 +215,13 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   child: Center(
                     child: messagesInfo.length != 0
                         ? Text(
-                            "Last message sent at " +
-                                timeago.format(messagesInfo[0].timeToSent),
+                            AppLocalizations.of(context)!.lastmessagesentat +
+                                timeago.format(messagesInfo[0].timeToSent,
+                                    locale: 'en_short'),
                             style: const TextStyle(fontSize: 16),
                           )
                         : Text(
-                            "There is no last message",
+                            AppLocalizations.of(context)!.thereisnolastmessage,
                             style: const TextStyle(fontSize: 16),
                           ),
                   ),
@@ -267,10 +269,10 @@ class _StoriesState extends State<_Stories> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 8, bottom: 16),
                 child: Text(
-                  'Photos',
+                  AppLocalizations.of(context)!.photos,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 15,
@@ -298,9 +300,9 @@ class _StoriesState extends State<_Stories> {
                         },
                       ),
                     ))
-                  : (const Center(
+                  : (Center(
                       child: Text(
-                        "There is no photo to show",
+                        AppLocalizations.of(context)!.theseisnophototoshow,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 15,
@@ -335,7 +337,7 @@ class _StoryCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
-              timeago.format(messageData.timeToSent),
+              timeago.format(messageData.timeToSent, locale: 'en_short'),
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 11,

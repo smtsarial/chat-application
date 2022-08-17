@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/editable_items.dart';
 import 'package:anonmy/screens/main/story/src/domain/models/painting_model.dart';
@@ -334,7 +335,8 @@ class _MainViewState extends State<MainView> {
                                 ignoring: true,
                                 child: Align(
                                   alignment: const Alignment(0, -0.1),
-                                  child: Text('Tap to type',
+                                  child: Text(
+                                      AppLocalizations.of(context)!.taptotype,
                                       style: TextStyle(
                                           fontFamily: 'Alegreya',
                                           fontWeight: FontWeight.w500,
@@ -456,8 +458,8 @@ class _MainViewState extends State<MainView> {
                                         color: Colors.white,
                                         width: 1.2,
                                       )),
-                                  child: const Text(
-                                    'Cancel',
+                                  child: Text(
+                                    AppLocalizations.of(context)!.cancel,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,

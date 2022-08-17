@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
@@ -736,7 +736,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                               controller: _sendMessageController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Type message',
+                                labelText:
+                                    AppLocalizations.of(context)!.typemessage,
                                 suffixIcon: IconButton(
                                   icon: Icon(Icons.send),
                                   onPressed: () {

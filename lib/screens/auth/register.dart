@@ -5,6 +5,7 @@ import 'package:anonmy/providers/pref_util.dart';
 import 'package:anonmy/screens/main/personalProfilePages/privacypolicy.dart';
 import 'package:anonmy/screens/main/personalProfilePages/termofuse.dart';
 import 'package:anonmy/screens/main/personalProfilePages/turkishprivacypolicy.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anonmy/connections/auth.dart';
@@ -444,10 +445,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (_imageload != true)
                         {
                           Authentication().deleteAccount().whenComplete(() {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Error occured please try again!')),
+                            QuickHelp.showAppNotificationAdvanced(
+                              context: context,
+                              title: "Error",
+                              message: "Error occured please try again!",
+                              isError: true,
                             );
                             setState(() {
                               _visibleCircular = false;
@@ -482,10 +484,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       0)
                                   .then((value) async {
                                 if (value == true) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Başarılı Şekilde Kayıt Olundu')),
+                                  QuickHelp.showAppNotificationAdvanced(
+                                    context: context,
+                                    title: "Success",
+                                    message: "Signing up successful!",
+                                    isError: false,
                                   );
                                   var _userEmail = await Authentication().login(
                                       emailController.text,
@@ -501,10 +504,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Authentication()
                                       .deleteAccount()
                                       .whenComplete(() {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Error occured please try again!')),
+                                    QuickHelp.showAppNotificationAdvanced(
+                                      context: context,
+                                      title: "Error",
+                                      message:
+                                          "Error occured please try again!",
+                                      isError: true,
                                     );
                                     setState(() {
                                       _visibleCircular = false;
@@ -514,10 +519,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               });
                             } else {
                               Authentication().deleteAccount().whenComplete(() {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Error occured please try again!')),
+                                QuickHelp.showAppNotificationAdvanced(
+                                  context: context,
+                                  title: "Error",
+                                  message: 'Error occured please try again!',
+                                  isError: false,
                                 );
                                 setState(() {
                                   _visibleCircular = false;
@@ -529,9 +535,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                   else
                     {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Error occured please try again!')),
+                      QuickHelp.showAppNotificationAdvanced(
+                        context: context,
+                        title: "ERROR",
+                        message: "Please try again",
+                        isError: true,
                       ),
                       setState(() {
                         _visibleCircular = false;
@@ -548,9 +556,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         //  });
         //});
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter the same password!')),
+        QuickHelp.showAppNotificationAdvanced(
+          context: context,
+          title: "Password",
+          message: "Please enter the same password!",
+          isError: true,
         );
+
         setState(() {
           _visibleCircular = false;
         });

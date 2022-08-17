@@ -59,6 +59,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
     Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -85,7 +86,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     //    _loginToCC(context, loggedUser);
     //  }
     //});
-
+    //FirestoreHelper.addSomethingToAllUsers();
     //Authentication ---------------------------------------------
     _handleAuthenticatedState().then((value) {
       WidgetsBinding.instance?.addObserver(this);

@@ -7,6 +7,7 @@ import 'package:anonmy/screens/main/personDetailScreens/myVoiceWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/spotifyWidget.dart';
 import 'package:anonmy/screens/main/personDetailScreens/youtubeWidget.dart';
 import 'package:anonmy/screens/main/storyViewer_screen.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/user.dart';
@@ -191,21 +192,25 @@ class _ProfileState extends State<Profile> {
                               widget.userData, widget.senderData)
                           .then((value) {
                         if (value == true) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('You unfollowed ' +
-                                    widget.userData.firstName.toString() +
-                                    " " +
-                                    widget.userData.lastName)),
+                          QuickHelp.showAppNotificationAdvanced(
+                            context: context,
+                            title: "Unfollowed",
+                            message: 'You unfollowed ' +
+                                widget.userData.firstName.toString() +
+                                " " +
+                                widget.userData.lastName,
+                            isError: false,
                           );
+
                           setState(() {
                             follower = false;
                           });
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .erroroccured)),
+                          QuickHelp.showAppNotificationAdvanced(
+                            context: context,
+                            title: "ERROR",
+                            message: AppLocalizations.of(context)!.erroroccured,
+                            isError: true,
                           );
                         }
                       });
@@ -218,23 +223,25 @@ class _ProfileState extends State<Profile> {
                               widget.senderData, widget.userData)
                           .then((value) {
                         if (value == true) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('You followed ' +
-                                    widget.userData.firstName.toString() +
-                                    " " +
-                                    widget.userData.lastName)),
+                          QuickHelp.showAppNotificationAdvanced(
+                            context: context,
+                            title: "Followed",
+                            message: 'You followed ' +
+                                widget.userData.firstName.toString() +
+                                " " +
+                                widget.userData.lastName,
+                            isError: false,
                           );
+
                           setState(() {
                             follower = true;
                           });
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  AppLocalizations.of(context)!.erroroccured),
-                              backgroundColor: Colors.redAccent,
-                            ),
+                          QuickHelp.showAppNotificationAdvanced(
+                            context: context,
+                            title: "ERROR",
+                            message: AppLocalizations.of(context)!.erroroccured,
+                            isError: true,
                           );
                         }
                       });

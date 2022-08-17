@@ -72,7 +72,7 @@ class TextMessage extends StatelessWidget {
                       children: [
                         Container(
                           child: Text(
-                            timeago.format(message!.timeToSent),
+                            timeago.format(message!.timeToSent, locale: 'tr'),
                             style: TextStyle(fontSize: 10),
                           ),
                         ),

@@ -6,6 +6,7 @@ import 'package:anonmy/screens/auth/google_sign.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
 import 'package:anonmy/theme.dart';
 import 'package:anonmy/screens/auth/register.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:connectycube_sdk/connectycube_calls.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -266,10 +267,14 @@ class _LoginPageState extends State<LoginPage> {
                       ));
                       Navigator.pop(context);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                        AppLocalizations.of(context)!.errorsendingemail,
-                      )));
+                      QuickHelp.showAppNotificationAdvanced(
+                        context: context,
+                        title: "Error",
+                        message:
+                            AppLocalizations.of(context)!.errorsendingemail,
+                        isError: true,
+                      );
+                     
                       Navigator.pop(context);
                     }
                   });

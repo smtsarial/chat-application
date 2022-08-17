@@ -93,6 +93,10 @@ dependencies:
   flutter_inapp_purchase: ^5.2.0
   swipe_to: ^1.0.2
   flutter_reaction_button: ^2.0.0+3
+  record: ^3.0.0
+  flutter_vibrate: ^1.1.0
+  lottie: ^1.2.1
+  firebase_dynamic_links: ^4.3.4
 
 
 dev_dependencies:

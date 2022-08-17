@@ -4,6 +4,7 @@ import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/main.dart';
 import 'package:anonmy/models/user.dart';
 import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -359,9 +360,13 @@ class _EditPageState extends State<EditPage> {
         setState(() {
           _visibleCircular = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Profile updated successfully except profile picture!"),
-        ));
+
+        QuickHelp.showAppNotificationAdvanced(
+          context: context,
+          title: "ERROR",
+          message: "Profile updated successfully except profile picture!",
+          isError: true,
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyApp()),
@@ -392,18 +397,24 @@ class _EditPageState extends State<EditPage> {
             setState(() {
               _visibleCircular = false;
             });
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Profile updated successfully"),
-            ));
+            QuickHelp.showAppNotificationAdvanced(
+              context: context,
+              title: "Successfully",
+              message: "Profile updated successfully",
+              isError: false,
+            );
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MyApp()),
             );
           });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Profile not updated successfully"),
-          ));
+          QuickHelp.showAppNotificationAdvanced(
+            context: context,
+            title: "Not Successfully",
+            message: "Profile not updated successfully",
+            isError: true,
+          );
         }
       });
     }

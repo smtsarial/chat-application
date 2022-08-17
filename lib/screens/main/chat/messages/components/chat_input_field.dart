@@ -6,6 +6,7 @@ import 'package:anonmy/models/message_data.dart';
 import 'package:anonmy/screens/main/chat/messages/components/message.dart';
 import 'package:anonmy/screens/main/chat/messages/components/reply/reply_message_widget.dart';
 import 'package:anonmy/theme.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -101,233 +102,242 @@ class _ChatInputFieldState extends State<ChatInputField> {
           child: SafeArea(
             child: Row(
               children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: kDefaultPadding / 4),
-                        _imageload == true
-                            ? Expanded(
-                                child: Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: Image.file(
-                                      _image,
-                                      fit: BoxFit.cover,
-                                    ).image,
-                                    child: IconButton(
-                                      icon: Icon(Icons.remove_circle),
-                                      onPressed: () {
-                                        setState(() {
-                                          _imageload = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ))
-                            : Expanded(
-                                child: TextField(
-                                  controller: messageController,
-                                  decoration: InputDecoration(
-                                    hintText: "Type Message",
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                        IconButton(
-                          onPressed: () async {
-                            final gif = await ModalGifPicker.pickModalSheetGif(
-                              context: context,
-                              apiKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
-                              rating: GiphyRating.r,
-                              sticker: true,
-                              backDropColor: Colors.black,
-                              crossAxisCount: 3,
-                              childAspectRatio: 1.2,
-                              topDragColor: Colors.white.withOpacity(0.2),
-                            );
-                            if (gif != null) {
-                              setState(() {
-                                _gifloaded = true;
-                                _giflink = gif.embedUrl.toString();
-                              });
-                              await updateLastMessageInfo("GIF")
-                                  .then((value) async {
-                                if (value == true) {
-                                  await FirestoreHelper.getUserData()
-                                      .then((value) async {
-                                    await FirestoreHelper.db
-                                        .collection('messages')
-                                        .doc(widget.messageRoom.id)
-                                        .collection('chatMessages')
-                                        .add({
-                                      "messageOwnerMail": value.email,
-                                      "messageOwnerUsername": value.username,
-                                      "timeToSent": DateTime.now(),
-                                      "messageType": 4,
-                                      "status": 0,
-                                      "message": gif.id,
-                                      "isAccepted": false,
-                                      "isReplied": false,
-                                      "repliedMessageType": 5,
-                                      "repliedMessageId": "",
-                                      "messageReaction": "empty"
-                                    });
-                                  });
-                                  return true;
-                                } else {
-                                  return false;
-                                }
-                              });
-                            }
-                          },
-                          icon: Icon(
-                            Icons.gif_rounded,
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .color!
-                                .withOpacity(0.64),
+                !isRecording
+                    ? Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 2,
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            SelectImageFromGallery();
-                          },
-                          icon: Icon(
-                            Icons.camera_alt_outlined,
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .color!
-                                .withOpacity(0.64),
-                          ),
-                        ),
-                        Container(
-                            height: 40,
-                            margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: isRecording
-                                          ? Colors.white
-                                          : Colors.black12,
-                                      spreadRadius: 4)
-                                ],
-                                color: PrimaryColor.withOpacity(1),
-                                shape: BoxShape.circle),
-                            child: GestureDetector(
-                              onLongPress: () {
-                                startRecord();
-                                setState(() {
-                                  isRecording = true;
-                                  isAudioMessage = true;
-                                });
-                              },
-                              onLongPressEnd: (details) {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: Text(
-                                              AppLocalizations.of(context)!
-                                                  .caution),
-                                          content: Text(
-                                              AppLocalizations.of(context)!
-                                                  .doyouwanttosendvoicemessage),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  context, 'Cancel'),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .cancel),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                await stopRecord().whenComplete(
-                                                  () => Navigator.pop(context),
-                                                );
-                                                setState(() {
-                                                  isRecording = false;
-                                                });
-                                              },
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .ok),
-                                            ),
-                                          ],
-                                        ));
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    Icons.mic,
-                                    color: Colors.white,
-                                    size: 20,
-                                  )),
-                            )),
-                        Container(
                           decoration: BoxDecoration(
-                              color: PrimaryColor,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: sentorNot == false
-                              ? IconButton(
-                                  onPressed: () {
+                            color: kPrimaryColor.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: kDefaultPadding / 4),
+                              _imageload == true
+                                  ? Expanded(
+                                      child: Stack(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: Image.file(
+                                            _image,
+                                            fit: BoxFit.cover,
+                                          ).image,
+                                          child: IconButton(
+                                            icon: Icon(Icons.remove_circle),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageload = false;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ))
+                                  : Expanded(
+                                      child: TextField(
+                                        controller: messageController,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .typemessage,
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                              IconButton(
+                                onPressed: () async {
+                                  final gif =
+                                      await ModalGifPicker.pickModalSheetGif(
+                                    context: context,
+                                    apiKey: 'TyardCfj6AlrGXaPKYwbV493gvskn5EU',
+                                    rating: GiphyRating.r,
+                                    sticker: true,
+                                    backDropColor: Colors.black,
+                                    crossAxisCount: 3,
+                                    childAspectRatio: 1.2,
+                                    topDragColor: Colors.white.withOpacity(0.2),
+                                  );
+                                  if (gif != null) {
                                     setState(() {
-                                      sentorNot = true;
+                                      _gifloaded = true;
+                                      _giflink = gif.embedUrl.toString();
                                     });
-                                    sendMessage(messageController.text)
-                                        .then((value) {
-                                      messageController.text = "";
-                                      if (value != true) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: Text(
-                                              "Connection lost please refresh this page! and try again!"),
-                                        ));
-                                      } else {
-                                        setState(() {
-                                          sentorNot = false;
-                                          _image = File("path");
-                                          _imageload = false;
+                                    await updateLastMessageInfo("GIF")
+                                        .then((value) async {
+                                      if (value == true) {
+                                        await FirestoreHelper.getUserData()
+                                            .then((value) async {
+                                          await FirestoreHelper.db
+                                              .collection('messages')
+                                              .doc(widget.messageRoom.id)
+                                              .collection('chatMessages')
+                                              .add({
+                                            "messageOwnerMail": value.email,
+                                            "messageOwnerUsername":
+                                                value.username,
+                                            "timeToSent": DateTime.now(),
+                                            "messageType": 4,
+                                            "status": 0,
+                                            "message": gif.id,
+                                            "isAccepted": false,
+                                            "isReplied": false,
+                                            "repliedMessageType": 5,
+                                            "repliedMessageId": "",
+                                            "messageReaction": "empty"
+                                          });
                                         });
+                                        return true;
+                                      } else {
+                                        return false;
                                       }
                                     });
-                                  },
-                                  icon: Icon(
-                                    Icons.send,
-                                    color: Colors.white,
-                                  ),
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.gif_rounded,
                                   color: Theme.of(context)
                                       .textTheme
                                       .bodyText1!
                                       .color!
                                       .withOpacity(0.64),
-                                )
-                              : Container(
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.white,
-                                    color: Colors.blueGrey,
-                                    strokeWidth: 3,
-                                  ),
-                                  height: 20,
-                                  width: 20,
                                 ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  SelectImageFromGallery();
+                                },
+                                icon: Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .color!
+                                      .withOpacity(0.64),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: PrimaryColor,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: sentorNot == false
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            sentorNot = true;
+                                          });
+                                          sendMessage(messageController.text)
+                                              .then((value) {
+                                            messageController.text = "";
+                                            if (value != true) {
+                                              QuickHelp
+                                                  .showAppNotificationAdvanced(
+                                                context: context,
+                                                title: "Error",
+                                                message:
+                                                    "Connection lost please refresh this page! and try again!",
+                                                isError: true,
+                                              );
+                                            } else {
+                                              setState(() {
+                                                sentorNot = false;
+                                                _image = File("path");
+                                                _imageload = false;
+                                              });
+                                            }
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.send,
+                                          color: Colors.white,
+                                        ),
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .color!
+                                            .withOpacity(0.64),
+                                      )
+                                    : Container(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.white,
+                                          color: Colors.blueGrey,
+                                          strokeWidth: 3,
+                                        ),
+                                        height: 20,
+                                        width: 20,
+                                      ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Text("hahaha"),
+                      ),
+                Container(
+                    height: 40,
+                    margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color:
+                                  isRecording ? Colors.white : Colors.black12,
+                              spreadRadius: 4)
+                        ],
+                        color: PrimaryColor.withOpacity(1),
+                        shape: BoxShape.circle),
+                    child: GestureDetector(
+                      onLongPress: () {
+                        startRecord();
+                        setState(() {
+                          isRecording = true;
+                          isAudioMessage = true;
+                        });
+                      },
+                      onLongPressEnd: (details) {
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text(
+                                      AppLocalizations.of(context)!.caution),
+                                  content: Text(AppLocalizations.of(context)!
+                                      .doyouwanttosendvoicemessage),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Cancel');
+                                        setState(() {
+                                          isRecording = false;
+                                        });
+                                      },
+                                      child: Text(
+                                          AppLocalizations.of(context)!.cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await stopRecord().whenComplete(
+                                          () => Navigator.pop(context),
+                                        );
+                                        setState(() {
+                                          isRecording = false;
+                                        });
+                                      },
+                                      child: Text(
+                                          AppLocalizations.of(context)!.ok),
+                                    ),
+                                  ],
+                                ));
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.mic,
+                            color: Colors.white,
+                            size: 20,
+                          )),
+                    )),
               ],
             ),
           ),
@@ -362,7 +372,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
       setState(() {});
     });
     //} else {}
-    //setState(() {});
+    setState(() {
+      isRecording = true;
+    });
   }
 
   Future<String> getFilePath() async {

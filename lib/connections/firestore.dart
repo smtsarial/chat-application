@@ -238,6 +238,21 @@ class FirestoreHelper {
     }
   }
 
+  static Future addSomethingToAllUsers() async {
+    await db.collection('users').get().then((value1) {
+      print(value1.docs.length);
+      value1.docs.forEach((element) {
+        db
+            .collection('users')
+            .doc(element.id)
+            .update({"canChangeUsername": true});
+      });
+      //db.collection('users').doc(value.id).update({
+      //  "myStoriesId": FieldValue.arrayUnion([value1.id])
+      //});
+    });
+  }
+
   static Future uploadStoryToStorage(path) async {
     //upload story picture
     try {
@@ -466,35 +481,37 @@ class FirestoreHelper {
     //this function will add new user to users collection
     try {
       var result = await db.collection('users').add(User(
-          id,
-          email,
-          age,
-          chatCount,
-          profilePictureUrl,
-          followers,
-          followed,
-          gender,
-          isActive,
-          lastActiveTime,
-          firstName,
-          lastName,
-          likes,
-          userBio,
-          userTags,
-          userType,
-          username,
-          "Türkiye",
-          "İstanbul",
-          [],
-          [],
-          [],
-          [],
-          [],
-          true,
-          [],
-          videoServicePassword,
-          cubeid,
-          []).toMap());
+              id,
+              email,
+              age,
+              chatCount,
+              profilePictureUrl,
+              followers,
+              followed,
+              gender,
+              isActive,
+              lastActiveTime,
+              firstName,
+              lastName,
+              likes,
+              userBio,
+              userTags,
+              userType,
+              username,
+              "Türkiye",
+              "İstanbul",
+              [],
+              [],
+              [],
+              [],
+              [],
+              true,
+              [],
+              videoServicePassword,
+              cubeid,
+              [],
+              true)
+          .toMap());
       return true;
     } catch (e) {
       print(e);

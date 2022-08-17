@@ -1,6 +1,7 @@
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/models/story.dart';
 import 'package:anonmy/models/user.dart';
+import 'package:anonmy/widgets/QuickHelp.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context)!.followerslist),
+        title: Text(AppLocalizations.of(context)!.storieslist),
       ),
       body: SafeArea(
         child: Container(
@@ -89,16 +90,17 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                                                                 .doc(item.id)
                                                                 .delete()
                                                                 .then((value) {
-                                                              ScaffoldMessenger
-                                                                      .of(
-                                                                          context)
-                                                                  .showSnackBar(
-                                                                      SnackBar(
-                                                                content: Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .success),
-                                                              ));
+                                                              QuickHelp
+                                                                  .showAppNotificationAdvanced(
+                                                                context:
+                                                                    context,
+                                                                title:
+                                                                    "Successfully",
+                                                                message: AppLocalizations.of(
+                                                                        context)!
+                                                                    .success,
+                                                                isError: false,
+                                                              );
                                                               FirestoreHelper
                                                                       .getUserData()
                                                                   .then(
@@ -117,15 +119,15 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                                                             });
                                                           } catch (e) {
                                                             print(e);
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    SnackBar(
-                                                              content: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .erroroccured),
-                                                            ));
+                                                            QuickHelp
+                                                                .showAppNotificationAdvanced(
+                                                              context: context,
+                                                              title: "Error",
+                                                              message: AppLocalizations
+                                                                      .of(context)!
+                                                                  .erroroccured,
+                                                              isError: true,
+                                                            );
                                                           }
                                                         },
                                                         icon: Icon(Icons

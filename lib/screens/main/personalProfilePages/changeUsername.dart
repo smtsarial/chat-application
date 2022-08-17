@@ -54,18 +54,30 @@ class _changeUsernameState extends State<changeUsername> {
                     ),
                   )),
               Padding(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                child: Visibility(
+                  visible: userData.canChangeUsername,
+                  child: Text("You can change username only one time",
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.fromLTRB(20, 25, 20, 0),
                 child: TextFormField(
                   style: TextStyle(color: TextColor),
                   validator: (value) {
-                    FirestoreHelper.checkUsername(value).then((value1) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill the area!';
-                      } else if (value1 != 0) {
-                        return "Please enter unique username";
-                      }
-                      return "OK";
-                    });
+                    if (userData.canChangeUsername) {
+                      FirestoreHelper.checkUsername(value).then((value1) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please fill the area!';
+                        } else if (value1 != 0) {
+                          return "Please enter unique username";
+                        }
+                      });
+                    } else {
+                      return "You can't change username";
+                    }
                   },
                   controller: usernameController,
                   autofocus: false,
@@ -80,50 +92,66 @@ class _changeUsernameState extends State<changeUsername> {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-                child: RaisedButton(
-                  padding: EdgeInsets.symmetric(horizontal: 140),
-                  onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        _visibleCircular = true;
-                      });
-                      try {
-                        FirestoreHelper.db
-                            .collection('users')
-                            .doc(userData.id)
-                            .update({"username": usernameController.text}).then(
-                                (value) {
+                child: Visibility(
+                  visible: userData.canChangeUsername,
+                  child: RaisedButton(
+                      onPressed: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
-                            _visibleCircular = false;
-                            showMessage = true;
+                            _visibleCircular = true;
                           });
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyApp()),
-                          );
-                        });
-                      } catch (e) {
-                        setState(() {
-                          _visibleCircular = false;
-                        });
-                      }
-                    }
-                  },
-                  color: PureColor,
-                  child: _visibleCircular
-                      ? Visibility(
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.grey,
-                            color: Colors.blueGrey,
-                            strokeWidth: 2,
-                          ),
-                          visible: _visibleCircular,
-                        )
-                      : Text(AppLocalizations.of(context)!.changeusername,
-                          style: TextStyle(color: PrimaryColor)),
+                          try {
+                            FirestoreHelper.db
+                                .collection('users')
+                                .doc(userData.id)
+                                .update({
+                              "username": usernameController.text
+                            }).then((value) {
+                              setState(() {
+                                _visibleCircular = false;
+                                showMessage = true;
+                              });
+                              FirestoreHelper.db
+                                  .collection('users')
+                                  .doc(userData.id)
+                                  .update({"canChangeUsername": false}).then(
+                                      (value) => Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp()),
+                                          ));
+                            });
+                          } catch (e) {
+                            setState(() {
+                              _visibleCircular = false;
+                            });
+                          }
+                        }
+                      },
+                      color: PrimaryColor,
+                      child: _visibleCircular
+                          ? Visibility(
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.grey,
+                                color: Colors.blueGrey,
+                                strokeWidth: 2,
+                              ),
+                              visible: _visibleCircular,
+                            )
+                          : Text(AppLocalizations.of(context)!.changeusername,
+                              style: TextStyle(fontSize: 15))),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                child: Visibility(
+                  visible: !userData.canChangeUsername,
+                  child: Text("You cannot change username anymore",
+                      style: TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold)),
+                ),
+              )
             ])),
       ),
     );

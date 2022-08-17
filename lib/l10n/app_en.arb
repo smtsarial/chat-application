@@ -52,6 +52,7 @@
     "success":"Successful!",
     "followed":"Followed",
     "editmystories":"Edit my stories!",
+    "storieslist":"Stories List",
     "getmoremessages":"Get More Messages!",
     "getshuffle":"Get Shuffle Proote, be on top of the shuffle list.",
     "updatemyaccount":"Update My Account",
@@ -123,5 +124,13 @@
     "share":"Share",
     "usernamechangedsuccessfully":"Username changed successfully!",
     "changeusername":"Change Username",
-    "recordyourvoice":"Record your voice."
+    "recordyourvoice":"Record your voice.",
+    "taptotype":"Type to type",
+    "lastmessagesentat":"Last message sent at ",
+    "thereisnolastmessage":"There is no last message",
+    "photos":"Photos",
+    "theseisnophototoshow":"There is no photo to show",
+    "typemessage":"Type Message"
+
+
 }
