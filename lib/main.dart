@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:anonmy/connections/dynamic_link_service.dart';
 import 'package:anonmy/connections/local_notification_api.dart';
 import 'package:anonmy/connections/firestore.dart';
 import 'package:anonmy/l10n/l10n.dart';
@@ -13,6 +14,7 @@ import 'package:anonmy/screens/main/landing_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:anonmy/providers/userProvider.dart';
 import 'package:anonmy/screens/main/splash_screen.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:anonmy/theme.dart';
@@ -34,6 +36,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   await Firebase.initializeApp();
+  // Get any initial links
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+
+  DynamicLinkService.listenDynamicLink();
+
   runApp(MyApp());
 }
 

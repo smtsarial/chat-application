@@ -8,16 +8,12 @@ class DynamicLinkService {
     print("DeepLink createDynamicLink: $id");
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      // The Dynamic Link URI domain. You can view created URIs on your Firebase console
-      uriPrefix: 'https://sirenlive.page.link',
-      // The deep Link passed to your application which you can use to affect change
-      link: Uri.parse("https://sirenlive.page.link/?$invite=$id"),
-      // Android application details needed for opening correct app on device/Play Store
+      uriPrefix: 'https://anonmy.page.link',
+      link: Uri.parse("https://anonmy.page.link/?$invite=$id"),
       androidParameters: AndroidParameters(
         packageName: "com.anonmy.anonmy",
         minimumVersion: 1,
       ),
-      // iOS application details needed for opening correct app on device/App Store
       iosParameters: IOSParameters(
         bundleId: "com.anonmy.anonmy",
         minimumVersion: '1',
@@ -27,8 +23,6 @@ class DynamicLinkService {
     final ShortDynamicLink shortDynamicLink =
         await FirebaseDynamicLinks.instance.buildShortLink(parameters);
     final Uri uri = shortDynamicLink.shortUrl;
-
-    //final Uri dynamicLinks = await FirebaseDynamicLinks.instance.buildLink(parameters);
     return uri;
   }
 
@@ -54,7 +48,7 @@ class DynamicLinkService {
     }
   }
 
-  static listenDynamicLink() {
+  static listenDynamicLink() async {
     print("DeepLink listenDynamicLink");
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
       print("helllllllllo");
