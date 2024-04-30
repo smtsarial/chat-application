@@ -1,17 +1,18 @@
 {
-    "files.exclude": {
-        "android": false,
-        "build": false,
-        "ios": false,
-        "assets": false,
-        "windows": false,
-        "web": false,
-        "test": false,
-        ".flutter-plugins": false,
-        ".flutter-plugins-dependencies": false,
-        ".gitignore": false,
-        ".metadata": false,
-        "README.md": false
-    },
-    "workspace.isHidden": false
+  "files.exclude": {
+    "android": false,
+    "build": false,
+    "ios": false,
+    "assets": false,
+    "windows": false,
+    "web": false,
+    "test": false,
+    ".flutter-plugins": false,
+    ".flutter-plugins-dependencies": false,
+    ".gitignore": false,
+    ".metadata": false,
+    "README.md": false
+  },
+  "workspace.isHidden": false,
+  "dart.flutterSdkPath": ".fvm/versions/2.10.5"
 }
